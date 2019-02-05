@@ -21,6 +21,7 @@ class User implements \Serializable, UserInterface
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
     /**
      * @ORM\Column(type="string", unique=true)
      */
@@ -41,28 +42,34 @@ class User implements \Serializable, UserInterface
      * )
      */
     private $password;
+
     //  /**
     //   * @ORM\Column(type="string")
     //   */
     //  private $salt;
+
     /**
      * @ORM\Column(type="datetime")
      */
     private $created;
+
     /**
      * @ORM\Column(type="datetime")
      */
     private $updated;
+
     /**
      * @ORM\Column(type="smallint")
      */
     private $status;
+
     /**
      * @var \Doctrine\Common\Collections\ArrayCollection
      * @ORM\ManyToMany(targetEntity="Role", inversedBy="users", cascade={"persist", "remove"})
      * @ORM\JoinTable(name="users_roles")
      */
     private $roles;
+
     /**
      * @ORM\OneToOne(targetEntity="UserAccount", mappedBy="user", cascade={"persist", "remove"})
      */
@@ -320,8 +327,8 @@ class User implements \Serializable, UserInterface
         return $this->account;
     }
 
-    public function getFullname()
+    public function getFullName()
     {
-        return $this->getAccount()->getFullname();
+        return $this->getAccount()->getFullName();
     }
 }

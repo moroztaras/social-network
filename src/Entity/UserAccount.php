@@ -55,11 +55,12 @@ class UserAccount
      * @ORM\JoinColumn(name="avatar_fid", referencedColumnName="id")
      */
     private $avatar;
-    /**
-     * @ORM\OneToOne(targetEntity="File", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(name="avatar_fid", referencedColumnName="id")
-     */
-    private $cover;
+
+//    /**
+//     * @ORM\OneToOne(targetEntity="File", cascade={"persist", "remove"})
+//     * @ORM\JoinColumn(name="avatar_fid", referencedColumnName="id")
+//     */
+//    private $cover;
 
     /**
      * Get id.
@@ -223,19 +224,19 @@ class UserAccount
         $this->avatar = $avatar;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCover()
-    {
-        return $this->cover;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getCover()
+//    {
+//        return $this->cover;
+//    }
 
-    /**
-     * @param mixed $cover
-     */
-    public function setCover($cover): void
-    {
-        $this->cover = $cover;
-    }
+//    /**
+//     * @param mixed $cover
+//     */
+//    public function setCover($cover): void
+//    {
+//        $this->cover = $cover;
+//    }
 }

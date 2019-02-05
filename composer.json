@@ -23,14 +23,22 @@
         "symfony/twig-bundle": "4.2.*",
         "symfony/validator": "4.2.*",
         "symfony/web-link": "4.2.*",
-        "symfony/yaml": "4.2.*"
+        "symfony/yaml": "4.2.*",
+        "gumlet/php-image-resize": "^1.9",
+        "guzzlehttp/guzzle": "^6.3",
+        "symfony/lts": "^4@dev",
+        "symfony/webpack-encore-pack": "^1.0",
+        "symfony/workflow": "^4.1"
+
     },
     "require-dev": {
         "symfony/debug-pack": "*",
         "symfony/maker-bundle": "^1.0",
         "symfony/profiler-pack": "*",
         "symfony/test-pack": "*",
-        "symfony/web-server-bundle": "4.2.*"
+        "symfony/web-server-bundle": "4.2.*",
+        "doctrine/doctrine-fixtures-bundle": "^3.0",
+        "symfony/dotenv": "^4.1"
     },
     "config": {
         "preferred-install": {

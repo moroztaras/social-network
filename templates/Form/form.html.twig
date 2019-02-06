@@ -1,0 +1,208 @@
+{%- block form_start -%}
+  {%- do form.setMethodRendered() -%}
+  {% set method = method|upper %}
+  {%- if method in ["GET", "POST"] -%}
+    {% set form_method = method %}
+  {%- else -%}
+    {% set form_method = "POST" %}
+  {%- endif -%}
+  {% if attr["class"] is not defined %}
+    {% set attrClass = { 'class' : 'form uk-form-stacked'} %}
+    {% set attr = attr|merge(attrClass) %}
+  {% else %}
+    {% set attrClass = { 'class' : 'form uk-form-stacked ' ~ attr["class"]} %}
+    {% set attr = attr|merge(attrClass) %}
+  {% endif %}
+  <form{% if name != '' %} name="{{ name }}"{% endif %} method="{{ form_method|lower }}"{% if action != '' %} action="{{ action }}"{% endif %}{% for attrname, attrvalue in attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}{% if multipart %} enctype="multipart/form-data"{% endif %}>
+  {%- if form_method != method -%}
+    <input type="hidden" name="_method" value="{{ method }}" />
+  {%- endif -%}
+{%- endblock form_start -%}
+
+{%- block form_label -%}
+  {% if label is not same as(false) -%}
+    {% if not compound -%}
+      {% set label_attr = label_attr|merge({'for': id}) %}
+    {%- endif -%}
+    {% if required -%}
+      {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
+    {%- endif -%}
+    {% if label is empty -%}
+      {%- if label_format is not empty -%}
+        {% set label = label_format|replace({
+          '%name%': name,
+          '%id%': id,
+        }) %}
+      {%- else -%}
+        {% set label = name|humanize %}
+      {%- endif -%}
+    {%- endif -%}
+    {% if label_attr["class"] is not defined %}
+      {% set attrClass = { 'class' : 'uk-form-label'} %}
+      {% set label_attr = label_attr|merge(attrClass) %}
+    {% else %}
+      {% set attrClass = { 'class' : 'uk-form-label ' ~ label_attr["class"]} %}
+      {% set label_attr = label_attr|merge(attrClass) %}
+    {% endif %}
+    <{{ element|default('label') }}{% if label_attr %}{% with { attr: label_attr } %}{{ block('attributes') }}{% endwith %}{% endif %}>
+    {%- if translation_domain is same as(false) -%}
+      {{- label -}}
+    {%- else -%}
+      {{- label|trans({}, translation_domain) -}}
+    {%- endif -%}
+    </{{ element|default('label') }}>
+  {%- endif -%}
+{%- endblock form_label -%}
+
+{%- block form_row -%}
+  {%- set widget_attr = {} -%}
+  {%- if help is not empty -%}
+    {%- set widget_attr = {attr: {'aria-describedby': id ~"_help"}} -%}
+  {%- endif -%}
+  <div class="form-row">
+    {{- form_label(form) -}}
+    <div class="uk-form-control uk-margin-small-bottom">
+      {{- form_widget(form, widget_attr) -}}
+      {{- form_errors(form) -}}
+      {{- form_help(form) -}}
+    </div>
+
+  </div>
+{%- endblock form_row -%}
+
+{%- block button_row -%}
+  <div>
+    {{- form_widget(form) -}}
+  </div>
+{%- endblock button_row -%}
+
+{%- block button_widget -%}
+  {%- if label is empty -%}
+    {%- if label_format is not empty -%}
+      {% set label = label_format|replace({
+        '%name%': name,
+        '%id%': id,
+      }) %}
+    {%- elseif label is same as(false) -%}
+      {% set translation_domain = false %}
+    {%- else -%}
+      {% set label = name|humanize %}
+    {%- endif -%}
+  {%- endif -%}
+  {% if attr["class"] is not defined %}
+    {% set attrClass = { 'class' : 'uk-button uk-button-default'} %}
+    {% set attr = attr|merge(attrClass) %}
+  {% else %}
+    {% set attrClass = { 'class' : 'uk-button uk-button-default' ~ attr["class"]} %}
+    {% set attr = attr|merge(attrClass) %}
+  {% endif %}
+  <button type="{{ type|default('button') }}" {{ block('button_attributes') }}>{{ translation_domain is same as(false) ? label : label|trans({}, translation_domain) }}</button>
+{%- endblock button_widget -%}
+
+{%- block textarea_widget -%}
+  {% if attr["class"] is not defined %}
+    {% set attrClass = { 'class' : 'uk-textarea'} %}
+    {% set attr = attr|merge(attrClass) %}
+  {% else %}
+    {% set attrClass = { 'class' : 'uk-textarea ' ~ attr["class"]} %}
+    {% set attr = attr|merge(attrClass) %}
+  {% endif %}
+  <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
+{%- endblock textarea_widget -%}
+
+{%- block checkbox_widget -%}
+  {% if attr["class"] is not defined %}
+    {% set attrClass = { 'class' : 'uk-checkbox'} %}
+    {% set attr = attr|merge(attrClass) %}
+  {% else %}
+    {% set attrClass = { 'class' : 'uk-checkbox ' ~ attr["class"]} %}
+    {% set attr = attr|merge(attrClass) %}
+  {% endif %}
+  <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+{%- endblock checkbox_widget -%}
+
+{%- block radio_widget -%}
+  {% if attr["class"] is not defined %}
+    {% set attrClass = { 'class' : 'uk-radio'} %}
+    {% set attr = attr|merge(attrClass) %}
+  {% else %}
+    {% set attrClass = { 'class' : 'uk-radio ' ~ attr["class"]} %}
+    {% set attr = attr|merge(attrClass) %}
+  {% endif %}
+  <input type="radio" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+{%- endblock radio_widget -%}
+
+{%- block choice_widget_collapsed -%}
+  {%- if required and placeholder is none and not placeholder_in_choices and not multiple and (attr.size is not defined or attr.size <= 1) -%}
+    {% set required = false %}
+  {%- endif -%}
+  {% if attr["class"] is not defined %}
+    {% set attrClass = { 'class' : 'uk-select'} %}
+    {% set attr = attr|merge(attrClass) %}
+  {% else %}
+    {% set attrClass = { 'class' : 'uk-select ' ~ attr["class"]} %}
+    {% set attr = attr|merge(attrClass) %}
+  {% endif %}
+  <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
+    {%- if placeholder is not none -%}
+      <option value=""{% if required and value is empty %} selected="selected"{% endif %}>{{ placeholder != '' ? (translation_domain is same as(false) ? placeholder : placeholder|trans({}, translation_domain)) }}</option>
+    {%- endif -%}
+    {%- if preferred_choices|length > 0 -%}
+      {% set options = preferred_choices %}
+      {{- block('choice_widget_options') -}}
+      {%- if choices|length > 0 and separator is not none -%}
+        <option disabled="disabled">{{ separator }}</option>
+      {%- endif -%}
+    {%- endif -%}
+    {%- set options = choices -%}
+    {{- block('choice_widget_options') -}}
+  </select>
+{%- endblock choice_widget_collapsed -%}
+
+{%- block form_widget_simple -%}
+  {%- set type = type|default('text') -%}
+  {% set ukClas = 'uk-select' %}
+  {%- if type == 'range' or type == 'color' -%}
+    {# Attribute "required" is not supported #}
+    {%- set required = false -%}
+  {%- endif -%}
+  {%- if type == 'range' -%}
+    {% set ukClas = 'uk-range' %}
+  {%- endif -%}
+  {%- if type != 'file' -%}
+    {% if attr["class"] is not defined %}
+      {% set attrClass = { 'class' : 'uk-input'} %}
+      {% set attr = attr|merge(attrClass) %}
+    {% else %}
+      {% set attrClass = { 'class' : 'uk-input ' ~ attr["class"]} %}
+      {% set attr = attr|merge(attrClass) %}
+    {% endif %}
+  {%- endif -%}
+
+  {%- if errors|length > 0 -%}
+    {% set attrClass = { 'class' : 'uk-form-danger ' ~ attr["class"]} %}
+    {% set attr = attr|merge(attrClass) %}
+  {% endif %}
+
+  {%- if type == 'file' -%}
+    <div uk-form-custom="target: true">
+  {%- endif -%}
+  <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+  {%- if type == 'file' -%}
+    <input class="uk-input uk-form-width-medium" type="text" placeholder="Select file" disabled>
+    <button class="uk-button uk-button-default" disabled>Upload</button>
+    </div>
+
+  {%- endif -%}
+
+{%- endblock form_widget_simple -%}
+
+{%- block form_errors -%}
+  {%- if errors|length > 0 -%}
+    <ul class="uk-list uk-margin-remove-top uk-margin-small-bottom uk-text-danger uk-text-small">
+      {%- for error in errors -%}
+        <li>{{ error.message }}</li>
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
+{%- endblock form_errors -%}

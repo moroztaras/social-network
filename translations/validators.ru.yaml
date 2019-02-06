@@ -1,0 +1,15 @@
+password_must_match: 'Поля пароля должны совпадать.'
+email_already_in_use : 'Этот электронный адрес уже используется'
+user:
+  fullname:
+    not_blank: 'Полное имя обязательное поле'
+  email:
+    not_blank: 'Эл. адрес обязательное поле'
+  password:
+    not_blank: 'Пароль обязательное поле'
+  birthday:
+    not_blank: 'Дата рождения обязательное поле'
+  gender:
+    not_blank: 'Пол обязательное поле'
+  region:
+    not_blank: 'Страна обязательное поле'

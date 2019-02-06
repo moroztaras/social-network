@@ -26,11 +26,13 @@ class User implements \Serializable, UserInterface
      * @ORM\Column(type="string", unique=true)
      */
     private $username;
+
     /**
      * @Assert\Email()
      * @ORM\Column(type="string", unique=true)
      */
     private $email;
+
     /**
      * @ORM\Column(type="string")
      *
@@ -327,8 +329,8 @@ class User implements \Serializable, UserInterface
         return $this->account;
     }
 
-    public function getFullName()
+    public function getFullname()
     {
-        return $this->getAccount()->getFullName();
+        return $this->getAccount()->getFullname();
     }
 }

@@ -1,0 +1,14 @@
+framework:
+    workflows:
+        svistyn:
+            type: 'workflow'
+            supports:
+                - App\Entity\Svistyn
+            initial_place: new
+            places:
+                - new
+                - active
+            transitions:
+                publish:
+                    from: new
+                    to: active

@@ -1,0 +1,44 @@
+{% extends "System/page.html.twig" %}
+{% block page %}
+  <header class="header uk-section uk-section-xsmall uk-background-default uk-margin-small-bottom" id="header">
+    <div class="uk-container">
+      <div uk-grid>
+        <div class="uk-width-auto uk-flex-1">
+          <a href="{{ path('front') }}" class="uk-link-text">Social Network</a>
+        </div>
+        <nav>
+          <ul class="uk-nav uk-text-small" uk-grid>
+            {% if app.user %}
+              <li>
+                {#<a href="{{ path('user_canonical', { 'id' : app.user.id }) }}" class="user-profile dropdown-toggle">#}
+                <div class="us-prof-header">
+                  <img src="{{ app.user.account.avatar|avatarStyleDefault }}" width="30px" class="uk-margin-small-right">
+                  {{ app.user.fullname }}<span uk-icon="icon: triangle-down"></span>
+                </div>
+                {#</a>#}
+                <div uk-drop="mode: click; offset: 20; pos: bottom-right" class="uk-card uk-card-default kuk-width-small">
+                  <nav class="uk-padding-small">
+                    <ul class="uk-nav uk-list-divider uk-text-small">
+                      <li><a href="{{ path('user_canonical') }}"><span uk-icon="user" class="uk-margin-small-right"></span> {{ 'profile'|trans }}</a></li>
+                      <li><a href="{{ path('logout') }}"><span uk-icon="sign-out" class="uk-margin-small-right"></span> {{ 'log_out'|trans }}</a></li>
+                    </ul>
+                  </nav>
+                </div>
+              </li>
+            {% else %}
+              <li><a href="{{ path('login') }}">{{ 'login'|trans }}</a></li>
+              <li><a href="{{ path('register') }}">{{ 'sign_up'|trans }}</a></li>
+            {% endif %}
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+  <div class="main{% block main_attr %}{% endblock %}">{% block main %}{% endblock %}</div>
+  <footer class="">
+    <div class="uk-background-default">
+      <div class="copyright uk-text-center uk-text-small uk-padding-small">{{ include('System/copyright.html.twig') }}</div>
+    </div>
+  </footer>
+{% endblock %}
+

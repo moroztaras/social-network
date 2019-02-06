@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>{% block title %}{% endblock %}</title>
+        <meta name="description" content="{% block description %}{% endblock %}">
+        <meta name="keywords" content="{% block keywords %}{% endblock %}">
         {% block stylesheets %}{% endblock %}
     </head>
-    <body>
+    <body class="{% block body_attr %}{% endblock %} uk-background-muted">
         {% block body %}{% endblock %}
         {% block javascripts %}{% endblock %}
     </body>

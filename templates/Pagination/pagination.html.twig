@@ -1,0 +1,12 @@
+{% if pagination.next or pagination.previous %}
+  <ul class="uk-pagination">
+    {% if pagination.previous %}
+      <li><a href="{{ pagination.routePrevious }}">{{ 'Назад' }}</a></li>
+    {% endif %}
+    <li class="uk-active"><a href="#">{{ pagination.page }}</a></li>
+    {% if pagination.next %}
+      <li><a href="{{ pagination.routeNext }}">{{ 'Следующая' }}</a></li>
+    {% endif %}
+  </ul>
+
+{% endif %}

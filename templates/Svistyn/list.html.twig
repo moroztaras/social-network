@@ -1,0 +1,19 @@
+{% extends "Layout/layout-default.html.twig" %}
+{% block main %}
+  {% if user is not null %}
+    {{ render(controller('App\\Controller\\BlockController::userCover',{ 'id': user.id })) }}
+  {% endif %}
+  {% if app.user %}
+    <div class="uk-text-center uk-margin">
+      <a href="{{ path('svistyn_add') }}" class="uk-button uk-button-default" style="margin-right: 5px;"><i class="fa fa-plus-square-o"></i> Добавить</a>
+    </div>
+  {% endif %}
+  <div class="uk-section uk-section-xsmall">
+    <div class="uk-container uk-container-xsmall">
+      {% for post in posts %}
+        {{ include('Svistyn/ModeView/full.html.twig', { 'svistyn' : post }) }}
+      {% endfor %}
+      {{ include('Pagination/pagination.html.twig', {'pagination' : pagination}) }}
+    </div>
+  </div>
+{% endblock %}

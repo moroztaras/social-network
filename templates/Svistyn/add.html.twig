@@ -1,0 +1,38 @@
+{% extends "Layout/layout-default.html.twig" %}
+{% block main %}
+  <div class="uk-container uk-container-xsmall">
+    <div class="uk-section uk-padding uk-background-default kuk-shadow">
+      {{ form(form) }}
+    </div>
+  </div>
+  {#<div class="m-panel size-tb mg-c">#}
+    {#<div class="m-content">#}
+      {#<div class="x_panel">#}
+        {#<div class="x_content">#}
+          {#<p>Добавить новый пост</p>#}
+          {#{{ form_start(form) }}#}
+          {#{{ form_row(form.text) }}#}
+          {#{{ form_row(form.embed) }}#}
+          {#<div class="form-item form-item-image">#}
+            {#{% set imgUrl = path('file_upload') %}#}
+            {#{{ form_widget(form.image, { attr : { 'data-url' : imgUrl , 'id' : 'svistyn_form_image'}}) }}#}
+          {#</div>#}
+          {#{{ form_end(form) }}#}
+          {#<div class="svistyn svistyn-preview" id="svistyn_add_preview">#}
+
+            {#<div class="svistyn--fd svistyn-fd--text hide"></div>#}
+            {#{% set svistynPhotoHide = '' %}#}
+            {#{% if svistyn.photo is null %}#}
+              {#{% set svistynPhotoHide = ' hide' %}#}
+            {#{% endif %}#}
+            {#<div class="svistyn--fd svistyn-fd--photo{{ svistynPhotoHide }}">#}
+              {#{% if svistyn.photo is not null %}#}
+                {#<img src="{{ svistyn.photo|style_image('550w') }}">#}
+              {#{% endif %}#}
+            {#</div>#}
+          {#</div>#}
+        {#</div>#}
+      {#</div>#}
+    {#</div>#}
+  {#</div>#}
+{% endblock %}

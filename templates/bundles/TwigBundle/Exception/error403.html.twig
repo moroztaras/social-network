@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
+  <link rel="stylesheet" href="{{ asset('vendor/css/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('vendor/css/gentelella.css') }}">
+{% endblock %}
+{% block body %}
+  <div class="container body">
+    <div class="main_container">
+      <!-- page content -->
+      <div class="col-md-12">
+        <div class="col-middle">
+          <div class="text-center text-center">
+            <h1 class="error-number">{{ 'http_error.name'|trans({ '%status_code%': 403 }) }}</h1>
+            <p class="lead">
+              {{ 'http_error_403.description'|trans }}
+            </p>
+            <p>
+              {{ 'http_error_403.suggestion'|trans }}
+            </p>
+          </div>
+        </div>
+      </div>
+      <!-- /page content -->
+    </div>
+  </div>
+{% endblock %}
+

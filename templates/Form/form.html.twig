@@ -179,10 +179,10 @@
     {% endif %}
   {%- endif -%}
 
-  {%- if errors|length > 0 -%}
-    {% set attrClass = { 'class' : 'uk-form-danger ' ~ attr["class"]} %}
-    {% set attr = attr|merge(attrClass) %}
-  {% endif %}
+  {#{%- if errors|length > 0 -%}#}
+    {#{% set attrClass = { 'class' : 'uk-form-danger ' ~ attr["class"]} %}#}
+    {#{% set attr = attr|merge(attrClass) %}#}
+  {#{% endif %}#}
 
   {%- if type == 'file' -%}
     <div uk-form-custom="target: true">

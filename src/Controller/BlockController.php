@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Svistyn;
 use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,9 +15,11 @@ class BlockController extends Controller
         if (!$user) {
             return new Response();
         }
+        $count_svistyns = $this->getDoctrine()->getRepository(Svistyn::class)->counterSvistynsByUser($user);
 
         return $this->render('User/cover.html.twig', [
-      'user' => $user,
-    ]);
+          'user' => $user,
+          'count_svistyns' => $count_svistyns,
+        ]);
     }
 }

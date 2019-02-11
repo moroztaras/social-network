@@ -118,13 +118,22 @@ class SvistynRepository extends EntityRepository
             /** @var Svistyn $post */
             $post = $posts[$parent];
             switch ($state) {
-        case 1:
-          $post->setCountSvists($result['ttl']);
-          break;
-        case 2:
-          $post->setCountZvizds($result['ttl']);
-          break;
-      }
+                case 1:
+                    $post->setCountSvists($result['ttl']);
+                    break;
+                case 2:
+                    $post->setCountZvizds($result['ttl']);
+                    break;
+             }
         }
+    }
+
+    public function counterSvistynsByUser(User $user)
+    {
+        $query = $this->createQueryBuilder('sv');
+        $query->andWhere('sv.user = :user');
+        $query->setParameter('user', $user->getId());
+
+        return $query->getQuery()->getResult();
     }
 }

@@ -10,7 +10,7 @@ use App\Entity\User;
 use App\Entity\UserAccount;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
-class RegisterUserModel
+class RegistrationUserModel
 {
     /**
      * @Assert\NotBlank(message="user.fullname.not_blank")
@@ -150,13 +150,13 @@ class RegisterUserModel
     {
         $user = new User();
         $account = new UserAccount();
+        $roleRepo = $this->em->getRepository(Role::class);
+        $roleUser = $roleRepo->findOneByRole('ROLE_USER');
         $account->setFullname($this->fullname);
         $account->setBirthday($this->birthday);
         $account->setSex($this->sex);
         $account->setRegion($this->region);
         $user->setEmail($this->email);
-        $roleUser = $this->em->getRepository(Role::class)->findOneByRole('ROLE_USER');
-        $user->addRole($roleUser);
         $user->addRole($roleUser);
         $user->setAccount($account);
         $password = $this->passwordEncoder->encodePassword($user, $this->password);

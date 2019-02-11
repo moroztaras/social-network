@@ -8,15 +8,23 @@ use Doctrine\Common\Persistence\ObjectManager;
 use App\Entity\Role;
 use App\Entity\User;
 use App\Entity\UserAccount;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserFixtures extends Fixture implements DependentFixtureInterface
 {
-    private $container;
+    /**
+     * @var UserPasswordEncoderInterface
+     */
+    private $passwordEncoder;
 
-    public function __construct(ContainerInterface $container)
+    /**
+     * UserFixtures constructor.
+     *
+     * @param UserPasswordEncoderInterface $passwordEncoder
+     */
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
     {
-        $this->container = $container;
+        $this->passwordEncoder = $passwordEncoder;
     }
 
     public function load(ObjectManager $manager)
@@ -27,11 +35,9 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         if (!$role) {
             return;
         }
-        $encoder = $this->container->get('security.password_encoder');
 
         $user = new User();
-        $password = $encoder->encodePassword($user, 'moroztaras');
-        $user->setPassword($password);
+        $user->setPassword($this->passwordEncoder->encodePassword($user, 'moroztaras'));
         $user->addRole($role);
         $user->addRole($roleAdmin);
         $user->setEmail('moroztaras@i.ua');
@@ -48,8 +54,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $manager->flush();
 
         $user = new User();
-        $password = $encoder->encodePassword($user, 'user_pass');
-        $user->setPassword($password);
+        $user->setPassword($this->passwordEncoder->encodePassword($user, 'user_pass'));
         $user->addRole($role);
         $user->addRole($roleAdmin);
         $user->setEmail('user@mail.ua');

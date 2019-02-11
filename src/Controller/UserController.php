@@ -35,8 +35,8 @@ class UserController extends Controller
         $user = $this->getDoctrine()->getRepository(User::class)->find($id);
 
         return $this->render('User/dashboard.html.twig', [
-      'user' => $user,
-    ]);
+          'user' => $user,
+        ]);
     }
 
     /**
@@ -68,8 +68,8 @@ class UserController extends Controller
         }
 
         return $this->render('User/edit.html.twig', [
-      'form' => $form->createView(),
-      'user' => $user,
+          'form' => $form->createView(),
+          'user' => $user,
     ]);
     }
 

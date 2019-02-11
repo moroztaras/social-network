@@ -30,17 +30,17 @@ class SvistController extends Controller
         $pagination->setRoute('svistyn_post');
         $pagination->setPage($request->query->get('page'));
         $options = [
-      'page' => $pagination->getPage(),
-      'marking' => 'active',
-    ];
+          'page' => $pagination->getPage(),
+          'marking' => 'active',
+        ];
         $posts = $repo->advancedFinder($options, $user);
         $repo->advancedFinderPagination($options, $pagination, $user);
 
         return $this->render('Svistyn/list.html.twig', [
-      'posts' => $posts,
-      'user' => $user,
-      'pagination' => $pagination,
-    ]);
+          'posts' => $posts,
+          'user' => $user,
+          'pagination' => $pagination,
+        ]);
     }
 
     /**
@@ -59,16 +59,16 @@ class SvistController extends Controller
         $pagination->setRoute('svistyn_post');
         $pagination->setPage($request->query->get('page'));
         $options = [
-      'page' => $pagination->getPage(),
-      'marking' => 'active',
-    ];
+            'page' => $pagination->getPage(),
+            'marking' => 'active',
+        ];
         $posts = $repo->advancedFinder($options, $user);
         $repo->advancedFinderPagination($options, $pagination, $user);
 
         return $this->render('Svistyn/list.html.twig', [
-      'posts' => $posts,
-      'pagination' => $pagination,
-    ]);
+            'posts' => $posts,
+            'pagination' => $pagination,
+        ]);
     }
 
     public function view()
@@ -97,9 +97,9 @@ class SvistController extends Controller
         }
 
         return $this->render('Svistyn/add.html.twig', [
-      'form' => $form->createView(),
-      'svistyn' => $svistyn,
-    ]);
+          'form' => $form->createView(),
+          'svistyn' => $svistyn,
+        ]);
     }
 
     /**
@@ -135,7 +135,7 @@ class SvistController extends Controller
         }
 
         return $this->render('Svistyn/delete.html.twig', [
-      'form' => $form->createView(),
+          'form' => $form->createView(),
     ]);
     }
 

@@ -10,7 +10,11 @@
         <ul class="uk-list uk-padding uk-padding-small">
           <li>{{ 'follows'|trans }}: <span class="uk-link">0</span></li>
           <li>{{ 'followers'|trans }}: <span class="uk-link">0</span></li>
-          <li>{{ 'posts'|trans }}: <span class="uk-link">0</span></li>
+          <li>{{ 'posts'|trans }}:
+              <span class="uk-link">
+                  {{ render(controller('App\\Controller\\BlockController::userCountSvistyn',{ 'id': user.id })) }}
+              </span>
+          </li>
         </ul>
       </div>
     </div>

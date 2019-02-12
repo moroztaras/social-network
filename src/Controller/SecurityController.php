@@ -123,7 +123,7 @@ class SecurityController extends Controller
                 $status = $recoverPassword->send($user);
             }
 
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('app_login');
         }
 
         return $this->render('User/Security/recover.html.twig', [
@@ -132,7 +132,7 @@ class SecurityController extends Controller
     }
 
     /**
-     * @Route("/logout", name="logout")
+     * @Route("/logout", name="app_logout")
      */
     public function logout()
     {
@@ -161,7 +161,7 @@ class SecurityController extends Controller
             $em->persist($user);
             $em->flush();
 
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('app_login');
         }
 
         return $this->render('User/Security/recover_password.html.twig', [

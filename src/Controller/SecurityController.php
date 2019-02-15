@@ -89,8 +89,7 @@ class SecurityController extends Controller
         $registrationForm = $this->createForm(RegistrationUserForm::class, $this->registrationModel);
         $registrationForm->handleRequest($request);
         if ($registrationForm->isSubmitted() && $registrationForm->isValid()) {
-            $user = $this->registrationModel->getUserHandler();
-            $this->userService->save($user);
+            $this->userService->save($this->registrationModel);
 
             return $this->redirectToRoute('app_login');
         }
@@ -167,13 +166,7 @@ class SecurityController extends Controller
         $formChangePassword = $this->createForm(ChangePasswordForm::class, $changePasswordModel);
         $formChangePassword->handleRequest($request);
         if ($formChangePassword->isSubmitted() && $formChangePassword->isValid()) {
-            $encoder = $this->get('security.password_encoder');
-            $password = $encoder->encodePassword($user, $changePasswordModel->password);
-            $user->setPassword($password);
-            $userAccount->setTokenRecover(null);
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
-            $em->flush();
+            $this->userService->changePasswordModel($user, $userAccount, $changePasswordModel);
 
             return $this->redirectToRoute('app_login');
         }

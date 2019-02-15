@@ -2,12 +2,10 @@
 
 namespace App\Components\User\Models;
 
-use App\Entity\Role;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Entity\User;
-use App\Entity\UserAccount;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class RegistrationUserModel
@@ -145,25 +143,6 @@ class RegistrationUserModel
     public function setFullname($fullname): void
     {
         $this->fullname = $fullname;
-    }
-
-    public function getUserHandler()
-    {
-        $user = new User();
-        $account = new UserAccount();
-        $roleRepo = $this->em->getRepository(Role::class);
-        $roleUser = $roleRepo->findOneByRole('ROLE_USER');
-        $account->setFullname($this->fullname);
-        $account->setBirthday($this->birthday);
-        $account->setSex($this->sex);
-        $account->setRegion($this->region);
-        $user->setEmail($this->email);
-        $user->addRole($roleUser);
-        $user->setAccount($account);
-        $password = $this->passwordEncoder->encodePassword($user, $this->plainPassword);
-        $user->setPassword($password);
-
-        return $user;
     }
 
     /**

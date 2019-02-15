@@ -24,10 +24,11 @@ class RegistrationUserModel
     public $email;
 
     /**
-     * @Assert\NotBlank(message="user.password.not_blank")
+     * @Assert\NotBlank(message="user.plainPassword.not_blank")
      * @Assert\Length(min="8", max="50")
      */
-    public $password;
+    public $plainPassword;
+
     /**
      * @Assert\NotBlank(message="user.birthday.not_blank")
      */
@@ -69,17 +70,17 @@ class RegistrationUserModel
     /**
      * @return mixed
      */
-    public function getPassword()
+    public function getPlainPassword()
     {
-        return $this->password;
+        return $this->plainPassword;
     }
 
     /**
-     * @param mixed $password
+     * @param mixed $plainPassword
      */
-    public function setPassword($password)
+    public function setPlainPassword($plainPassword)
     {
-        $this->password = $password;
+        $this->plainPassword = $plainPassword;
     }
 
     /**
@@ -159,7 +160,7 @@ class RegistrationUserModel
         $user->setEmail($this->email);
         $user->addRole($roleUser);
         $user->setAccount($account);
-        $password = $this->passwordEncoder->encodePassword($user, $this->password);
+        $password = $this->passwordEncoder->encodePassword($user, $this->plainPassword);
         $user->setPassword($password);
 
         return $user;

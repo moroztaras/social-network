@@ -45,6 +45,11 @@ class User implements \Serializable, UserInterface
      */
     private $password;
 
+    /**
+     * @var string
+     */
+    protected $plainPassword;
+
     //  /**
     //   * @ORM\Column(type="string")
     //   */
@@ -190,6 +195,26 @@ class User implements \Serializable, UserInterface
     public function setPassword($password)
     {
         $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPlainPassword()
+    {
+        return (string) $this->plainPassword;
+    }
+
+    /**
+     * @param string $plainPassword
+     *
+     * @return $this
+     */
+    public function setPlainPassword($plainPassword)
+    {
+        $this->plainPassword = $plainPassword;
 
         return $this;
     }

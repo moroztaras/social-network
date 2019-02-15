@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Components\User\Models\RecoverUserModel;
 use App\Components\User\Models\RegistrationUserModel;
 use App\Components\User\Security\RecoverPassword;
+use App\Services\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -21,9 +22,15 @@ use App\Components\User\Forms\ChangePasswordForm;
 class SecurityController extends Controller
 {
     /**
+     * @var UserService
+     */
+    private $userService;
+
+    /**
      * @var AuthenticationUtils
      */
     private $helper;
+
     /**
      * @var RegistrationUserModel
      */
@@ -34,11 +41,20 @@ class SecurityController extends Controller
      */
     private $authorizationChecker;
 
-    public function __construct(AuthenticationUtils $helper, RegistrationUserModel $registrationModel, AuthorizationCheckerInterface $authorizationChecker)
+    /**
+     * SecurityController constructor.
+     *
+     * @param AuthenticationUtils           $helper
+     * @param RegistrationUserModel         $registrationModel
+     * @param AuthorizationCheckerInterface $authorizationChecker
+     * @param UserService                   $userService
+     */
+    public function __construct(AuthenticationUtils $helper, RegistrationUserModel $registrationModel, AuthorizationCheckerInterface $authorizationChecker, UserService $userService)
     {
         $this->helper = $helper;
         $this->registrationModel = $registrationModel;
         $this->authorizationChecker = $authorizationChecker;
+        $this->userService = $userService;
     }
 
     /**
@@ -54,9 +70,9 @@ class SecurityController extends Controller
         $lastUsername = $this->helper->getLastUsername();
 
         return $this->render('User/Security/login.html.twig', [
-      'last_username' => $lastUsername,
-      'error' => $error,
-    ]);
+          'last_username' => $lastUsername,
+          'error' => $error,
+        ]);
     }
 
     /**
@@ -74,9 +90,7 @@ class SecurityController extends Controller
         $registrationForm->handleRequest($request);
         if ($registrationForm->isSubmitted() && $registrationForm->isValid()) {
             $user = $this->registrationModel->getUserHandler();
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
-            $em->flush();
+            $this->userService->save($user);
 
             return $this->redirectToRoute('app_login');
         }
@@ -127,8 +141,8 @@ class SecurityController extends Controller
         }
 
         return $this->render('User/Security/recover.html.twig', [
-      'recover_form' => $recoverForm->createView(),
-    ]);
+          'recover_form' => $recoverForm->createView(),
+        ]);
     }
 
     /**
@@ -165,7 +179,7 @@ class SecurityController extends Controller
         }
 
         return $this->render('User/Security/recover_password.html.twig', [
-      'recover_form' => $formChangePassword->createView(),
-    ]);
+          'recover_form' => $formChangePassword->createView(),
+        ]);
     }
 }

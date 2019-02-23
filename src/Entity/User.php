@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
@@ -48,7 +47,7 @@ class User implements \Serializable, UserInterface
     /**
      * @var string
      */
-    protected $plainPassword;
+    private $plainPassword;
 
     //  /**
     //   * @ORM\Column(type="string")
@@ -71,11 +70,9 @@ class User implements \Serializable, UserInterface
     private $status;
 
     /**
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     * @ORM\ManyToMany(targetEntity="Role", inversedBy="users", cascade={"persist", "remove"})
-     * @ORM\JoinTable(name="users_roles")
+     * @ORM\Column(type="json")
      */
-    private $roles;
+    private $roles = [];
 
     /**
      * @ORM\OneToOne(targetEntity="UserAccount", mappedBy="user", cascade={"persist", "remove"})
@@ -84,7 +81,7 @@ class User implements \Serializable, UserInterface
 
     public function __construct()
     {
-        $this->roles = new ArrayCollection();
+        $this->roles = ['ROLE_USER'];
 //        $this->salt = md5( uniqid(null, TRUE) );
         $this->username = md5(uniqid(null, true));
         $this->created = new \DateTime();
@@ -104,18 +101,6 @@ class User implements \Serializable, UserInterface
     public function unserialize($serialized)
     {
         list($this->id, $this->username, $this->password) = unserialize($serialized, ['allowed_classes' => false]);
-    }
-
-    public function getRoles()
-    {
-        // return $this->roles->toArray();
-        $roles = [];
-        /** @var Role $role */
-        foreach ($this->roles as $role) {
-            $roles[] = $role->getRole();
-        }
-
-        return $roles;
     }
 
     public function getPassword()
@@ -306,27 +291,22 @@ class User implements \Serializable, UserInterface
     }
 
     /**
-     * Add role.
-     *
-     * @param \App\Entity\Role $role
-     *
-     * @return User
+     * @see UserInterface
      */
-    public function addRole(\App\Entity\Role $role)
+    public function getRoles(): array
     {
-        $this->roles[] = $role;
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
 
-        return $this;
+        return array_unique($roles);
     }
 
-    /**
-     * Remove role.
-     *
-     * @param \App\Entity\Role $role
-     */
-    public function removeRole(\App\Entity\Role $role)
+    public function setRoles(array $roles): self
     {
-        $this->roles->removeElement($role);
+        $this->roles = $roles;
+
+        return $this;
     }
 
     /**

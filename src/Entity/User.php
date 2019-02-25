@@ -75,10 +75,45 @@ class User implements \Serializable, UserInterface
     private $roles = [];
 
     /**
-     * @ORM\OneToOne(targetEntity="UserAccount", mappedBy="user", cascade={"persist", "remove"})
+     * @ORM\Column(type="string")
      */
-    private $account;
+    private $fullname;
 
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $birthday;
+
+    /**
+     * @ORM\Column(type="string", length=10)
+     */
+    private $gender;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $region;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $tokenRecover;
+
+    /**
+     * @ORM\OneToOne(targetEntity="File", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(name="avatar_fid", referencedColumnName="id")
+     */
+    private $avatar;
+
+    /**
+     * @ORM\OneToOne(targetEntity="File", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(name="cover_fid", referencedColumnName="id")
+     */
+    private $cover;
+
+    /**
+     * User constructor.
+     */
     public function __construct()
     {
         $this->roles = ['ROLE_USER'];
@@ -310,32 +345,146 @@ class User implements \Serializable, UserInterface
     }
 
     /**
-     * Set account.
+     * Set birthday.
      *
-     * @param UserAccount $account
+     * @param \DateTime $birthday
      *
      * @return User
      */
-    public function setAccount(UserAccount $account = null)
+    public function setBirthday($birthday)
     {
-        $this->account = $account;
-        $account->setUser($this);
+        $this->birthday = $birthday;
 
         return $this;
     }
 
     /**
-     * Get account.
+     * Get birthday.
      *
-     * @return UserAccount
+     * @return \DateTime
      */
-    public function getAccount()
+    public function getBirthday()
     {
-        return $this->account;
+        return $this->birthday;
     }
 
+    /**
+     * Set region.
+     *
+     * @param string $region
+     *
+     * @return User
+     */
+    public function setRegion($region)
+    {
+        $this->region = $region;
+
+        return $this;
+    }
+
+    /**
+     * Get region.
+     *
+     * @return string
+     */
+    public function getRegion()
+    {
+        return $this->region;
+    }
+
+    /**
+     * Set gender.
+     *
+     * @param string $gender
+     *
+     * @return User
+     */
+    public function setGender($gender)
+    {
+        $this->gender = $gender;
+
+        return $this;
+    }
+
+    /**
+     * Get sex.
+     *
+     * @return string
+     */
+    public function getGender()
+    {
+        return $this->gender;
+    }
+
+    /**
+     * Set tokenRecover.
+     *
+     * @param string $tokenRecover
+     *
+     * @return User
+     */
+    public function setTokenRecover($tokenRecover)
+    {
+        $this->tokenRecover = $tokenRecover;
+
+        return $this;
+    }
+
+    /**
+     * Get tokenRecover.
+     *
+     * @return string
+     */
+    public function getTokenRecover()
+    {
+        return $this->tokenRecover;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAvatar()
+    {
+        return $this->avatar;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getFullname()
     {
-        return $this->getAccount()->getFullname();
+        return $this->fullname;
+    }
+
+    /**
+     * @param mixed $fullname
+     */
+    public function setFullname($fullname): void
+    {
+        $this->fullname = $fullname;
+    }
+
+    /**
+     * @param mixed $avatar
+     */
+    public function setAvatar($avatar): void
+    {
+        $this->avatar = $avatar;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCover()
+    {
+        return $this->cover;
+    }
+
+    /**
+     * @param mixed $cover
+     */
+    public function setCover($cover): void
+    {
+        $this->cover = $cover;
     }
 }

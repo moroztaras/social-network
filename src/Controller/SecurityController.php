@@ -10,9 +10,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use App\Entity\User;
-use App\Entity\UserAccount;
 use App\Components\User\Forms\RecoverUserForm;
-use App\Components\User\Forms\RegistrationUserForm;
+use App\Form\User\RegistrationForm;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Routing\Annotation\Route;
@@ -86,10 +85,11 @@ class SecurityController extends Controller
         if ($this->authorizationChecker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirectToRoute('user_default');
         }
-        $registrationForm = $this->createForm(RegistrationUserForm::class, $this->registrationModel);
+        $user = new User();
+        $registrationForm = $this->createForm(RegistrationForm::class, $user);
         $registrationForm->handleRequest($request);
         if ($registrationForm->isSubmitted() && $registrationForm->isValid()) {
-            $this->userService->save($this->registrationModel);
+            $this->userService->save($user);
 
             return $this->redirectToRoute('app_login');
         }

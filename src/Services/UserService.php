@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Components\User\Models\ChangePasswordModel;
-use App\Components\User\Models\RegistrationUserModel;
 use App\Entity\User;
 use App\Entity\UserAccount;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -33,17 +32,9 @@ class UserService
         $this->passwordEncoder = $passwordEncoder;
     }
 
-    public function save(RegistrationUserModel $registrationModel)
+    public function save(User $user)
     {
-        $user = new User();
-        $account = new UserAccount();
-        $account->setFullname($registrationModel->getFullname());
-        $account->setBirthday($registrationModel->getBirthday());
-        $account->setSex($registrationModel->getSex());
-        $account->setRegion($registrationModel->getRegion());
-        $user->setEmail($registrationModel->getEmail());
-        $user->setAccount($account);
-        $password = $this->passwordEncoder->encodePassword($user, $registrationModel->getPlainPassword());
+        $password = $this->passwordEncoder->encodePassword($user, $user->getPlainPassword());
         $user->setPassword($password);
 
         $this->doctrine->getManager()->persist($user);

@@ -5,7 +5,6 @@ namespace App\DataFixtures\ORM;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use App\Entity\User;
-use App\Entity\UserAccount;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserFixtures extends Fixture
@@ -27,37 +26,28 @@ class UserFixtures extends Fixture
 
     public function load(ObjectManager $manager)
     {
-        $user = new User();
-        $user
-          ->setPassword($this->passwordEncoder->encodePassword($user, 'moroztaras'))
+        $userAdmin = new User();
+        $userAdmin
+          ->setPassword($this->passwordEncoder->encodePassword($userAdmin, 'moroztaras'))
           ->setRoles(['ROLE_SUPER_ADMIN'])
-          ->setEmail('moroztaras@i.ua');
+          ->setEmail('moroztaras@i.ua')
+          ->setGender('m')
+          ->setBirthday(new \DateTime())
+          ->setRegion('UA')
+          ->setFullname('Moroz Taras');
 
-        $userAccount = new UserAccount();
-        $userAccount->setFullname('Moroz Taras');
-        $userAccount->setBirthday(new \DateTime());
-        $userAccount->setSex('m');
-        $manager->persist($user);
-        $manager->flush();
-        $userAccount->setUser($user);
-        $manager->persist($userAccount);
-
-        $manager->flush();
+        $manager->persist($userAdmin);
 
         $user = new User();
         $user
           ->setPassword($this->passwordEncoder->encodePassword($user, 'user_pass'))
           ->setRoles(['ROLE_USER'])
-          ->setEmail('user@mail.ua');
-
-        $userAccount = new UserAccount();
-        $userAccount->setFullname('User FullName');
-        $userAccount->setBirthday(new \DateTime());
-        $userAccount->setSex('m');
+          ->setEmail('user@mail.ua')
+          ->setBirthday(new \DateTime())
+          ->setGender('m')
+          ->setRegion('UA')
+          ->setFullname('FullName');
         $manager->persist($user);
-        $manager->flush();
-        $userAccount->setUser($user);
-        $manager->persist($userAccount);
 
         $manager->flush();
     }

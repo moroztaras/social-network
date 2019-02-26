@@ -1,6 +1,6 @@
 {% set cover = '/images/user-default-bg.jpg' %}
-{% if user.account.cover is not null %}
-  {% set cover = user.account.cover|style_image('1280_300_crop') %}
+{% if user.cover is not null %}
+  {% set cover = user.cover|style_image('1280_300_crop') %}
 {% endif %}
 <div class="uk-container user-cover uk-background-cover" data-src="{{ cover }}" uk-img>
   <div class="uk-section uk-section-xsmall">
@@ -11,7 +11,7 @@
         </ul>
       </div>
       <div class="uk-width-medium">
-        <div class="user-cover-avatar"><img src="{{ user.account.avatar|avatarStyleDefault }}" width="200px" class="uk-background uk-background-default"></div>
+        <div class="user-cover-avatar"><img src="{{ user.avatar|avatarStyleDefault }}" width="200px" class="uk-background uk-background-default"></div>
         <div class="uk-background-muted uk-margin-small-top uk-padding-small">
           <h4 class="uk-margin-remove-bottom">{{ user.fullname }}</h4>
         </div>

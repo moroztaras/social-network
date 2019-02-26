@@ -2,9 +2,9 @@
 
 namespace App\Controller;
 
+use App\Form\User\Model\ProfileModel;
+use App\Form\User\ProfileForm;
 use App\Components\User\Forms\AccountSecurityForm;
-use App\Components\User\Forms\ProfileAccountForm;
-use App\Components\User\Models\ProfileAccountModel;
 use App\Components\User\Models\ProfileSecurityModel;
 use App\Components\User\UserSecurityManager;
 use App\Entity\User;
@@ -12,11 +12,27 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserController extends Controller
 {
     /**
-     * @Route("/user", name="user_default")
+     * @var
+     */
+    private $passwordEncoder;
+
+    /**
+     * UserController constructor.
+     *
+     * @param UserPasswordEncoderInterface $passwordEncoder
+     */
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $this->passwordEncoder = $passwordEncoder;
+    }
+
+    /**
+     * @Route("/user", methods={"GET"}, name="user_default")
      * @Security("is_granted('ROLE_USER')")
      */
     public function user()
@@ -27,7 +43,7 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/user/{id}", name="user_canonical", requirements={"id"="\d+"}, defaults={"id" = null})
+     * @Route("/user/{id}", methods={"GET"}, name="user_canonical", requirements={"id"="\d+"}, defaults={"id" = null})
      * @Security("is_granted('ROLE_USER')")
      */
     public function dashboard($id)
@@ -40,29 +56,29 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/user/edit", name="user_edit")
+     * @Route("/user/edit", methods={"GET", "POST"}, name="user_edit")
      * @Security("is_granted('ROLE_USER')")
      */
-    public function edit(ProfileAccountModel $accountModel, Request $request)
+    public function edit(ProfileModel $profileModel, Request $request)
     {
         $user = $this->getUser();
 
-        return $this->editCanonical($user->getId(), $accountModel, $request);
+        return $this->editCanonical($user->getId(), $profileModel, $request);
     }
 
     /**
-     * @Route("/user/{id}/edit", name="user_edit_canonical", requirements={"id"="\d+"}, defaults={"id" = null})
+     * @Route("/user/{id}/edit", methods={"GET", "POST"}, name="user_edit_canonical", requirements={"id"="\d+"}, defaults={"id" = null})
      * @Security("is_granted('ROLE_USER')")
      */
-    public function editCanonical($id, ProfileAccountModel $accountModel, Request $request)
+    public function editCanonical($id, ProfileModel $profileModel, Request $request)
     {
         $user = $this->getDoctrine()->getRepository(User::class)->find($id);
         $this->denyAccessUnlessGranted('edit', $user);
-        $accountModel->setUser($user->getAccount());
-        $form = $this->createForm(ProfileAccountForm::class, $accountModel);
+        $profileModel->setUser($user);
+        $form = $this->createForm(ProfileForm::class, $profileModel);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $accountModel->save();
+            $profileModel->save($user);
 
             return $this->redirectToRoute('user_canonical', ['id' => $user->getId()]);
         }
@@ -70,22 +86,21 @@ class UserController extends Controller
         return $this->render('User/edit.html.twig', [
           'form' => $form->createView(),
           'user' => $user,
-    ]);
+        ]);
     }
 
     /**
      * @Route("/user/{id}/security", name="user_security_canonical", requirements={"id"="\d+"}, defaults={"id" = null})
      * @Security("is_granted('ROLE_USER')")
      */
-    public function securityCanonical($id, ProfileSecurityModel $profileSecurityModel, UserSecurityManager $userSecurityManager, Request $request)
+    public function securityCanonical($id, ProfileSecurityModel $profileSecurityModel, UserSecurityManager $userSecurityManager, Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
         $user = $this->getDoctrine()->getRepository(User::class)->find($id);
         $profileSecurityModel->setUser($user);
         $form = $this->createForm(AccountSecurityForm::class, $profileSecurityModel);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $encoder = $this->get('security.password_encoder');
-            if ($encoder->isPasswordValid($user, $profileSecurityModel->getPassword())) {
+            if ($passwordEncoder->isPasswordValid($user, $profileSecurityModel->getPassword())) {
                 $userSecurityManager->getChange($user);
 
                 return $this->redirectToRoute('user_canonical', ['id' => $user->getId()]);
@@ -95,8 +110,8 @@ class UserController extends Controller
         }
 
         return $this->render('User/security.html.twig', [
-      'form' => $form->createView(),
-      'user' => $user,
-    ]);
+          'form' => $form->createView(),
+          'user' => $user,
+        ]);
     }
 }

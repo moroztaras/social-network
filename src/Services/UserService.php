@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Components\User\Models\ChangePasswordModel;
 use App\Entity\User;
-use App\Entity\UserAccount;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -43,11 +42,11 @@ class UserService
         return $user;
     }
 
-    public function changePasswordModel(User $user, UserAccount $userAccount, ChangePasswordModel $changePasswordModel)
+    public function changePasswordModel(User $user, ChangePasswordModel $changePasswordModel)
     {
         $password = $this->passwordEncoder->encodePassword($user, $changePasswordModel->plainPassword);
         $user->setPassword($password);
-        $userAccount->setTokenRecover(null);
+        $user->setTokenRecover(null);
         $this->doctrine->getManager()->persist($user);
         $this->doctrine->getManager()->flush();
 

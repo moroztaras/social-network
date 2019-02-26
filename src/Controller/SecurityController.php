@@ -106,7 +106,7 @@ class SecurityController extends Controller
      * @param AuthorizationCheckerInterface $authorizationChecker
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     * @Route("/recover/{token}", name="recover", defaults={"token": "null"})
+     * @Route("/recover/{token}", methods={"GET","POST"}, name="recover", defaults={"token": "null"})
      */
     public function recover($token, Request $request, RecoverPassword $recoverPassword, AuthorizationCheckerInterface $authorizationChecker)
     {
@@ -114,11 +114,11 @@ class SecurityController extends Controller
             return $this->redirectToRoute('user_default');
         }
         if ($token) {
-            /** @var UserAccount $userRecover */
-            $userAccountRecover = $this->getDoctrine()->getRepository('App:UserAccount')->findOneByTokenRecover($token);
+            /** @var User $userRecover */
+            $userRecover = $this->getDoctrine()->getRepository('App:User')->findOneByTokenRecover($token);
 
-            if ($userAccountRecover) {
-                $userPasswordToken = new UsernamePasswordToken($userAccountRecover->getUser(), null, 'main', $userAccountRecover->getUser()->getRoles());
+            if ($userRecover) {
+                $userPasswordToken = new UsernamePasswordToken($userRecover, null, 'main', $userRecover->getRoles());
                 $this->get('security.token_storage')->setToken($userPasswordToken);
 
                 return $this->redirectToRoute('user_password_recover');
@@ -158,15 +158,14 @@ class SecurityController extends Controller
     {
         /** @var User $user */
         $user = $this->getUser();
-        $userAccount = $user->getAccount();
-        if (!$userAccount->getTokenRecover()) {
+        if (!$user->getTokenRecover()) {
             return $this->redirectToRoute('recover');
         }
         $changePasswordModel = new ChangePasswordModel();
         $formChangePassword = $this->createForm(ChangePasswordForm::class, $changePasswordModel);
         $formChangePassword->handleRequest($request);
         if ($formChangePassword->isSubmitted() && $formChangePassword->isValid()) {
-            $this->userService->changePasswordModel($user, $userAccount, $changePasswordModel);
+            $this->userService->changePasswordModel($user, $changePasswordModel);
 
             return $this->redirectToRoute('app_login');
         }

@@ -23,6 +23,7 @@ class UserController extends Controller
 
     /**
      * UserController constructor.
+     *
      * @param UserPasswordEncoderInterface $passwordEncoder
      */
     public function __construct(UserPasswordEncoderInterface $passwordEncoder)
@@ -85,7 +86,7 @@ class UserController extends Controller
         return $this->render('User/edit.html.twig', [
           'form' => $form->createView(),
           'user' => $user,
-    ]);
+        ]);
     }
 
     /**
@@ -109,8 +110,8 @@ class UserController extends Controller
         }
 
         return $this->render('User/security.html.twig', [
-      'form' => $form->createView(),
-      'user' => $user,
-    ]);
+          'form' => $form->createView(),
+          'user' => $user,
+        ]);
     }
 }

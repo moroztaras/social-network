@@ -12,9 +12,24 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserController extends Controller
 {
+    /**
+     * @var
+     */
+    private $passwordEncoder;
+
+    /**
+     * UserController constructor.
+     * @param UserPasswordEncoderInterface $passwordEncoder
+     */
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $this->passwordEncoder = $passwordEncoder;
+    }
+
     /**
      * @Route("/user", methods={"GET"}, name="user_default")
      * @Security("is_granted('ROLE_USER')")
@@ -77,15 +92,14 @@ class UserController extends Controller
      * @Route("/user/{id}/security", name="user_security_canonical", requirements={"id"="\d+"}, defaults={"id" = null})
      * @Security("is_granted('ROLE_USER')")
      */
-    public function securityCanonical($id, ProfileSecurityModel $profileSecurityModel, UserSecurityManager $userSecurityManager, Request $request)
+    public function securityCanonical($id, ProfileSecurityModel $profileSecurityModel, UserSecurityManager $userSecurityManager, Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
         $user = $this->getDoctrine()->getRepository(User::class)->find($id);
         $profileSecurityModel->setUser($user);
         $form = $this->createForm(AccountSecurityForm::class, $profileSecurityModel);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $encoder = $this->get('security.password_encoder');
-            if ($encoder->isPasswordValid($user, $profileSecurityModel->getPassword())) {
+            if ($passwordEncoder->isPasswordValid($user, $profileSecurityModel->getPassword())) {
                 $userSecurityManager->getChange($user);
 
                 return $this->redirectToRoute('user_canonical', ['id' => $user->getId()]);

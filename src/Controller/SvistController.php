@@ -79,7 +79,7 @@ class SvistController extends Controller
      * @param Request      $request
      * @param SvistynModel $svistynModel
      * @Security("is_granted('ROLE_USER')")
-     * @Route("/post/add", name="svistyn_add")
+     * @Route("/post/add", methods={"GET", "POST"}, name="svistyn_add")
      *
      * @return Response
      */

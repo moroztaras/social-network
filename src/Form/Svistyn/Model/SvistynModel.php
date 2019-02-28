@@ -3,6 +3,7 @@
 namespace App\Form\Svistyn\Model;
 
 use App\Components\User\CurrentUser;
+use App\Components\File\FileAssistant;
 use App\Entity\File;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -18,7 +19,17 @@ class SvistynModel
 
     public $embed;
 
-    public $image;
+    /**
+     * @Assert\Image(
+     *  mimeTypes = {"image/jpeg", "image/png", "image/jpg"},
+     *  maxSize = "20Mi",
+     *  minWidth = "12",
+     *  minHeight = "300",
+     *  maxSizeMessage = "Image file size exceeds 20MB.",
+     *  mimeTypesMessage = "Invalid file format. Allowed file formats: JPG, JPEG, PNG."
+     * )
+     */
+    public $photo;
     /**
      * @var Svistyn
      */
@@ -35,20 +46,23 @@ class SvistynModel
     private $currentUser;
 
     /**
+     * @var FileAssistant
+     */
+    private $fileAssistant;
+
+    /**
      * SvistynModel constructor.
      *
      * @param VideoEmbedManager      $embedManager
      * @param EntityManagerInterface $entityManager
      * @param CurrentUser            $currentUser
      */
-    public function __construct(
-    VideoEmbedManager $embedManager,
-    EntityManagerInterface $entityManager,
-    CurrentUser $currentUser)
+    public function __construct(VideoEmbedManager $embedManager, EntityManagerInterface $entityManager, CurrentUser $currentUser, FileAssistant $fileAssistant)
     {
         $this->embedManager = $embedManager;
         $this->em = $entityManager;
         $this->currentUser = $currentUser;
+        $this->fileAssistant = $fileAssistant;
     }
 
     /**
@@ -151,6 +165,15 @@ class SvistynModel
         }
         if (!empty($this->embed)) {
             $this->svistyn->setEmbedVideo($this->embed);
+        }
+        if (!empty($this->photo)) {
+            $file = $this->fileAssistant->prepareUploadFile($this->photo, 'svistyn/'.$this->svistyn->getId());
+            $file->setStatus(1);
+            $svistynPhoto = $this->svistyn->getPhoto();
+            if ($svistynPhoto) {
+                $this->em->remove($svistynPhoto);
+            }
+            $this->svistyn->setPhoto($file);
         }
         $user = $this->currentUser->getUser();
         $this->svistyn->setUser($user);

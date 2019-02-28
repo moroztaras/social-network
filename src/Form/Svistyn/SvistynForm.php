@@ -31,7 +31,7 @@ class SvistynForm extends AbstractType
               'label' => 'embed_video',
               'required' => false,
             ]);
-            $builder->add('image', FileType::class, [
+            $builder->add('photo', FileType::class, [
               'label' => 'image',
               'required' => false,
             ]);

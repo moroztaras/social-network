@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Components\Svistyn\Forms\SvistynForm;
-use App\Components\Svistyn\Models\SvistynModel;
+use App\Form\Svistyn\SvistynForm;
+use App\Form\Svistyn\Model\SvistynModel;
 use App\Components\Svistyn\SvistynApi;
 use App\Components\Utils\Form\EntityDeleteForm;
 use App\Components\Utils\Pagination;

@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: pavel
- * Date: 5/14/2018
- * Time: 3:00 PM.
- */
 
 namespace App\Components\VideoEmbed;
 

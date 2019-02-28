@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Components\Svistyn\Forms\SvistynForm;
-use App\Components\Svistyn\Models\SvistynModel;
+use App\Form\Svistyn\SvistynForm;
+use App\Form\Svistyn\Model\SvistynModel;
 use App\Components\Svistyn\SvistynApi;
 use App\Components\Utils\Form\EntityDeleteForm;
 use App\Components\Utils\Pagination;
@@ -79,7 +79,7 @@ class SvistController extends Controller
      * @param Request      $request
      * @param SvistynModel $svistynModel
      * @Security("is_granted('ROLE_USER')")
-     * @Route("/post/add", name="svistyn_add")
+     * @Route("/post/add", methods={"GET", "POST"}, name="svistyn_add")
      *
      * @return Response
      */

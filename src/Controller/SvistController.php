@@ -103,10 +103,31 @@ class SvistController extends Controller
     }
 
     /**
-     * @Route("/post/edit/{id}", name="svistyn_edit", requirements={"id"="\d+"}, defaults={"id" = null})
+     * @Route("/post/{id}/edit", name="svistyn_edit", requirements={"id"="\d+"}, defaults={"id" = null})
+     * @Security("is_granted('ROLE_USER')")
      */
-    public function edit()
+    public function edit($id, Request $request, SvistynModel $svistynModel)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $svistyn = $this->svistynRepo()->find($id);
+        if ($user != $svistyn->getUser()) {
+            return $this->redirectToRoute('front');
+        }
+        $svistynModel->setSvistynEntity($svistyn);
+        $form = $this->createForm(SvistynForm::class, $svistynModel);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $svistynModel->save();
+
+            return $this->redirectToRoute('svistyn_post');
+        }
+
+        return $this->render('Svistyn/edit.html.twig', [
+          'form' => $form->createView(),
+          'svistyn' => $svistyn,
+        ]);
     }
 
     /**

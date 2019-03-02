@@ -3,8 +3,8 @@
   <div class="m-panel size-tb mg-c">
     <div class="m-content">
       <div class="x_panel">
-        <div class="x_content">
-          <p class="bd-highlight">Вы уверены что хотите удалить этот пост?</p>
+        <div class="x_content center">
+          <p class="bd-highlight">{{ 'delete_svistyn_question'|trans }}?</p>
           {{ include('Form/delete.html.twig', { 'form' : form, 'cancel_url' : path('svistyn_post') }) }}
         </div>
       </div>

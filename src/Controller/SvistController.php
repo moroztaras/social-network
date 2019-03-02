@@ -44,7 +44,7 @@ class SvistController extends Controller
     }
 
     /**
-     * @Route("user/{id}/post", name="svistyn_post_user", requirements={"id"="\d+"})
+     * @Route("user/{id}/post", methods={"GET"}, name="svistyn_post_user", requirements={"id"="\d+"})
      */
     public function userPosts($id, Request $request)
     {
@@ -66,6 +66,7 @@ class SvistController extends Controller
         $repo->advancedFinderPagination($options, $pagination, $user);
 
         return $this->render('Svistyn/list.html.twig', [
+            'user' => $user,
             'posts' => $posts,
             'pagination' => $pagination,
         ]);

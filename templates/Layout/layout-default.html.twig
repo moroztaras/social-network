@@ -4,7 +4,9 @@
     <div class="uk-container">
       <div uk-grid>
         <div class="uk-width-auto uk-flex-1">
-          <a href="{{ path('front') }}" class="uk-link-text">Social Network</a>
+          <a href="{{ path('front') }}" class="uk-link-text">
+            <img src="{{ asset('/images/svistyn_logo.jpg')}}" alt="Svistyn logo">
+          </a>
         </div>
         <nav>
           <ul class="uk-nav uk-text-small" uk-grid>
@@ -12,7 +14,7 @@
               <li>
                 {#<a href="{{ path('user_canonical', { 'id' : app.user.id }) }}" class="user-profile dropdown-toggle">#}
                 <div class="us-prof-header">
-                  <img src="{{ app.user.account.avatar|avatarStyleDefault }}" width="30px" class="uk-margin-small-right">
+                  <img src="{{ app.user.avatar|avatarStyleDefault }}" width="30px" class="uk-margin-small-right">
                   {{ app.user.fullname }}<span uk-icon="icon: triangle-down"></span>
                 </div>
                 {#</a>#}
@@ -20,14 +22,14 @@
                   <nav class="uk-padding-small">
                     <ul class="uk-nav uk-list-divider uk-text-small">
                       <li><a href="{{ path('user_canonical') }}"><span uk-icon="user" class="uk-margin-small-right"></span> {{ 'profile'|trans }}</a></li>
-                      <li><a href="{{ path('logout') }}"><span uk-icon="sign-out" class="uk-margin-small-right"></span> {{ 'log_out'|trans }}</a></li>
+                      <li><a href="{{ path('app_logout') }}"><span uk-icon="sign-out" class="uk-margin-small-right"></span> {{ 'log_out'|trans }}</a></li>
                     </ul>
                   </nav>
                 </div>
               </li>
             {% else %}
-              <li><a href="{{ path('login') }}">{{ 'login'|trans }}</a></li>
-              <li><a href="{{ path('register') }}">{{ 'sign_up'|trans }}</a></li>
+              <li><a href="{{ path('app_login') }}">{{ 'login'|trans }}</a></li>
+              <li><a href="{{ path('app_registration') }}">{{ 'sign_up'|trans }}</a></li>
             {% endif %}
           </ul>
         </nav>

@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Components\Svistyn\Forms\SvistynForm;
-use App\Components\Svistyn\Models\SvistynModel;
+use App\Form\Svistyn\SvistynForm;
+use App\Form\Svistyn\Model\SvistynModel;
 use App\Components\Svistyn\SvistynApi;
 use App\Components\Utils\Form\EntityDeleteForm;
 use App\Components\Utils\Pagination;
@@ -30,21 +30,21 @@ class SvistController extends Controller
         $pagination->setRoute('svistyn_post');
         $pagination->setPage($request->query->get('page'));
         $options = [
-      'page' => $pagination->getPage(),
-      'marking' => 'active',
-    ];
+          'page' => $pagination->getPage(),
+          'marking' => 'active',
+        ];
         $posts = $repo->advancedFinder($options, $user);
         $repo->advancedFinderPagination($options, $pagination, $user);
 
         return $this->render('Svistyn/list.html.twig', [
-      'posts' => $posts,
-      'user' => $user,
-      'pagination' => $pagination,
-    ]);
+          'posts' => $posts,
+          'user' => $user,
+          'pagination' => $pagination,
+        ]);
     }
 
     /**
-     * @Route("user/{id}/post", name="svistyn_post_user", requirements={"id"="\d+"})
+     * @Route("user/{id}/post", methods={"GET"}, name="svistyn_post_user", requirements={"id"="\d+"})
      */
     public function userPosts($id, Request $request)
     {
@@ -59,16 +59,17 @@ class SvistController extends Controller
         $pagination->setRoute('svistyn_post');
         $pagination->setPage($request->query->get('page'));
         $options = [
-      'page' => $pagination->getPage(),
-      'marking' => 'active',
-    ];
+            'page' => $pagination->getPage(),
+            'marking' => 'active',
+        ];
         $posts = $repo->advancedFinder($options, $user);
         $repo->advancedFinderPagination($options, $pagination, $user);
 
         return $this->render('Svistyn/list.html.twig', [
-      'posts' => $posts,
-      'pagination' => $pagination,
-    ]);
+            'user' => $user,
+            'posts' => $posts,
+            'pagination' => $pagination,
+        ]);
     }
 
     public function view()
@@ -79,7 +80,7 @@ class SvistController extends Controller
      * @param Request      $request
      * @param SvistynModel $svistynModel
      * @Security("is_granted('ROLE_USER')")
-     * @Route("/post/add", name="svistyn_add")
+     * @Route("/post/add", methods={"GET", "POST"}, name="svistyn_add")
      *
      * @return Response
      */
@@ -97,16 +98,37 @@ class SvistController extends Controller
         }
 
         return $this->render('Svistyn/add.html.twig', [
-      'form' => $form->createView(),
-      'svistyn' => $svistyn,
-    ]);
+          'form' => $form->createView(),
+          'svistyn' => $svistyn,
+        ]);
     }
 
     /**
-     * @Route("/post/edit/{id}", name="svistyn_edit", requirements={"id"="\d+"}, defaults={"id" = null})
+     * @Route("/post/{id}/edit", name="svistyn_edit", requirements={"id"="\d+"}, defaults={"id" = null})
+     * @Security("is_granted('ROLE_USER')")
      */
-    public function edit()
+    public function edit($id, Request $request, SvistynModel $svistynModel)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $svistyn = $this->svistynRepo()->find($id);
+        if ($user != $svistyn->getUser()) {
+            return $this->redirectToRoute('front');
+        }
+        $svistynModel->setSvistynEntity($svistyn);
+        $form = $this->createForm(SvistynForm::class, $svistynModel);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $svistynModel->save();
+
+            return $this->redirectToRoute('svistyn_post');
+        }
+
+        return $this->render('Svistyn/edit.html.twig', [
+          'form' => $form->createView(),
+          'svistyn' => $svistyn,
+        ]);
     }
 
     /**
@@ -135,7 +157,7 @@ class SvistController extends Controller
         }
 
         return $this->render('Svistyn/delete.html.twig', [
-      'form' => $form->createView(),
+          'form' => $form->createView(),
     ]);
     }
 

@@ -2,15 +2,13 @@
 
 namespace App\Components\User\Models;
 
-use App\Entity\Role;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Entity\User;
-use App\Entity\UserAccount;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
-class RegisterUserModel
+class RegistrationUserModel
 {
     /**
      * @Assert\NotBlank(message="user.fullname.not_blank")
@@ -24,10 +22,11 @@ class RegisterUserModel
     public $email;
 
     /**
-     * @Assert\NotBlank(message="user.password.not_blank")
+     * @Assert\NotBlank(message="user.plainPassword.not_blank")
      * @Assert\Length(min="8", max="50")
      */
-    public $password;
+    public $plainPassword;
+
     /**
      * @Assert\NotBlank(message="user.birthday.not_blank")
      */
@@ -69,17 +68,17 @@ class RegisterUserModel
     /**
      * @return mixed
      */
-    public function getPassword()
+    public function getPlainPassword()
     {
-        return $this->password;
+        return $this->plainPassword;
     }
 
     /**
-     * @param mixed $password
+     * @param mixed $plainPassword
      */
-    public function setPassword($password)
+    public function setPlainPassword($plainPassword)
     {
-        $this->password = $password;
+        $this->plainPassword = $plainPassword;
     }
 
     /**
@@ -144,25 +143,6 @@ class RegisterUserModel
     public function setFullname($fullname): void
     {
         $this->fullname = $fullname;
-    }
-
-    public function getUserHandler()
-    {
-        $user = new User();
-        $account = new UserAccount();
-        $account->setFullname($this->fullname);
-        $account->setBirthday($this->birthday);
-        $account->setSex($this->sex);
-        $account->setRegion($this->region);
-        $user->setEmail($this->email);
-        $roleUser = $this->em->getRepository(Role::class)->findOneByRole('ROLE_USER');
-        $user->addRole($roleUser);
-        $user->addRole($roleUser);
-        $user->setAccount($account);
-        $password = $this->passwordEncoder->encodePassword($user, $this->password);
-        $user->setPassword($password);
-
-        return $user;
     }
 
     /**

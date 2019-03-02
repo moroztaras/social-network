@@ -48,20 +48,20 @@ class RecoverPassword
 
         try {
             $template = $this->twig->render('User/MailTemplate/recover.html.twig', [
-        'url' => $url,
-        'fullname' => $fullname,
-      ]);
+              'url' => $url,
+              'fullname' => $fullname,
+            ]);
         } catch (\Exception $e) {
             return false;
         }
 
         $mail = new \Swift_Message();
-        $mail->setFrom('info@svisteti.dev');
+        $mail->setFrom('info@socaial_network.dev');
         $mail->setTo($user->getEmail());
         $mail->setSubject('Recover password');
         $mail->setBody($template);
 
-        $user->getAccount()->setTokenRecover($token);
+        $user->setTokenRecover($token);
         $this->em->persist($user);
         $this->em->flush();
         $status = $this->mailer->send($mail);

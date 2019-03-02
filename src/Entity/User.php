@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
@@ -45,6 +44,11 @@ class User implements \Serializable, UserInterface
      */
     private $password;
 
+    /**
+     * @var string
+     */
+    private $plainPassword;
+
     //  /**
     //   * @ORM\Column(type="string")
     //   */
@@ -66,20 +70,53 @@ class User implements \Serializable, UserInterface
     private $status;
 
     /**
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     * @ORM\ManyToMany(targetEntity="Role", inversedBy="users", cascade={"persist", "remove"})
-     * @ORM\JoinTable(name="users_roles")
+     * @ORM\Column(type="json")
      */
-    private $roles;
+    private $roles = [];
 
     /**
-     * @ORM\OneToOne(targetEntity="UserAccount", mappedBy="user", cascade={"persist", "remove"})
+     * @ORM\Column(type="string")
      */
-    private $account;
+    private $fullname;
 
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $birthday;
+
+    /**
+     * @ORM\Column(type="string", length=10)
+     */
+    private $gender;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $region;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $tokenRecover;
+
+    /**
+     * @ORM\OneToOne(targetEntity="File", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(name="avatar_fid", referencedColumnName="id")
+     */
+    private $avatar;
+
+    /**
+     * @ORM\OneToOne(targetEntity="File", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(name="cover_fid", referencedColumnName="id")
+     */
+    private $cover;
+
+    /**
+     * User constructor.
+     */
     public function __construct()
     {
-        $this->roles = new ArrayCollection();
+        $this->roles = ['ROLE_USER'];
 //        $this->salt = md5( uniqid(null, TRUE) );
         $this->username = md5(uniqid(null, true));
         $this->created = new \DateTime();
@@ -99,18 +136,6 @@ class User implements \Serializable, UserInterface
     public function unserialize($serialized)
     {
         list($this->id, $this->username, $this->password) = unserialize($serialized, ['allowed_classes' => false]);
-    }
-
-    public function getRoles()
-    {
-        // return $this->roles->toArray();
-        $roles = [];
-        /** @var Role $role */
-        foreach ($this->roles as $role) {
-            $roles[] = $role->getRole();
-        }
-
-        return $roles;
     }
 
     public function getPassword()
@@ -190,6 +215,26 @@ class User implements \Serializable, UserInterface
     public function setPassword($password)
     {
         $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPlainPassword()
+    {
+        return (string) $this->plainPassword;
+    }
+
+    /**
+     * @param string $plainPassword
+     *
+     * @return $this
+     */
+    public function setPlainPassword($plainPassword)
+    {
+        $this->plainPassword = $plainPassword;
 
         return $this;
     }
@@ -281,56 +326,165 @@ class User implements \Serializable, UserInterface
     }
 
     /**
-     * Add role.
-     *
-     * @param \App\Entity\Role $role
-     *
-     * @return User
+     * @see UserInterface
      */
-    public function addRole(\App\Entity\Role $role)
+    public function getRoles(): array
     {
-        $this->roles[] = $role;
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
 
         return $this;
     }
 
     /**
-     * Remove role.
+     * Set birthday.
      *
-     * @param \App\Entity\Role $role
-     */
-    public function removeRole(\App\Entity\Role $role)
-    {
-        $this->roles->removeElement($role);
-    }
-
-    /**
-     * Set account.
-     *
-     * @param UserAccount $account
+     * @param \DateTime $birthday
      *
      * @return User
      */
-    public function setAccount(UserAccount $account = null)
+    public function setBirthday($birthday)
     {
-        $this->account = $account;
-        $account->setUser($this);
+        $this->birthday = $birthday;
 
         return $this;
     }
 
     /**
-     * Get account.
+     * Get birthday.
      *
-     * @return UserAccount
+     * @return \DateTime
      */
-    public function getAccount()
+    public function getBirthday()
     {
-        return $this->account;
+        return $this->birthday;
     }
 
+    /**
+     * Set region.
+     *
+     * @param string $region
+     *
+     * @return User
+     */
+    public function setRegion($region)
+    {
+        $this->region = $region;
+
+        return $this;
+    }
+
+    /**
+     * Get region.
+     *
+     * @return string
+     */
+    public function getRegion()
+    {
+        return $this->region;
+    }
+
+    /**
+     * Set gender.
+     *
+     * @param string $gender
+     *
+     * @return User
+     */
+    public function setGender($gender)
+    {
+        $this->gender = $gender;
+
+        return $this;
+    }
+
+    /**
+     * Get sex.
+     *
+     * @return string
+     */
+    public function getGender()
+    {
+        return $this->gender;
+    }
+
+    /**
+     * Set tokenRecover.
+     *
+     * @param string $tokenRecover
+     *
+     * @return User
+     */
+    public function setTokenRecover($tokenRecover)
+    {
+        $this->tokenRecover = $tokenRecover;
+
+        return $this;
+    }
+
+    /**
+     * Get tokenRecover.
+     *
+     * @return string
+     */
+    public function getTokenRecover()
+    {
+        return $this->tokenRecover;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAvatar()
+    {
+        return $this->avatar;
+    }
+
+    /**
+     * @return mixed
+     */
     public function getFullname()
     {
-        return $this->getAccount()->getFullname();
+        return $this->fullname;
+    }
+
+    /**
+     * @param mixed $fullname
+     */
+    public function setFullname($fullname): void
+    {
+        $this->fullname = $fullname;
+    }
+
+    /**
+     * @param mixed $avatar
+     */
+    public function setAvatar($avatar): void
+    {
+        $this->avatar = $avatar;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCover()
+    {
+        return $this->cover;
+    }
+
+    /**
+     * @param mixed $cover
+     */
+    public function setCover($cover): void
+    {
+        $this->cover = $cover;
     }
 }

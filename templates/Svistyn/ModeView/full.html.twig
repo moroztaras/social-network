@@ -2,12 +2,27 @@
   <div class="uk-card-header">
     <div class="uk-grid-small uk-flex-middle" uk-grid>
       <div class="uk-width-auto">
-        <img data-src="{{ svistyn.user.account.avatar|avatarStyleDefault }}" width="40" height="40" alt uk-img>
+        <img data-src="{{ svistyn.user.avatar|avatarStyleDefault }}" width="40" height="40" alt uk-img>
       </div>
       <div class="uk-width-expand">
         <div><a class="uk-text-small uk-text-muted" href="href="{{ path('user_canonical', { 'id' : svistyn.user.id }) }}">{{ svistyn.user.fullname }}</a></div>
         <p class="uk-text-meta uk-margin-remove-top"><time datetime="{{ svistyn.created|date('Y-m-d H:i:s') }}">{{ svistyn.created|date('M d, Y') }}</time></p>
       </div>
+      {% if app.user %}
+          <li>
+              <div class="us-prof-header">
+                  <span uk-icon="icon: chevron-down"></span>
+              </div>
+              <div uk-drop="mode: click; offset: 20; pos: bottom-right" class="uk-card uk-card-default kuk-width-small">
+                  <nav class="uk-padding-small">
+                      <ul class="uk-nav uk-list-divider uk-text-small">
+                          <li><a href="{{ path('svistyn_edit', { 'id' : svistyn.id}) }}"><span uk-icon="icon: pencil" class="uk-margin-small-right"></span> {{ 'edit'|trans }}</a></li>
+                          <li><a href="{{ path('svistyn_delete', { 'id' : svistyn.id}) }}"><span uk-icon="icon: trash" class="uk-margin-small-right"></span> {{ 'delete'|trans }}</a></li>
+                      </ul>
+                  </nav>
+              </div>
+          </li>
+        {% endif %}
     </div>
   </div>
   <div class="uk-card uk-card-body">

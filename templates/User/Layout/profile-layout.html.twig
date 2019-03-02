@@ -4,13 +4,17 @@
   <div uk-grid>
     <div class="uk-width-1-2@s uk-width-1-3@m">
       <div class="uk-section uk-section-xsmall uk-background uk-background-default">
-        <h3 class="uk-heading-bullet">{{ user.account.fullname }}</h3>
-        <div class="user-avatar uk-text-center uk-margin-small-bottom"><img src="{{ user.account.avatar|avatarStyleDefault }}" width="100px" class="uk-background uk-background-default"></div>
+        <h3 class="uk-heading-bullet">{{ user.fullname }}</h3>
+        <div class="user-avatar uk-text-center uk-margin-small-bottom"><img src="{{ user.avatar|avatarStyleDefault }}" width="100px" class="uk-background uk-background-default"></div>
         <hr>
         <ul class="uk-list uk-padding uk-padding-small">
-          <li>{{ 'follows'|trans }}: <span class="uk-link">0</span></li>
+          <li>{{ 'following'|trans }}: <span class="uk-link">0</span></li>
           <li>{{ 'followers'|trans }}: <span class="uk-link">0</span></li>
-          <li>{{ 'posts'|trans }}: <span class="uk-link">0</span></li>
+          <li>{{ 'posts'|trans }}:
+              <span class="uk-link">
+                  {{ render(controller('App\\Controller\\BlockController::userCountSvistyn',{ 'id': user.id })) }}
+              </span>
+          </li>
         </ul>
       </div>
     </div>
@@ -27,15 +31,15 @@
         {% block profile_content %}
           <div uk-grid class="uk-grid-small">
             <div class="uk-text-bold">{{ 'full_name'|trans }}:</div>
-            <div>{{ user.account.fullname }}</div>
+            <div>{{ user.fullname }}</div>
           </div>
           <div uk-grid class="uk-grid-small">
             <div class="uk-text-bold">{{ 'birthday'|trans }}:</div>
-            <div>{{ user.account.birthday|date('d-m-Y') }}</div>
+            <div>{{ user.birthday|date('d-m-Y') }}</div>
           </div>
           <div uk-grid class="uk-grid-small">
             <div class="uk-text-bold">{{ 'gender'|trans }}:</div>
-            <div>{{ user.account.sex|gender }}</div>
+            <div>{{ user.gender|gender }}</div>
           </div>
         {% endblock %}
       </div>

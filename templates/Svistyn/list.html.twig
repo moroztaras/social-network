@@ -3,14 +3,16 @@
   {% if user is not null %}
     {{ render(controller('App\\Controller\\BlockController::userCover',{ 'id': user.id })) }}
   {% endif %}
-  {% if app.user == user %}
-    <div class="uk-text-center uk-margin">
-      <a href="{{ path('svistyn_add') }}" class="uk-button uk-button-default" style="margin-right: 5px;"><i class="fa fa-plus-square-o"></i>{{ 'add'|trans }}</a>
-    </div>
-  {% else  %}
-    <div class="uk-text-center uk-margin">
-      <a href="#" class="uk-button uk-button-default" style="margin-right: 5px;"><i class="fa fa-plus-square-o"></i>{{ 'follow'|trans }}</a>
-    </div>
+  {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+      {% if app.user == user  %}
+          <div class="uk-text-center uk-margin">
+              <a href="{{ path('svistyn_add') }}" class="uk-button uk-button-default" style="margin-right: 5px;"><i class="fa fa-plus-square-o"></i>{{ 'add'|trans }}</a>
+          </div>
+        {% else  %}
+            <div class="uk-text-center uk-margin">
+                <a href="#" class="uk-button uk-button-default" style="margin-right: 5px;"><i class="fa fa-plus-square-o"></i>{{ 'follow'|trans }}</a>
+            </div>
+        {% endif %}
   {% endif %}
   <div class="uk-section uk-section-xsmall">
     <div class="uk-container uk-container-xsmall">

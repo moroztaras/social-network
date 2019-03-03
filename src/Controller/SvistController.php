@@ -189,9 +189,9 @@ class SvistController extends Controller
         }
 
         return $this->render('Svistyn/share.html.twig', [
-      'form' => $form->createView(),
-      'svistyn' => $newSvist,
-    ]);
+          'form' => $form->createView(),
+          'svistyn' => $newSvist,
+        ]);
     }
 
     /**

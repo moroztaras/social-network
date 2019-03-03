@@ -11,9 +11,11 @@
           <li>{{ 'following'|trans }}: <span class="uk-link">0</span></li>
           <li>{{ 'followers'|trans }}: <span class="uk-link">0</span></li>
           <li>{{ 'posts'|trans }}:
+            <a href="{{ path('svistyn_post_user',{ 'id': user.id }) }}">
               <span class="uk-link">
                   {{ render(controller('App\\Controller\\BlockController::userCountSvistyn',{ 'id': user.id })) }}
               </span>
+            </a>
           </li>
         </ul>
       </div>

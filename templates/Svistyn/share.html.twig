@@ -1,21 +1,12 @@
 {% extends "Layout/layout-default.html.twig" %}
 {% block main %}
-  <div class="m-panel size-tb mg-c">
-    <div class="m-content">
-      <div class="x_panel">
-        <div class="x_content">
-          <p>Поделится постом</p>
-          {{ form_start(form) }}
-          {{ form_row(form.text) }}
-
-          <div class="x_panel">
-            <div class="x_content">
-              {{ include('Svistyn/ModeView/share.html.twig', {'svistyn': svistyn.parent } ) }}
-            </div>
-          </div>
-          {{ form_end(form) }}
-        </div>
-      </div>
-    </div>
+<div class="uk-section uk-section-xsmall">
+  <div class="uk-container uk-container-xsmall">
+    <div class="center">{{ 'share_svist'|trans }}</div>
+    {{ form_start(form) }}
+    {{ form_row(form.text) }}
+      {{ include('Svistyn/ModeView/share.html.twig', {'svistyn.parent': svistyn.parent } ) }}
+    {{ form_end(form) }}
   </div>
+</div>
 {% endblock %}

@@ -86,8 +86,8 @@ class Svistyn
     public function __construct()
     {
         $this->state = 0; //null of start
-    $this->status = 1; //is published
-    $this->marking = 'new';
+        $this->status = 1; //is published
+        $this->marking = 'new';
     }
 
     /**

@@ -153,6 +153,7 @@ class SvistynModel
     {
         $this->beforeSave();
         $this->svistyn->setMarking('active');
+        $this->svistyn->setUpdatedAtValue(new \DateTime());
         $this->em->persist($this->svistyn);
         $this->em->flush();
     }

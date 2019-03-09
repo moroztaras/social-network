@@ -72,8 +72,15 @@ class SvistController extends Controller
         ]);
     }
 
-    public function view()
+    /**
+     * @Route("/post/{id}", methods={"GET"}, name="svistyn_post_show", requirements={"id"="\d+"})
+     */
+    public function view($id, Request $request)
     {
+        $svistyn = $this->getDoctrine()->getRepository(Svistyn::class)->find($id);
+        return $this->render('Svistyn/show.html.twig', [
+          'svistyn' => $svistyn,
+        ]);
     }
 
     /**

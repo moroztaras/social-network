@@ -108,6 +108,7 @@ class CommentController extends Controller
           'title' => 'Edit comment',
         ]);
     }
+
     /**
      * @Route("/{id}/delete", methods={"GET", "DELETE"}, name="comment_delete")
      */

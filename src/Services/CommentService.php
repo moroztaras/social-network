@@ -47,6 +47,7 @@ class CommentService
 
         return $comments;
     }
+
     public function remove(Comment $comment)
     {
         $this->doctrine->getManager()->remove($comment);

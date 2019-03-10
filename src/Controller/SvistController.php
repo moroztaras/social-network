@@ -9,6 +9,7 @@ use App\Components\Utils\Form\EntityDeleteForm;
 use App\Components\Utils\Pagination;
 use App\Entity\Svistyn;
 use App\Entity\User;
+use App\Services\CommentService;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -18,6 +19,21 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SvistController extends Controller
 {
+    /**
+     * @var CommentService
+     */
+    public $commentService;
+
+    /**
+     * SvistController constructor.
+     *
+     * @param CommentService $commentService
+     */
+    public function __construct(CommentService $commentService)
+    {
+        $this->commentService = $commentService;
+    }
+
     /**
      * @Route("/post", name="svistyn_post")
      */
@@ -73,13 +89,16 @@ class SvistController extends Controller
     }
 
     /**
-     * @Route("/post/{id}", methods={"GET"}, name="svistyn_post_show", requirements={"id"="\d+"})
+     * @Route("/post/{id}", methods={"GET"}, name="svistyn_post_view", requirements={"id"="\d+"})
      */
     public function view($id, Request $request)
     {
         $svistyn = $this->getDoctrine()->getRepository(Svistyn::class)->find($id);
-        return $this->render('Svistyn/show.html.twig', [
+        $comments = $this->commentService->getCommentsForSvistyn($svistyn);
+
+        return $this->render('Svistyn/view.html.twig', [
           'svistyn' => $svistyn,
+          'comments' => $comments,
         ]);
     }
 

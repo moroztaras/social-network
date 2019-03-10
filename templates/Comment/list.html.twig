@@ -18,7 +18,7 @@
                             <nav class="uk-padding-small">
                                 <ul class="uk-nav uk-list-divider uk-text-small">
                                     <li><a href="{{ path('comment_edit', {'id': comment.id}) }}"><span uk-icon="icon: pencil" class="uk-margin-small-right"></span> {{ 'edit'|trans }}</a></li>
-                                    <li><a href="#"><span uk-icon="icon: trash" class="uk-margin-small-right"></span> {{ 'delete'|trans }}</a></li>
+                                    <li><a href="{{ path('comment_delete', {'id': comment.id}) }}"><span uk-icon="icon: trash" class="uk-margin-small-right"></span> {{ 'delete'|trans }}</a></li>
                                 </ul>
                             </nav>
                         </div>

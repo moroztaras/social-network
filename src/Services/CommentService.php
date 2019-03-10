@@ -47,6 +47,13 @@ class CommentService
 
         return $comments;
     }
+    public function remove(Comment $comment)
+    {
+        $this->doctrine->getManager()->remove($comment);
+        $this->doctrine->getManager()->flush();
+
+        return $comment;
+    }
 
     private function getSvistyn($id)
     {

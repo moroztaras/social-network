@@ -94,6 +94,7 @@ class CommentController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->commentService->save($comment);
+//            $this->flashBag->add('success', 'Comment was edited');
 
             return $this->redirect($this->generateUrl('svistyn_post_view',
                 [
@@ -106,5 +107,24 @@ class CommentController extends Controller
           'form' => $form->createView(),
           'title' => 'Edit comment',
         ]);
+    }
+    /**
+     * @Route("/{id}/delete", methods={"GET", "DELETE"}, name="comment_delete")
+     */
+    public function deleteAction(Request $request, Comment $comment)
+    {
+        $referer = $request->headers->get('referer');
+        if (!$comment || $comment->getUser() != $this->getUser()) {
+            return $this->redirect($this->generateUrl('svistyn_post_view',
+              [
+                'id' => $comment->getSvistyn()->getId(),
+              ])
+            );
+        }
+        $this->denyAccessUnlessGranted(CommentVoter::EDIT, $comment);
+        $this->commentService->remove($comment);
+//        $this->flashBag->add('error', 'Comment was deleted');
+
+        return $this->redirect($referer);
     }
 }

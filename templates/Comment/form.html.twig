@@ -6,7 +6,7 @@
             </div>
             <div class="uk-width-expand">
                 <div class="">
-                    {{ form_start(form_comment, { 'action': path('comment_create' , { 'id' : comment.svistyn.id }), 'method': 'POST' }) }}
+                    {{ form_start(form_comment, { 'action': path('comment_add' , { 'id' : comment.svistyn.id }), 'method': 'POST' }) }}
                     <ul class="uk-flex-inline uk-nav uk-text-small">
                         <li>{{ form_widget(form_comment) }}</li>
                         <li>

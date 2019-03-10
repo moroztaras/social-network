@@ -5,7 +5,9 @@ namespace App\Controller;
 use App\Form\Comment\CommentForm;
 use App\Entity\User;
 use App\Entity\Svistyn;
+use App\Entity\Comment;
 use App\Services\CommentService;
+use App\Security\CommentVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -50,9 +52,9 @@ class CommentController extends Controller
     }
 
     /**
-     * @Route("/comment/{id}", name="comment_create", requirements={"id": "\d+"})
+     * @Route("/comment/{id}", methods={"POST"}, name="comment_add", requirements={"id": "\d+"})
      */
-    public function createAction(Request $request, $id)
+    public function addAction(Request $request, $id)
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -70,5 +72,39 @@ class CommentController extends Controller
         }
 
         return $this->redirectToRoute('svistyn_post_view', ['id' => $id]);
+    }
+
+    /**
+     * @Route("/comment/{id}/edit", methods={"GET", "POST"}, name="comment_edit")
+     */
+    public function editAction($id, Request $request)
+    {
+        /** @var Comment $comment */
+        $comment = $this->getDoctrine()->getRepository(Comment::class)->find($id);
+        if (!$comment || $comment->getUser() != $this->getUser()) {
+            return $this->redirect($this->generateUrl('svistyn_post_view',
+                [
+                  'id' => $comment->getSvistyn()->getId(),
+                ])
+            );
+        }
+        $this->denyAccessUnlessGranted(CommentVoter::EDIT, $comment);
+        $form = $this->createForm(CommentForm::class, $comment);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->commentService->save($comment);
+
+            return $this->redirect($this->generateUrl('svistyn_post_view',
+                [
+                  'id' => $comment->getSvistyn()->getId(),
+                ]).'#comment-'.$comment->getId()
+            );
+        }
+
+        return $this->render('Comment/edit.html.twig', [
+          'form' => $form->createView(),
+          'title' => 'Edit comment',
+        ]);
     }
 }

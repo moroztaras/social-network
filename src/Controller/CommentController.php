@@ -115,16 +115,19 @@ class CommentController extends Controller
     public function deleteAction(Request $request, Comment $comment)
     {
         $referer = $request->headers->get('referer');
-        if (!$comment || $comment->getUser() != $this->getUser()) {
+        if (!$comment) {
             return $this->redirect($this->generateUrl('svistyn_post_view',
               [
                 'id' => $comment->getSvistyn()->getId(),
               ])
             );
+        } elseif ($comment->getUser() == $this->getUser() || $comment->getSvistyn()->getUser() == $this->getUser()) {
+            $this->denyAccessUnlessGranted(CommentVoter::EDIT, $comment);
+            $this->commentService->remove($comment);
+//            s$this->flashBag->add('error', 'Comment was deleted');
+
+            return $this->redirect($referer);
         }
-        $this->denyAccessUnlessGranted(CommentVoter::EDIT, $comment);
-        $this->commentService->remove($comment);
-//        $this->flashBag->add('error', 'Comment was deleted');
 
         return $this->redirect($referer);
     }

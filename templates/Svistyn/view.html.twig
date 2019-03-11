@@ -27,9 +27,9 @@
                 </div>
                 <div class="uk-card-footer">
                     {% if svistyn.parent is null and app.user and app.user.id != svistyn.user.id %}
-                        {{ include('Svistyn/inc/svistyn-post-action-link.html.twig', { 'svistyn' : svistyn }) }}
+                        {{ include('Svistyn/inc/svistyn-post-action-link.html.twig', { 'svistyn' : svistyn, 'comments': comments }) }}
                     {% elseif svistyn.parent is null or svistyn.isParent %}
-                        {{ include('Svistyn/inc/svistyn-post-action.html.twig', { 'svistyn' : svistyn }) }}
+                        {{ include('Svistyn/inc/svistyn-post-action.html.twig', { 'svistyn' : svistyn, 'comments': comments }) }}
                     {% endif %}
                 </div>
             </div>

@@ -5,7 +5,7 @@
         <img data-src="{{ svistyn.parent.user.avatar|avatarStyleDefault }}" width="40" height="40" alt uk-img>
       </div>
       <div class="uk-width-expand">
-        <div><a class="uk-text-small uk-text-muted" href="href="{{ path('user_canonical', { 'id' : svistyn.parent.user.id }) }}">{{ svistyn.parent.user.fullname }}</a></div>
+        <div><a class="uk-text-small uk-text-muted" href="{{ path('user_canonical', { 'id' : svistyn.parent.user.id }) }}">{{ svistyn.parent.user.fullname }}</a></div>
         <p class="uk-text-meta uk-margin-remove-top"><time datetime="{{ svistyn.parent.created|date('Y-m-d H:i:s') }}">{{ svistyn.parent.created|date('M d, Y') }}</time></p>
       </div>
     </div>

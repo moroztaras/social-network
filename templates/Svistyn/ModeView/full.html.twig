@@ -39,6 +39,10 @@
       <div class="st-post-fd st-post-fd--parent">
         {{ include('Svistyn/ModeView/full.html.twig', {'svistyn': svistyn.parent } ) }}
       </div>
+    {% else %}
+        <div class="st-post-fd st-post-fd--show uk-text-small">
+            <a href="{{ path('svistyn_post_view', {'id': svistyn.id}) }}">{{ 'show_more'|trans }}</a>
+        </div>
     {% endif %}
   </div>
   <div class="uk-card-footer">

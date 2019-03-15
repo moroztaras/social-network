@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class MediaController extends AbstractController
 {
     /**
-     * @Route("/media", methods={"POST"}, name="media_upload")
+     * @Route("/media", methods={"GET", "POST"}, name="media_upload")
      */
     public function indexAction(Request $request)
     {

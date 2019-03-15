@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Class Friends.
  *
- * @ORM\Entity(repositoryClass="App\Repository\FriendsRepository")
+ * @ORM\Entity
  * @ORM\Table(name="friends")
  */
 class Friends
@@ -18,19 +18,31 @@ class Friends
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\OneToOne(targetEntity="User")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
+
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\OneToOne(targetEntity="User")
+     * @ORM\JoinColumn(name="friend_id", referencedColumnName="id")
      */
     private $friend;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $created;
+    private $createdAt;
+
+    /**
+     * Friends constructor.
+     */
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+    }
 
     /**
      * Get id.
@@ -43,13 +55,23 @@ class Friends
     }
 
     /**
+     * Get user.
+     *
+     * @return User|null
+     */
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    /**
      * Set user.
      *
-     * @param int $user
+     * @param User|null $user
      *
      * @return Friends
      */
-    public function setUser($user)
+    public function setUser(?User $user): self
     {
         $this->user = $user;
 
@@ -57,23 +79,23 @@ class Friends
     }
 
     /**
-     * Get user.
+     * Get friend.
      *
-     * @return int
+     * @return User|null
      */
-    public function getUser()
+    public function getFriend(): ?User
     {
-        return $this->user;
+        return $this->friend;
     }
 
     /**
      * Set friend.
      *
-     * @param int $friend
+     * @param User|null $friend
      *
      * @return Friends
      */
-    public function setFriend($friend)
+    public function setFriend(?User $friend): self
     {
         $this->friend = $friend;
 
@@ -81,36 +103,26 @@ class Friends
     }
 
     /**
-     * Get friend.
+     * Set createdAt.
      *
-     * @return int
-     */
-    public function getFriend()
-    {
-        return $this->friend;
-    }
-
-    /**
-     * Set created.
-     *
-     * @param \DateTime $created
+     * @param \DateTime $createdAt
      *
      * @return Friends
      */
-    public function setCreated($created)
+    public function setCreatedAt($createdAt)
     {
-        $this->created = $created;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
 
     /**
-     * Get created.
+     * Get createdAt.
      *
      * @return \DateTime
      */
-    public function getCreated()
+    public function getCreatedAt()
     {
-        return $this->created;
+        return $this->createdAt;
     }
 }

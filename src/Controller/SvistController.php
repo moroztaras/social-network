@@ -83,6 +83,7 @@ class SvistController extends Controller
 
         return $this->render('Svistyn/list.html.twig', [
             'user' => $user,
+            'this_user' => $this->getUser(),
             'posts' => $posts,
             'pagination' => $pagination,
         ]);

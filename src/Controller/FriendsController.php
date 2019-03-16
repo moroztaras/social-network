@@ -43,4 +43,17 @@ class FriendsController extends Controller
           'status' => $status,
         ]);
     }
+
+    /**
+     * @Route("/user/{id}/friends", name="user_list_friends", requirements={"id"="\d+"}, defaults={"id" = null})
+     * @Security("is_granted('ROLE_USER')")
+     */
+    public function userListFrirnds($id)
+    {
+        $user = $this->getDoctrine()->getRepository(User::class)->find($id);
+
+        return $this->render('Friends/list.html.twig', [
+          'user' => $user,
+        ]);
+    }
 }

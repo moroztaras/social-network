@@ -35,4 +35,13 @@ class BlockController extends Controller
           'count_svistyns' => $count_svistyns,
         ]);
     }
+
+    public function followers($id)
+    {
+        $user = $this->getDoctrine()->getRepository(User::class)->find($id);
+
+        return $this->render('Friends/followers.html.twig', [
+          'user' => $user,
+        ]);
+    }
 }

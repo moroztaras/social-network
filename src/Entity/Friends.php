@@ -20,16 +20,18 @@ class Friends
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     */
-    private $user;
-
-    /**
-     * @ORM\OneToOne(targetEntity="User")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="friends")
      * @ORM\JoinColumn(name="friend_id", referencedColumnName="id")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $friend;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(onDelete="CASCADE")
+     */
+    private $user;
 
     /**
      * @ORM\Column(type="datetime")
@@ -55,54 +57,6 @@ class Friends
     }
 
     /**
-     * Get user.
-     *
-     * @return User|null
-     */
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    /**
-     * Set user.
-     *
-     * @param User|null $user
-     *
-     * @return Friends
-     */
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    /**
-     * Get friend.
-     *
-     * @return User|null
-     */
-    public function getFriend(): ?User
-    {
-        return $this->friend;
-    }
-
-    /**
-     * Set friend.
-     *
-     * @param User|null $friend
-     *
-     * @return Friends
-     */
-    public function setFriend(?User $friend): self
-    {
-        $this->friend = $friend;
-
-        return $this;
-    }
-
-    /**
      * Set createdAt.
      *
      * @param \DateTime $createdAt
@@ -124,5 +78,29 @@ class Friends
     public function getCreatedAt()
     {
         return $this->createdAt;
+    }
+
+    public function getFriend(): ?User
+    {
+        return $this->friend;
+    }
+
+    public function setFriend(?User $friend): self
+    {
+        $this->friend = $friend;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
     }
 }

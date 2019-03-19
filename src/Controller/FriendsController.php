@@ -45,15 +45,29 @@ class FriendsController extends Controller
     }
 
     /**
-     * @Route("/user/{id}/friends", name="user_list_friends", requirements={"id"="\d+"}, defaults={"id" = null})
+     * @Route("/user/{id}/followers", name="user_list_followers", requirements={"id"="\d+"}, defaults={"id" = null})
      * @Security("is_granted('ROLE_USER')")
      */
-    public function userListFrirnds($id)
+    public function userListFollowers($id)
     {
         $user = $this->getDoctrine()->getRepository(User::class)->find($id);
 
-        return $this->render('Friends/list.html.twig', [
+        return $this->render('Friends/followers_list.html.twig', [
           'user' => $user,
+        ]);
+    }
+
+    /**
+     * @Route("/user/{id}/following", name="user_list_following", requirements={"id"="\d+"}, defaults={"id" = null})
+     * @Security("is_granted('ROLE_USER')")
+     */
+    public function userListFollowing($id)
+    {
+        $user = $this->getDoctrine()->getRepository(User::class)->find($id);
+        $followers = $this->getDoctrine()->getRepository(Friends::class)->findBy(['user' => $user]);
+
+        return $this->render('Friends/following_list.html.twig', [
+          'followers' => $followers,
         ]);
     }
 }

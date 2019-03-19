@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Svistyn;
 use App\Entity\User;
+use App\Entity\Friends;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -36,11 +37,24 @@ class BlockController extends Controller
         ]);
     }
 
+    //number followers
     public function followers($id)
     {
         $user = $this->getDoctrine()->getRepository(User::class)->find($id);
 
         return $this->render('Friends/followers.html.twig', [
+          'user' => $user,
+        ]);
+    }
+
+    //number following
+    public function following($id)
+    {
+        $user = $this->getDoctrine()->getRepository(User::class)->find($id);
+        $followings = $this->getDoctrine()->getRepository(Friends::class)->findBy(['user' => $user]);
+
+        return $this->render('Friends/following.html.twig', [
+          'followings' => $followings,
           'user' => $user,
         ]);
     }

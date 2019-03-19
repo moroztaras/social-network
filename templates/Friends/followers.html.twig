@@ -1,5 +1,5 @@
 {% if user.friends|length == 0%}
     0
 {% else %}
-    <a href="{{ path('user_list_friends', {'id': user.id}) }}">{{ user.friends|length }}</a>
+    <a href="{{ path('user_list_followers', {'id': user.id}) }}">{{ user.friends|length }}</a>
 {% endif %}

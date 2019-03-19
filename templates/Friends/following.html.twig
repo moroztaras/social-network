@@ -1,0 +1,5 @@
+{% if followings|length == 0%}
+    0
+{% else %}
+    <a href="{{ path('user_list_following', {'id': user.id}) }}">{{ followings|length }}</a>
+{% endif %}

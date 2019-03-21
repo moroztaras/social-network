@@ -128,6 +128,18 @@ class SvistynRepository extends EntityRepository
         }
     }
 
+    public function findAllPostsOfFriends($userId)
+    {
+        return $this->getEntityManager()
+            ->createQuery(
+                'SELECT p, u FROM App\Entity\Svistyn p ' .
+                'JOIN p.user u ' .
+                'JOIN u.friends f ' .
+                'WHERE f.id=:userId'
+            )->setParameter('userId', $userId)
+            ->getResult();
+    }
+
     public function counterSvistynsByUser(User $user)
     {
         $query = $this->createQueryBuilder('sv');

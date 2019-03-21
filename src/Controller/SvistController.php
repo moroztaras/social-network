@@ -60,6 +60,19 @@ class SvistController extends Controller
     }
 
     /**
+     * @Route("/feed", methods={"GET"}, name="friend_post")
+     */
+    public function findAllPostsOfFriends()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $posts = $em->getRepository('App\Entity\Svistyn')->findAllPostsOfFriends($this->getUser());
+
+        return $this->render('Svistyn/feed.html.twig', [
+            'posts' => $posts
+        ]);
+    }
+
+    /**
      * @Route("user/{id}/post", methods={"GET"}, name="svistyn_post_user", requirements={"id"="\d+"})
      */
     public function userPosts($id, Request $request)

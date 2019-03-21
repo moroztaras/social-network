@@ -7,6 +7,7 @@ use App\Form\Svistyn\Model\SvistynModel;
 use App\Components\Svistyn\SvistynApi;
 use App\Components\Utils\Form\EntityDeleteForm;
 use App\Components\Utils\Pagination;
+use Knp\Component\Pager\PaginatorInterface;
 use App\Entity\Svistyn;
 use App\Entity\User;
 use App\Services\CommentService;
@@ -218,6 +219,26 @@ class SvistController extends Controller
         return $this->render('Svistyn/share.html.twig', [
           'form' => $form->createView(),
           'svistyn' => $newSvist,
+        ]);
+    }
+
+    /**
+     * @Route("/feed", methods={"GET"}, name="svistyn_feed_following")
+     * @Security("is_granted('ROLE_USER')")
+     */
+    public function feed(Request $request, PaginatorInterface $paginator)
+    {
+        /** @var User $user */
+        $user = $this->getDoctrine()->getRepository(User::class)->find($this->getUser());
+
+        $svistyns = $paginator->paginate(
+          $this->getDoctrine()->getRepository(Svistyn::class)->findAllPostsOfFriends($user),
+          $request->query->getInt('page', 1),
+          $request->query->getInt('limit', 10)
+        );
+
+        return $this->render('Svistyn/feed.html.twig', [
+          'svistyns' => $svistyns,
         ]);
     }
 

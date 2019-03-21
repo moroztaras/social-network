@@ -60,6 +60,7 @@
                     </div>
                 </div>
             {% endfor %}
+            {{ include('Pagination/kpn_pagination.html.twig', {'field' : svistyns}) }}
         </div>
     </div>
 {% endblock %}

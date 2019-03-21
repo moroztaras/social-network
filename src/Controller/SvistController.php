@@ -222,6 +222,22 @@ class SvistController extends Controller
     }
 
     /**
+     * @Route("/feed", methods={"GET"}, name="svistyn_feed_following")
+     * @Security("is_granted('ROLE_USER')")
+     */
+    public function feed()
+    {
+        /** @var User $user */
+        $user = $this->getDoctrine()->getRepository(User::class)->find($this->getUser());
+
+        $svistyns = $this->getDoctrine()->getRepository(Svistyn::class)->findAllPostsOfFriends($user);
+
+        return $this->render('Svistyn/feed.html.twig', [
+          'svistyns' => $svistyns,
+        ]);
+    }
+
+    /**
      * @Route("/api/svistyn", name="svistyn_api")
      */
     public function api(SvistynApi $svistynApi)

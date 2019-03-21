@@ -22,6 +22,6 @@ class DefaultController extends Controller
 //        $this->addFlash('warning', 'this is warning');
 
 //        return $this->render('front.html.twig');
-        return $this->redirectToRoute('svistyn_post');
+        return $this->redirectToRoute('svistyn_feed_following');
     }
 }

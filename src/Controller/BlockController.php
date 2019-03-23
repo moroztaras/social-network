@@ -6,7 +6,10 @@ use App\Entity\Svistyn;
 use App\Entity\User;
 use App\Entity\Friends;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 class BlockController extends Controller
 {
@@ -56,6 +59,33 @@ class BlockController extends Controller
         return $this->render('Friends/following.html.twig', [
           'followings' => $followings,
           'user' => $user,
+        ]);
+    }
+
+    /**
+     * @Route("/search", name="search")
+     */
+    public function search(Request $request, PaginatorInterface $paginator)
+    {
+        $users = null;
+
+        if ($request->query->get('search')) {
+            $data = $request->query->get('search');
+            $users = $paginator->paginate(
+                $this->getDoctrine()->getRepository(User::class)->findUsersByData($data),
+                $request->query->getInt('page', 1),
+                $request->query->getInt('limit', 10)
+            );
+            $count_users = count($this->getDoctrine()->getRepository(User::class)->findUsersByData($data));
+            unset($request);
+        } else {
+            return $this->redirectToRoute('svistyn_post');
+        }
+
+        return $this->render(
+          'User/search.html.twig', [
+          'users' => $users,
+          'count_users' => $count_users,
         ]);
     }
 }

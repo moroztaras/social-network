@@ -70,7 +70,7 @@ class Svistyn
 
     /**
      * @var ArrayCollection
-     * @ORM\OneToMany(targetEntity="Comment", mappedBy="article", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="svistyn", cascade={"persist", "remove"})
      * @ORM\OrderBy({"id" = "DESC"})
      */
     private $comments;

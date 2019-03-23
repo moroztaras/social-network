@@ -4,9 +4,8 @@
     <div class="uk-container">
       <div uk-grid>
         <div class="uk-width-auto uk-flex-1">
-          <a href="{{ path('front') }}" class="uk-link-text">
-            <img src="{{ asset('/images/svistyn_logo.jpg')}}" alt="Svistyn logo">
-          </a>
+          {{ include('System/logo.html.twig' ) }}
+          {{ include('Form/search.html.twig' ) }}
         </div>
         <nav>
           <ul class="uk-nav uk-text-small" uk-grid>

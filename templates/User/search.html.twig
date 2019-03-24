@@ -2,6 +2,16 @@
 {% block main %}
     <div class="uk-section uk-section-xsmall">
         <div class="uk-container uk-container-xsmall">
+            <nav class="uk-navbar-container" uk-navbar>
+                <div class="uk-navbar-left">
+                    <div class="uk-navbar-item">
+                        <form class="uk-search uk-search-navbar">
+                            <span uk-search-icon></span>
+                            <input class="uk-search-input" type="search" name="search_input" placeholder="{{ 'search'|trans }}...">
+                        </form>
+                    </div>
+                </div>
+            </nav>
             <div class="center">{{ count_users }} {{ 'results'|trans }}</div>
             {% for user in users %}
                 <div class="uk-card uk-card-default uk-card-small uk-margin-small">
@@ -23,7 +33,9 @@
                     </div>
                 </div>
             {% endfor %}
-            {{ include('Pagination/kpn_pagination.html.twig', {'field' : users}) }}
+            {% if users|length != 0 %}
+                {{ include('Pagination/kpn_pagination.html.twig', {'field' : users}) }}
+            {% endif %}
         </div>
     </div>
 {% endblock %}

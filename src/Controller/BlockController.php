@@ -5,14 +5,24 @@ namespace App\Controller;
 use App\Entity\Svistyn;
 use App\Entity\User;
 use App\Entity\Friends;
+use App\Services\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class BlockController extends Controller
 {
+    /**
+     * @var UserService
+     */
+    private $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
     public function userCover($id)
     {
         $user = $this->getDoctrine()->getRepository(User::class)->find($id);
@@ -65,21 +75,19 @@ class BlockController extends Controller
     /**
      * @Route("/search", name="search")
      */
-    public function search(Request $request, PaginatorInterface $paginator)
+    public function search(Request $request)
     {
         $users = null;
+        $count_users = 0;
 
         if ($request->query->get('search')) {
-            $data = $request->query->get('search');
-            $users = $paginator->paginate(
-                $this->getDoctrine()->getRepository(User::class)->findUsersByData($data),
-                $request->query->getInt('page', 1),
-                $request->query->getInt('limit', 10)
-            );
-            $count_users = count($this->getDoctrine()->getRepository(User::class)->findUsersByData($data));
+            $users = $this->userService->getlistSerarchUsers($request);
+            $count_users = count($this->getDoctrine()->getRepository(User::class)->findUsersByData($request->query->get('search')));
             unset($request);
-        } else {
-            return $this->redirectToRoute('svistyn_post');
+        } elseif ($request->query->get('search_input')) {
+            $users = $this->userService->getlistSerarchUsers($request);
+            $count_users = count($this->getDoctrine()->getRepository(User::class)->findUsersByData($request->query->get('search_input')));
+            unset($request);
         }
 
         return $this->render(

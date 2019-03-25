@@ -9,6 +9,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * Class FriendsController.
+ */
 class FriendsController extends Controller
 {
     /**
@@ -16,6 +19,11 @@ class FriendsController extends Controller
      */
     private $friendsService;
 
+    /**
+     * FriendsController constructor.
+     *
+     * @param FriendsService $friendsService
+     */
     public function __construct(FriendsService $friendsService)
     {
         $this->friendsService = $friendsService;

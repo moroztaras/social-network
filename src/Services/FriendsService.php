@@ -40,13 +40,13 @@ class FriendsService
 
         if ($friendship) {
             $this->doctrine->getManager()->remove($friendship);
-            $this->flashBag->add('danger', 'Ви відписалися від '.$friend->getFullname());
+            $this->flashBag->add('danger', 'friend_remove');
         } else {
             $fr = new Friends();
             $fr->setUser($user);
             $fr->setFriend($friend);
             $this->doctrine->getManager()->persist($fr);
-            $this->flashBag->add('success', 'Ви підписалися на '.$friend->getFullname());
+            $this->flashBag->add('success', 'friend_add');
         }
         $this->doctrine->getManager()->flush();
     }

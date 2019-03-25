@@ -8,10 +8,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * Class MediaController.
+ *
+ * @Route("/media")
+ */
 class MediaController extends AbstractController
 {
     /**
-     * @Route("/media", methods={"GET", "POST"}, name="media_upload")
+     * @Route("", methods={"GET", "POST"}, name="media_upload")
      */
     public function indexAction(Request $request)
     {
@@ -27,7 +32,7 @@ class MediaController extends AbstractController
     }
 
     /**
-     * @Route("/media/{id}", methods={"DELETE"}, name="media_remove")
+     * @Route("/{id}", methods={"DELETE"}, name="media_remove")
      */
     public function removeAction($id)
     {

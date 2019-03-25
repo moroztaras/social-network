@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 /**
  * Class CommentController.
  *
- *  @Route("/comment")
+ * @Route("/comment")
  */
 class CommentController extends Controller
 {

@@ -8,6 +8,7 @@ use App\Components\User\Security\RecoverPassword;
 use App\Services\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use App\Entity\User;
 use App\Components\User\Forms\RecoverUserForm;
@@ -41,19 +42,26 @@ class SecurityController extends Controller
     private $authorizationChecker;
 
     /**
+     * @var FlashBagInterface
+     */
+    private $flashBag;
+
+    /**
      * SecurityController constructor.
      *
      * @param AuthenticationUtils           $helper
      * @param RegistrationUserModel         $registrationModel
      * @param AuthorizationCheckerInterface $authorizationChecker
      * @param UserService                   $userService
+     * @param FlashBagInterface             $flashBag
      */
-    public function __construct(AuthenticationUtils $helper, RegistrationUserModel $registrationModel, AuthorizationCheckerInterface $authorizationChecker, UserService $userService)
+    public function __construct(AuthenticationUtils $helper, RegistrationUserModel $registrationModel, AuthorizationCheckerInterface $authorizationChecker, UserService $userService, FlashBagInterface $flashBag)
     {
         $this->helper = $helper;
         $this->registrationModel = $registrationModel;
         $this->authorizationChecker = $authorizationChecker;
         $this->userService = $userService;
+        $this->flashBag = $flashBag;
     }
 
     /**
@@ -83,6 +91,8 @@ class SecurityController extends Controller
     public function registration(Request $request)
     {
         if ($this->authorizationChecker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            $this->flashBag->add('warning', 'user_log_in');
+
             return $this->redirectToRoute('user_default');
         }
         $user = new User();
@@ -90,6 +100,7 @@ class SecurityController extends Controller
         $registrationForm->handleRequest($request);
         if ($registrationForm->isSubmitted() && $registrationForm->isValid()) {
             $this->userService->save($user);
+            $this->flashBag->add('success', 'user_registration_successfully');
 
             return $this->redirectToRoute('app_login');
         }
@@ -111,6 +122,8 @@ class SecurityController extends Controller
     public function recover($token, Request $request, RecoverPassword $recoverPassword, AuthorizationCheckerInterface $authorizationChecker)
     {
         if ($authorizationChecker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            $this->flashBag->add('warning', 'user_log_in');
+
             return $this->redirectToRoute('user_default');
         }
         if ($token) {
@@ -134,6 +147,7 @@ class SecurityController extends Controller
 
             if ($user) {
                 $status = $recoverPassword->send($user);
+                $this->flashBag->add('warning', 'user_recover_password_send_email');
             }
 
             return $this->redirectToRoute('app_login');
@@ -159,6 +173,8 @@ class SecurityController extends Controller
         /** @var User $user */
         $user = $this->getUser();
         if (!$user->getTokenRecover()) {
+            $this->flashBag->add('danger', 'user_token_not_found');
+
             return $this->redirectToRoute('recover');
         }
         $changePasswordModel = new ChangePasswordModel();
@@ -166,6 +182,7 @@ class SecurityController extends Controller
         $formChangePassword->handleRequest($request);
         if ($formChangePassword->isSubmitted() && $formChangePassword->isValid()) {
             $this->userService->changePasswordModel($user, $changePasswordModel);
+            $this->flashBag->add('success', 'user_recover_password_successfully');
 
             return $this->redirectToRoute('app_login');
         }

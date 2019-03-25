@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Entity\User;
 use App\Entity\Friends;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class FriendsService
 {
@@ -14,13 +15,20 @@ class FriendsService
     private $doctrine;
 
     /**
-     * UserService constructor.
-     *
-     * @param ManagerRegistry $doctrine
+     * @var FlashBagInterface
      */
-    public function __construct(ManagerRegistry $doctrine)
+    private $flashBag;
+
+    /**
+     * FriendsService constructor.
+     *
+     * @param ManagerRegistry   $doctrine
+     * @param FlashBagInterface $flashBag
+     */
+    public function __construct(ManagerRegistry $doctrine, FlashBagInterface $flashBag)
     {
         $this->doctrine = $doctrine;
+        $this->flashBag = $flashBag;
     }
 
     public function save($id_user, $id_friend)
@@ -32,11 +40,13 @@ class FriendsService
 
         if ($friendship) {
             $this->doctrine->getManager()->remove($friendship);
+            $this->flashBag->add('danger', 'Ви відписалися від '.$friend->getFullname());
         } else {
             $fr = new Friends();
             $fr->setUser($user);
             $fr->setFriend($friend);
             $this->doctrine->getManager()->persist($fr);
+            $this->flashBag->add('success', 'Ви підписалися на '.$friend->getFullname());
         }
         $this->doctrine->getManager()->flush();
     }

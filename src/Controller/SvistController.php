@@ -106,6 +106,11 @@ class SvistController extends Controller
     public function view($id, Request $request)
     {
         $svistyn = $this->getDoctrine()->getRepository(Svistyn::class)->find($id);
+        if (!$svistyn) {
+            $this->flashBag->add('danger', 'svist_not_found');
+
+            return $this->redirectToRoute('svistyn_post');
+        }
         $comments = $this->commentService->getCommentsForSvistyn($svistyn);
 
         return $this->render('Svistyn/view.html.twig', [

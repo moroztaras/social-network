@@ -5,7 +5,7 @@
         <div class="uk-alert-{{ label }} uk-margin-remove-vertical uk-padding-remove" uk-alert>
           <div class="uk-container uk-container-small uk-padding uk-padding-small" style="position: relative;">
             <a class="uk-alert-close" uk-close></a>
-            {{ message }}
+            {{ message | trans}}
           </div>
         </div>
       {% endfor %}

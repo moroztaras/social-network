@@ -11,9 +11,12 @@ use App\Security\CommentVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 /**
  * Class CommentController.
+ *
+ * @Route("/comment")
  */
 class CommentController extends Controller
 {
@@ -23,13 +26,20 @@ class CommentController extends Controller
     public $commentService;
 
     /**
+     * @var FlashBagInterface
+     */
+    private $flashBag;
+
+    /**
      * CommentController constructor.
      *
-     * @param CommentService $commentService
+     * @param CommentService    $commentService
+     * @param FlashBagInterface $flashBag
      */
-    public function __construct(CommentService $commentService)
+    public function __construct(CommentService $commentService, FlashBagInterface $flashBag)
     {
         $this->commentService = $commentService;
+        $this->flashBag = $flashBag;
     }
 
     public function new($id)
@@ -52,7 +62,7 @@ class CommentController extends Controller
     }
 
     /**
-     * @Route("/comment/{id}", methods={"POST"}, name="comment_add", requirements={"id": "\d+"})
+     * @Route("/{id}", methods={"POST"}, name="comment_add", requirements={"id": "\d+"})
      */
     public function addAction(Request $request, $id)
     {
@@ -63,6 +73,7 @@ class CommentController extends Controller
         $form->handleRequest($request);
         if ($form->isValid()) {
             $this->commentService->save($comment);
+            $this->flashBag->add('success', 'added_new_comment_successfully');
 
             return $this->redirect($this->generateUrl('svistyn_post_view',
                 [
@@ -75,13 +86,21 @@ class CommentController extends Controller
     }
 
     /**
-     * @Route("/comment/{id}/edit", methods={"GET", "POST"}, name="comment_edit")
+     * @Route("/{id}/edit", methods={"GET", "POST"}, name="comment_edit")
      */
     public function editAction($id, Request $request)
     {
         /** @var Comment $comment */
         $comment = $this->getDoctrine()->getRepository(Comment::class)->find($id);
+
+        if (!$comment) {
+            $this->flashBag->add('danger', 'comment_not_found');
+
+            return $this->redirect($this->generateUrl('svistyn_post'));
+        }
         if (!$comment || $comment->getUser() != $this->getUser()) {
+            $this->flashBag->add('danger', 'edit_comment_is_forbidden');
+
             return $this->redirect($this->generateUrl('svistyn_post_view',
                 [
                   'id' => $comment->getSvistyn()->getId(),
@@ -94,7 +113,7 @@ class CommentController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->commentService->save($comment);
-//            $this->flashBag->add('success', 'Comment was edited');
+            $this->flashBag->add('success', 'comment_edited_successfully');
 
             return $this->redirect($this->generateUrl('svistyn_post_view',
                 [
@@ -116,6 +135,8 @@ class CommentController extends Controller
     {
         $referer = $request->headers->get('referer');
         if (!$comment) {
+            $this->flashBag->add('danger', 'comment_not_found');
+
             return $this->redirect($this->generateUrl('svistyn_post_view',
               [
                 'id' => $comment->getSvistyn()->getId(),
@@ -124,10 +145,11 @@ class CommentController extends Controller
         } elseif ($comment->getUser() == $this->getUser() || $comment->getSvistyn()->getUser() == $this->getUser()) {
             $this->denyAccessUnlessGranted(CommentVoter::EDIT, $comment);
             $this->commentService->remove($comment);
-//            s$this->flashBag->add('error', 'Comment was deleted');
+            $this->flashBag->add('danger', 'comment_was_deleted');
 
             return $this->redirect($referer);
         }
+        $this->flashBag->add('danger', 'delete_comment_is_forbidden');
 
         return $this->redirect($referer);
     }

@@ -5,16 +5,14 @@
                 <img data-src="{{ user.avatar|avatarStyleDefault }}" width="40" height="40" alt uk-img>
             </div>
             <div class="uk-width-expand">
-                <div class="">
-                    {{ form_start(form_comment, { 'action': path('comment_add' , { 'id' : comment.svistyn.id }), 'method': 'POST' }) }}
-                    <ul class="uk-flex-inline uk-nav uk-text-small">
-                        <li>{{ form_widget(form_comment) }}</li>
-                        <li>
-                            <button type="submit" class="uk-icon-button" uk-icon="icon: commenting"></button>
-                        </li>
-                    </ul>
-                    {{ form_end(form_comment) }}
-                </div>
+                {{ form_start(form_comment, { 'action': path('comment_add' , { 'id' : comment.svistyn.id }), 'method': 'POST' }) }}
+                <ul class="uk-flex-inline uk-nav uk-text-small">
+                    <li>{{ form_widget(form_comment) }}</li>
+                    <li>
+                        <button type="submit" class="uk-icon-button" uk-icon="icon: commenting"></button>
+                    </li>
+                </ul>
+                {{ form_end(form_comment) }}
             </div>
         </div>
     </div>

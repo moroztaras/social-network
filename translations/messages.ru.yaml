@@ -73,3 +73,33 @@ home_page: 'Главная'
 feed: 'Новости'
 search: 'Поиск'
 results: 'Результатов'
+
+#flash_messages
+added_new_svist_successfully: 'Новый свист добавлен успешно'
+svist_edited_successfully: 'Свист отредактировано успешно'
+edit_svist_is_forbidden: 'Редактировать свист запрещено'
+svist_not_found: 'Свист не найдено'
+svist_was_deleted_successfully: 'Свист удален успешно'
+delete_svist_is_forbidden: 'Удалять свист запрещено'
+svist_share_successfully: 'Вы успешно поделились свистом'
+
+added_new_comment_successfully: 'Комментарий добавлено успешно'
+comment_edited_successfully: 'Комментарий отредактирован успешно'
+edit_comment_is_forbidden: 'Редактировать комментарий запрещено'
+delete_comment_is_forbidden: 'Удалять комментарий запрещено'
+comment_was_deleted: 'Комментарий успешно удален'
+comment_not_found: 'Комментарий не найдено'
+
+user_not_found: 'Пользователь не найден'
+
+friend_add: 'Вы подписались на пользователя'
+friend_remove: 'Вы отписались от пользователя'
+
+user_registration_successfully: 'Новый пользователь зарегистрирован успешно'
+user_log_in: 'Пользователь авторизован'
+user_recover_password_send_email: 'Данные для восстановления пароля высланы на Вашу эл. адрес'
+user_token_not_found: 'Данные для восстановления пароля неверные'
+user_recover_password_successfully: 'Пароль пользователя восстановлено успешно'
+user_change_security_successfully: 'Секретные данные изменены успешно'
+user_edit_save: 'Данные пользователя сохранено'
+data_is_not_correct: 'Данные указано неверно'

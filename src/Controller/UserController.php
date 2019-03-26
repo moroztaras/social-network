@@ -11,6 +11,7 @@ use App\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -22,13 +23,20 @@ class UserController extends Controller
     private $passwordEncoder;
 
     /**
+     * @var FlashBagInterface
+     */
+    private $flashBag;
+
+    /**
      * UserController constructor.
      *
      * @param UserPasswordEncoderInterface $passwordEncoder
+     * @param FlashBagInterface            $flashBag
      */
-    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder, FlashBagInterface $flashBag)
     {
         $this->passwordEncoder = $passwordEncoder;
+        $this->flashBag = $flashBag;
     }
 
     /**
@@ -79,6 +87,7 @@ class UserController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $profileModel->save($user);
+            $this->flashBag->add('success', 'user_edit_save');
 
             return $this->redirectToRoute('user_canonical', ['id' => $user->getId()]);
         }
@@ -96,15 +105,19 @@ class UserController extends Controller
     public function securityCanonical($id, ProfileSecurityModel $profileSecurityModel, UserSecurityManager $userSecurityManager, Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
         $user = $this->getDoctrine()->getRepository(User::class)->find($id);
+        $this->denyAccessUnlessGranted('edit', $user);
         $profileSecurityModel->setUser($user);
         $form = $this->createForm(AccountSecurityForm::class, $profileSecurityModel);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($passwordEncoder->isPasswordValid($user, $profileSecurityModel->getPassword())) {
                 $userSecurityManager->getChange($user);
+                $this->flashBag->add('success', 'user_change_security_successfully');
 
                 return $this->redirectToRoute('user_canonical', ['id' => $user->getId()]);
             } else {
+                $this->flashBag->add('danger', 'data_is_not_correct');
+
                 return $this->redirectToRoute('user_security_canonical', ['id' => $user->getId()]);
             }
         }

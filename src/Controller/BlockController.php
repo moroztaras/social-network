@@ -18,6 +18,11 @@ class BlockController extends Controller
      */
     private $userService;
 
+    /**
+     * BlockController constructor.
+     *
+     * @param UserService $userService
+     */
     public function __construct(UserService $userService)
     {
         $this->userService = $userService;

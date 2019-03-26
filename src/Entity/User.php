@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
@@ -112,6 +114,13 @@ class User implements \Serializable, UserInterface
     private $cover;
 
     /**
+     * @var ArrayCollection
+     * @ORM\OneToMany(targetEntity="Friends", mappedBy="friend", cascade={"persist", "remove"})
+     * @ORM\OrderBy({"id" = "DESC"})
+     */
+    private $friends;
+
+    /**
      * User constructor.
      */
     public function __construct()
@@ -122,6 +131,7 @@ class User implements \Serializable, UserInterface
         $this->created = new \DateTime();
         $this->updated = new \DateTime();
         $this->status = 1;
+        $this->friends = new ArrayCollection();
     }
 
     public function serialize()
@@ -486,5 +496,36 @@ class User implements \Serializable, UserInterface
     public function setCover($cover): void
     {
         $this->cover = $cover;
+    }
+
+    /**
+     * @return Collection|Friends[]
+     */
+    public function getFriends(): Collection
+    {
+        return $this->friends;
+    }
+
+    public function addFriend(Friends $friend): self
+    {
+        if (!$this->friends->contains($friend)) {
+            $this->friends[] = $friend;
+            $friend->setFriend($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFriend(Friends $friend): self
+    {
+        if ($this->friends->contains($friend)) {
+            $this->friends->removeElement($friend);
+            // set the owning side to null (unless already changed)
+            if ($friend->getFriend() === $this) {
+                $friend->setFriend(null);
+            }
+        }
+
+        return $this;
     }
 }

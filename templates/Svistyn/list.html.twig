@@ -10,7 +10,10 @@
           </div>
         {% else  %}
             <div class="uk-text-center uk-margin">
-                <a href="#" class="uk-button uk-button-default" style="margin-right: 5px;"><i class="fa fa-plus-square-o"></i>{{ 'follow'|trans }}</a>
+                <a href="{{ path('friend_add', {'id_user': this_user.id, 'id_friend': user.id }) }}" class="uk-button uk-button-default" style="margin-right: 5px;">
+                    <i class="fa fa-plus-square-o"></i>
+                    {{ render(controller('App\\Controller\\FriendsController::status', {'id_user': this_user.id, 'id_friend': user.id})) }}
+                </a>
             </div>
         {% endif %}
   {% endif %}

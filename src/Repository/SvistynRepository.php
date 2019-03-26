@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Components\Utils\Pagination;
+use App\Entity\Friends;
 use App\Entity\Svistyn;
 use App\Entity\User;
 use Doctrine\ORM\EntityRepository;
@@ -130,10 +131,23 @@ class SvistynRepository extends EntityRepository
 
     public function counterSvistynsByUser(User $user)
     {
-        $query = $this->createQueryBuilder('sv');
-        $query->andWhere('sv.user = :user');
-        $query->setParameter('user', $user->getId());
+        return $this
+          ->createQueryBuilder('sv')
+          ->andWhere('sv.user = :user')
+          ->setParameter('user', $user->getId())
+          ->getQuery()
+          ->getResult();
+    }
 
-        return $query->getQuery()->getResult();
+    public function findAllPostsOfFriends(User $user)
+    {
+        return $this
+          ->createQueryBuilder('sv')
+          ->leftJoin('sv.user', 'user')
+          ->leftJoin('user.friends', 'friends')
+          ->where('friends.user = :user')
+          ->setParameter('user', $user)
+          ->getQuery()
+          ->getResult();
     }
 }

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * Class Svistyn.
@@ -67,6 +69,13 @@ class Svistyn
     private $updated;
 
     /**
+     * @var ArrayCollection
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="svistyn", cascade={"persist", "remove"})
+     * @ORM\OrderBy({"id" = "DESC"})
+     */
+    private $comments;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Svistyn")
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
      */
@@ -86,8 +95,9 @@ class Svistyn
     public function __construct()
     {
         $this->state = 0; //null of start
-    $this->status = 1; //is published
-    $this->marking = 'new';
+        $this->status = 1; //is published
+        $this->marking = 'new';
+        $this->comments = new ArrayCollection();
     }
 
     /**
@@ -266,6 +276,49 @@ class Svistyn
     public function getCreated()
     {
         return $this->created;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    /**
+     * @param Comment $comment
+     *
+     * @return Svistyn
+     */
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setSvistyn($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove comment.
+     *
+     * @param Comment $comment
+     *
+     * @return Svistyn
+     */
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->contains($comment)) {
+            $this->comments->removeElement($comment);
+            // set the owning side to null (unless already changed)
+            if ($comment->getSvistyn() === $this) {
+                $comment->setSvistyn(null);
+            }
+        }
+
+        return $this;
     }
 
     /**

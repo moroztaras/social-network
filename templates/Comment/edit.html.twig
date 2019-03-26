@@ -1,0 +1,12 @@
+{% extends "Layout/layout-default.html.twig" %}
+{% block main %}
+    <div class="uk-container uk-container-xsmall">
+        <div class="uk-section uk-padding uk-background-default kuk-shadow">
+            <p class="center">{{ 'edit'|trans }}</p>
+            {{ form_start(form) }}
+                {{ 'comment'|trans }} {{ form_widget(form) }}
+                <button type="submit" class="uk-button uk-button-default">{{ 'save'|trans }}</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

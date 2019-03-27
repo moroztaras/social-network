@@ -1,4 +1,8 @@
 security:
+    role_hierarchy:
+        ROLE_USER: ROLE_USER
+        ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_SUPER_ADMIN]
+
     access_decision_manager:
         strategy: unanimous
         allow_if_all_abstain: false
@@ -14,16 +18,29 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        api:
+            anonymous: true
+            pattern: ^/api/
+            guard:
+                authenticators:
+                    - App\Security\TokenAuthenticator
+
         main:
-             anonymous: ~
-             provider: db_user
-             http_basic: ~
-             form_login:
-                 login_path: /login
-                 check_path: /login
-             logout:
-                 path: /logout
+            anonymous: true
+            guard:
+                authenticators:
+                    - App\Security\LoginFormAuthenticator
+            form_login:
+                check_path: login_check
+                login_path: app_login
+                username_parameter: email
+                password_parameter: password
+                default_target_path: /
+            logout:
+                path: app_logout
 
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/edit, roles: [ROLE_SUPER_ADMIN, ROLE_USER] }
+         - { path: ^/security, roles: [ROLE_SUPER_ADMIN, ROLE_USER] }
+         - { path: ^/security, roles: [ROLE_SUPER_ADMIN, ROLE_USER] }

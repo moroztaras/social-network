@@ -140,3 +140,47 @@ nelmio_api_doc:
                                         example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
                         '400':
                             description: Bad request
+            /api/user/profile:
+                get:
+                    tags:
+                        - User API
+                    description: Profile user into the api
+                    produces:
+                        - application/json
+                    parameters:
+                        - name:  x-api-key
+                          description: X-API-KEY
+                          in: header
+                          required: true
+                    responses:
+                        '200':
+                            description: Returns user profile
+                            schema:
+                                type: object
+                                properties:
+                                    id:
+                                      type: string
+                                      example: 1
+                                    fullName:
+                                      type: string
+                                      example: new_fake_fullName
+                                    email:
+                                      type: string
+                                      example: email@mail.ua
+                                    gender:
+                                      type: string
+                                      example: m
+                                    country:
+                                      type: string
+                                      example: UA
+                                    birthday:
+                                      type: string
+                                      example: "1986-07-15T00:00:00+02:00"
+                                    roles:
+                                      type: string
+                                      example: "USER_ROLE"
+                                    api-token:
+                                        type: string
+                                        example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+                        '400':
+                            description: Authentication error

@@ -132,6 +132,15 @@ nelmio_api_doc:
                                     birthday:
                                       type: string
                                       example: "1986-07-15T00:00:00+02:00"
+                                    create_at:
+                                      type: string
+                                      example: "2019-03-27T14:02:29+02:00"
+                                    update_at:
+                                      type: string
+                                      example: "2019-03-27T14:02:29+02:00"
+                                    status:
+                                      type: integer
+                                      example: 1
                                     roles:
                                       type: string
                                       example: "USER_ROLE"
@@ -144,7 +153,7 @@ nelmio_api_doc:
                 get:
                     tags:
                         - User API
-                    description: Profile user into the api
+                    description: My profile user into the api
                     produces:
                         - application/json
                     parameters:
@@ -152,6 +161,60 @@ nelmio_api_doc:
                           description: X-API-KEY
                           in: header
                           required: true
+                    responses:
+                        '200':
+                            description: Returns my profile user
+                            schema:
+                                type: object
+                                properties:
+                                    id:
+                                      type: string
+                                      example: 1
+                                    fullName:
+                                      type: string
+                                      example: new_fake_fullName
+                                    email:
+                                      type: string
+                                      example: email@mail.ua
+                                    gender:
+                                      type: string
+                                      example: m
+                                    country:
+                                      type: string
+                                      example: UA
+                                    birthday:
+                                      type: string
+                                      example: "1986-07-15T00:00:00+02:00"
+                                    create_at:
+                                      type: string
+                                      example: "2019-03-27T14:02:29+02:00"
+                                    update_at:
+                                      type: string
+                                      example: "2019-03-27T14:02:29+02:00"
+                                    status:
+                                      type: integer
+                                      example: 1
+                                    roles:
+                                      type: string
+                                      example: "USER_ROLE"
+                                    api-token:
+                                        type: string
+                                        example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+                        '400':
+                            description: Authentication error
+            /api/user/{id}/profile:
+                get:
+                    tags:
+                        - User API
+                    description: Profile user into the api
+                    produces:
+                        - application/json
+                    parameters:
+                        - name: id
+                          description: User ID
+                          in: path
+                          required: true
+                          type: string
                     responses:
                         '200':
                             description: Returns user profile
@@ -176,11 +239,17 @@ nelmio_api_doc:
                                     birthday:
                                       type: string
                                       example: "1986-07-15T00:00:00+02:00"
+                                    create_at:
+                                      type: string
+                                      example: "2019-03-27T14:02:29+02:00"
+                                    update_at:
+                                      type: string
+                                      example: "2019-03-27T14:02:29+02:00"
+                                    status:
+                                      type: integer
+                                      example: 1
                                     roles:
                                       type: string
                                       example: "USER_ROLE"
-                                    api-token:
-                                        type: string
-                                        example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-                        '400':
-                            description: Authentication error
+                        '404':
+                            description: User object not found

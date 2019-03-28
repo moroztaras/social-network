@@ -5,6 +5,8 @@ namespace App\Controller\Api;
 use App\Entity\User;
 use App\Exception\JsonHttpException;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use App\Exception\NotFoundException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -48,9 +50,9 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/profile", methods={"GET"}, name="api_user_profile")
+     * @Route("/profile", methods={"GET"}, name="api_my_user_profile")
      */
-    public function profileUserAction(Request $request)
+    public function myProfileUserAction(Request $request)
     {
         $apiToken = $request->headers->get('x-api-key');
 
@@ -64,5 +66,17 @@ class UserController extends Controller
         }
 
         return $this->json(['user' => $user]);
+    }
+
+    /**
+     * @Route("/{id}/profile", name="api_user_profile", methods={"GET"}, requirements={"id": "\d+"})
+     */
+    public function profileUserAction(User $user)
+    {
+        if (!$user) {
+            throw new NotFoundException(Response::HTTP_NOT_FOUND, 'Not Found.');
+        }
+
+        return $this->json(['user' => $user], Response::HTTP_OK);
     }
 }

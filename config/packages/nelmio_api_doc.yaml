@@ -49,12 +49,15 @@ nelmio_api_doc:
                                     email:
                                       type: string
                                       example: moroztaras@i.ua
-                                    garden:
+                                    gender:
                                       type: string
                                       example: m
                                     country:
                                       type: string
                                       example: UA
+                                    birthday:
+                                      type: string
+                                      example: "1986-07-15T00:00:00+02:00"
                                     create_at:
                                       type: string
                                       example: "2019-03-27T14:02:29+02:00"
@@ -64,8 +67,76 @@ nelmio_api_doc:
                                     status:
                                       type: integer
                                       example: 1
+                                    roles:
+                                      type: string
+                                      example: "USER_ROLE"
                                     api-token:
                                         type: string
                                         example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
                         '400':
                             description: Authentication error
+            /api/user/registration:
+                post:
+                    tags:
+                        - User API
+                    description: Registration new user
+                    produces:
+                        - application/json
+                    parameters:
+                        - name: user
+                          description: User to be registered
+                          in: body
+                          required: true
+                          schema:
+                              type: object
+                              properties:
+                                  fullName:
+                                      type: string
+                                      example: new_fake_fullName
+                                  email:
+                                      type: string
+                                      example: new_fake_mail@mail.ua
+                                  plainPassword:
+                                      type: string
+                                      example: fake_password
+                                  gender:
+                                      type: string
+                                      example: m
+                                  region:
+                                      type: string
+                                      example: UA
+                                  birthday:
+                                      type: string
+                                      example: "1986-07-15T00:00:00+02:00"
+                    responses:
+                        '200':
+                            description: Registration successful
+                            schema:
+                                type: object
+                                properties:
+                                    id:
+                                      type: string
+                                      example: 1
+                                    fullName:
+                                      type: string
+                                      example: new_fake_fullName
+                                    email:
+                                      type: string
+                                      example: email@mail.ua
+                                    gender:
+                                      type: string
+                                      example: m
+                                    country:
+                                      type: string
+                                      example: UA
+                                    birthday:
+                                      type: string
+                                      example: "1986-07-15T00:00:00+02:00"
+                                    roles:
+                                      type: string
+                                      example: "USER_ROLE"
+                                    api-token:
+                                        type: string
+                                        example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+                        '400':
+                            description: Bad request

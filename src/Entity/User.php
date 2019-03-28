@@ -565,10 +565,13 @@ class User implements \Serializable, UserInterface, \JsonSerializable
           'id' => $this->getId(),
           'fullName' => $this->getFullname(),
           'email' => $this->getEmail(),
+          'gender' => $this->getGender(),
+          'country' => $this->getRegion(),
           'roles' => $this->getRoles(),
-          'avatar' => $this->getAvatar(),
-          'api_token' => $this->getApiToken(),
           'create_at' => $this->getCreated(),
+          'updated_at' => $this->getUpdated(),
+          'status' => $this->getStatus(),
+          'api_token' => $this->getApiToken(),
         ];
     }
 }

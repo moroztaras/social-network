@@ -1,0 +1,71 @@
+nelmio_api_doc:
+    areas:
+        path_patterns:
+            - ^/api(?!/doc$)
+    documentation:
+        info:
+            title: Social Network API Doc
+            description: Social Network using Symfony framework
+            version: 1.0.1
+        securityDefinitions:
+            ApiAuth:
+                type: apiKey
+                in: header
+                name: x-api-key
+        paths:
+            /api/user/login:
+                post:
+                    tags:
+                        - User API
+                    description: Login into the api
+                    produces:
+                        - application/json
+                    parameters:
+                        - name: user
+                          description: User object used for user authentication
+                          in: body
+                          required: true
+                          schema:
+                              type: object
+                              properties:
+                                  email:
+                                      type: string
+                                      example: moroztaras@i.ua
+                                  plainPassword:
+                                      type: string
+                                      example: moroztaras
+                    responses:
+                        '200':
+                            description: Login successful. Returns user profile
+                            schema:
+                                type: object
+                                properties:
+                                    id:
+                                      type: integer
+                                      example: 1
+                                    fullName:
+                                      type: string
+                                      example: Moroz Taras
+                                    email:
+                                      type: string
+                                      example: moroztaras@i.ua
+                                    garden:
+                                      type: string
+                                      example: m
+                                    country:
+                                      type: string
+                                      example: UA
+                                    create_at:
+                                      type: string
+                                      example: "2019-03-27T14:02:29+02:00"
+                                    update_at:
+                                      type: string
+                                      example: "2019-03-27T14:02:29+02:00"
+                                    status:
+                                      type: integer
+                                      example: 1
+                                    api-token:
+                                        type: string
+                                        example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+                        '400':
+                            description: Authentication error

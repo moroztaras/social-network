@@ -78,4 +78,30 @@ class SecurityController extends Controller
 
         throw new JsonHttpException(400, 'Incorrect password');
     }
+
+    /**
+     * @Route("/registration", methods={"POST"}, name="api_user_registration")
+     */
+    public function registrationUserAction(Request $request)
+    {
+        if (!$content = $request->getContent()) {
+            throw new JsonHttpException(400, 'Bad Request');
+        }
+        /* @var User $user */
+        $user = $this->serializer->deserialize($request->getContent(), User::class, 'json');
+        $user
+          ->setRoles(['ROLE_USER'])
+          ->setApiToken(Uuid::uuid4())
+          ->setPassword($this->passwordEncoder->encodePassword($user, $user->getPlainPassword()))
+        ;
+
+        $errors = $this->validator->validate($user);
+        if (count($errors)) {
+            throw new JsonHttpException(400, (string) $errors->get(0)->getPropertyPath().': '.(string) $errors->get(0)->getMessage());
+        }
+        $this->getDoctrine()->getManager()->persist($user);
+        $this->getDoctrine()->getManager()->flush();
+
+        return $this->json(['user' => $user]);
+    }
 }

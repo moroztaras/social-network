@@ -39,7 +39,6 @@ class User implements \Serializable, UserInterface, \JsonSerializable
      *
      * @Assert\Length(
      *      min = 8,
-     *      max = 50,
      *      minMessage = "Password must be at least 8 characters",
      *      maxMessage = "The password must be no more than 50 characters"
      * )
@@ -565,10 +564,14 @@ class User implements \Serializable, UserInterface, \JsonSerializable
           'id' => $this->getId(),
           'fullName' => $this->getFullname(),
           'email' => $this->getEmail(),
+          'gender' => $this->getGender(),
+          'birthday' => $this->getBirthday(),
+          'country' => $this->getRegion(),
           'roles' => $this->getRoles(),
-          'avatar' => $this->getAvatar(),
-          'api_token' => $this->getApiToken(),
           'create_at' => $this->getCreated(),
+          'updated_at' => $this->getUpdated(),
+          'status' => $this->getStatus(),
+          'api_token' => $this->getApiToken(),
         ];
     }
 }

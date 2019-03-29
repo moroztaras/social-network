@@ -13,7 +13,7 @@ use Doctrine\Common\Collections\Collection;
  * @ORM\Table(name="svistyn")
  * @ORM\HasLifecycleCallbacks()
  */
-class Svistyn
+class Svistyn implements \JsonSerializable
 {
     /**
      * @ORM\Column(type="integer")
@@ -450,5 +450,33 @@ class Svistyn
     public function setIsParent(bool $isParent): void
     {
         $this->isParent = $isParent;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+          'id' => $this->getId(),
+          'text' => $this->getText(),
+          'photo' => [
+            'fileName' => $this->getPhoto()->getFilename(),
+            'url' => $this->getPhoto()->getUrl(),
+            'fileSize' => $this->getPhoto()->getFileSize(),
+            'createdAt' => $this->getPhoto()->getCreated(),
+          ],
+          'embedVideo' => $this->getEmbedVideo(),
+          'createdAt' => $this->getCreated(),
+          'updatedAt' => $this->getUpdated(),
+          'comments' => [
+            'comment' => $this->getComments(),
+          ],
+          'status' => $this->getStatus(),
+          'isParent' => $this->isParent(),
+          'user' => [
+            'id' => $this->getUser()->getId(),
+            'fullName' => $this->getUser()->getFullname(),
+          ],
+          'countSvists' => $this->getCountSvists(),
+          'countZvizds' => $this->getCountZvizds(),
+        ];
     }
 }

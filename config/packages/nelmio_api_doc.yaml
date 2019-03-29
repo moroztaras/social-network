@@ -316,6 +316,92 @@ nelmio_api_doc:
                                       example: "USER_ROLE"
                         '404':
                             description: User object not found
+            /api/user/{id}/svist/page={page}:
+                get:
+                    tags:
+                        - Svist API
+                    description: User list svists
+                    produces:
+                        - application/json
+                    parameters:
+                        - name: id
+                          description: User ID
+                          in: path
+                          required: true
+                          type: string
+                        - name: page
+                          description: Page
+                          in: path
+                          required: true
+                          type: string
+                    responses:
+                        '200':
+                            description: User list svists successful
+                            schema:
+                                type: object
+                                properties:
+                                    svists:
+                                        type: object
+                                        properties:
+                                            id:
+                                                type: string
+                                                example: 1
+                                            text:
+                                                type: string
+                                                example: Test text of the first article
+                                            photo:
+                                                type: object
+                                                properties:
+                                                    fileName:
+                                                        type: string
+                                                        example: "da2ede4ce8fb2b8f23d93d59555bb871.jpg"
+                                                    url:
+                                                        type: string
+                                                        example: "public://svistyn/1/da2ede4ce8fb2b8f23d93d59555bb871.jpg"
+                                                    fileSize:
+                                                        type: string
+                                                        example: "310677"
+                                                    create_at:
+                                                        type: string
+                                                        example: "2019-03-27T14:02:29+02:00"
+                                            embedVideo:
+                                                type: string
+                                                example: https://www.youtube.com/watch?v=mNnknknWAKg
+                                            create_at:
+                                                type: string
+                                                example: "2019-03-27T14:02:29+02:00"
+                                            update_at:
+                                                type: string
+                                                example: "2019-03-27T14:02:29+02:00"
+                                            comments:
+                                                type: object
+                                                properties:
+                                                    comment:
+                                                        type: string
+                                                        example: []
+                                            status:
+                                                type: integer
+                                                example: 1
+                                            isParent:
+                                                type: boolean
+                                                example: false
+                                            countSvists:
+                                                type: integer
+                                                example: 0
+                                            countZvizds:
+                                                type: integer
+                                                example: 0
+                                            user:
+                                                type: object
+                                                properties:
+                                                    id:
+                                                        type: integer
+                                                        example: 1
+                                                    fullName:
+                                                        type: string
+                                                        example: "Moroz Taras"
+                        '404':
+                            description: Svisit Not Found.
             /api/svist/{id}:
                 get:
                     tags:

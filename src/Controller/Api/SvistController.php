@@ -116,4 +116,32 @@ class SvistController extends Controller
 
         return $this->json(['svistyn' => $svistyn]);
     }
+
+    /**
+     * @Route("svist/{id}", name="api_svist_delete", methods={"DELETE"}, requirements={"id": "\d+"})
+     */
+    public function removeArticle(Request $request, Svistyn $svistyn)
+    {
+        if (!$svistyn) {
+            throw new NotFoundException(Response::HTTP_NOT_FOUND, 'Svist Not Found.');
+        }
+        $em = $this->getDoctrine()->getManager();
+        $apiToken = $request->headers->get('x-api-key');
+
+        /** @var User $user */
+        $user = $em->getRepository(User::class)->findOneBy(['apiToken' => $apiToken]);
+        if (!$user) {
+            throw new JsonHttpException(Response::HTTP_BAD_REQUEST, 'Authentication error');
+        }
+
+        $this->getDoctrine()->getManager()->remove($svistyn);
+        $this->getDoctrine()->getManager()->flush();
+
+        return $this->json([
+          'success' => [
+            'code' => Response::HTTP_OK,
+            'message' => 'Svist was deleted',
+          ],
+        ], Response::HTTP_OK);
+    }
 }

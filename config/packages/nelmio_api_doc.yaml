@@ -564,3 +564,26 @@ nelmio_api_doc:
                             description: Bad request
                         '404':
                             description: Svisit Not Found.
+                delete:
+                    tags:
+                        - Svist API
+                    description: Svist delete
+                    produces:
+                        - application/json
+                    parameters:
+                        - name:  x-api-key
+                          description: X-API-KEY
+                          in: header
+                          required: true
+                        - name: id
+                          description: Svist ID
+                          in: path
+                          required: true
+                          type: string
+                    responses:
+                        '200':
+                            description: Svist was deleted
+                        '400':
+                            description: Bad request
+                        '404':
+                            description: Svist Not Found.

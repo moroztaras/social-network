@@ -81,4 +81,39 @@ class SvistController extends Controller
 
         return $this->json(['svist' => $svistyn], Response::HTTP_OK);
     }
+
+    /**
+     * @Route("svist", name="api_svist_new", methods={"POST"})
+     */
+    public function newSvisit(Request $request)
+    {
+        if (!$content = $request->getContent()) {
+            throw new JsonHttpException(Response::HTTP_BAD_REQUEST, 'Bad Request');
+        }
+        $em = $this->getDoctrine()->getManager();
+        $apiToken = $request->headers->get('x-api-key');
+
+        /** @var User $user */
+        $user = $em->getRepository(User::class)
+          ->findOneBy(['apiToken' => $apiToken]);
+        if (!$user) {
+            throw new JsonHttpException(Response::HTTP_BAD_REQUEST, 'Authentication error');
+        }
+        /* @var Svistyn $svistyn */
+        $svistyn = $this->serializer->deserialize($request->getContent(), Svistyn::class, 'json');
+        $svistyn
+          ->setUser($user)
+          ->setCreated(new \DateTime())
+          ->setUpdated(new \DateTime())
+          ;
+
+        $errors = $this->validator->validate($svistyn);
+        if (count($errors)) {
+            throw new JsonHttpException(Response::HTTP_BAD_REQUEST, (string) $errors->get(0)->getPropertyPath().': '.(string) $errors->get(0)->getMessage());
+        }
+        $this->getDoctrine()->getManager()->persist($svistyn);
+        $this->getDoctrine()->getManager()->flush();
+
+        return $this->json(['svistyn' => $svistyn]);
+    }
 }

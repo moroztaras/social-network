@@ -585,5 +585,7 @@ nelmio_api_doc:
                             description: Svist was deleted
                         '400':
                             description: Bad request
+                        '403':
+                            description: Access Denied.
                         '404':
                             description: Svist Not Found.

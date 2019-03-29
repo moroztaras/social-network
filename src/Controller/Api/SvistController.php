@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Exception\NotFoundException;
 use App\Exception\JsonHttpException;
+use App\Exception\AccessDeniedException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -133,7 +134,9 @@ class SvistController extends Controller
         if (!$user) {
             throw new JsonHttpException(Response::HTTP_BAD_REQUEST, 'Authentication error');
         }
-
+        if ($user !== $svistyn->getUser()) {
+            throw new AccessDeniedException(Response::HTTP_FORBIDDEN, 'Access Denied.');
+        }
         $this->getDoctrine()->getManager()->remove($svistyn);
         $this->getDoctrine()->getManager()->flush();
 

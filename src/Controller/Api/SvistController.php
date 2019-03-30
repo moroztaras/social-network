@@ -102,7 +102,7 @@ class SvistController extends Controller
     /**
      * @Route("/{id}", name="api_svist_delete", methods={"DELETE"}, requirements={"id": "\d+"})
      */
-    public function removeArticle(Request $request, Svistyn $svistyn)
+    public function removeSvist(Request $request, Svistyn $svistyn)
     {
         if (!$svistyn) {
             throw new NotFoundException(Response::HTTP_NOT_FOUND, 'Svist Not Found.');

@@ -3,8 +3,10 @@
 namespace App\Controller\Api;
 
 use App\Entity\Comment;
+use App\Entity\User;
 use App\Exception\JsonHttpException;
 use App\Exception\NotFoundException;
+use App\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -101,5 +103,35 @@ class CommentController extends Controller
         $this->getDoctrine()->getManager()->flush();
 
         return $this->json(['comment' => $comment], 200, [], [AbstractNormalizer::GROUPS => ['Details']]);
+    }
+
+    /**
+     * @Route("/{id}", name="api_comment_delete", methods={"DELETE"}, requirements={"id": "\d+"})
+     */
+    public function removeSvist(Request $request, Comment $comment)
+    {
+        if (!$comment) {
+            throw new NotFoundException(Response::HTTP_NOT_FOUND, 'Comment Not Found.');
+        }
+        $em = $this->getDoctrine()->getManager();
+        $apiToken = $request->headers->get('x-api-key');
+
+        /** @var User $user */
+        $user = $em->getRepository(User::class)->findOneBy(['apiToken' => $apiToken]);
+        if (!$user) {
+            throw new JsonHttpException(Response::HTTP_BAD_REQUEST, 'Authentication error');
+        }
+        if ($user !== $comment->getUser()) {
+            throw new AccessDeniedException(Response::HTTP_FORBIDDEN, 'Access Denied.');
+        }
+        $this->getDoctrine()->getManager()->remove($comment);
+        $this->getDoctrine()->getManager()->flush();
+
+        return $this->json([
+          'success' => [
+            'code' => Response::HTTP_OK,
+            'message' => 'Comment was deleted',
+          ],
+        ], Response::HTTP_OK);
     }
 }

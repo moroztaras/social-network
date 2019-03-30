@@ -1000,3 +1000,28 @@ nelmio_api_doc:
                             description: Bad request
                         '404':
                             description: Comment not found
+                delete:
+                    tags:
+                        - Comments API
+                    description: Comment delete
+                    produces:
+                        - application/json
+                    parameters:
+                        - name:  x-api-key
+                          description: X-API-KEY
+                          in: header
+                          required: true
+                        - name: id
+                          description: Comment ID
+                          in: path
+                          required: true
+                          type: string
+                    responses:
+                        '200':
+                            description: Comment was deleted
+                        '400':
+                            description: Authentication error
+                        '403':
+                            description: Access Denied.
+                        '404':
+                            description: Comments Not Found.

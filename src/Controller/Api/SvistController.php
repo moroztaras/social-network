@@ -3,6 +3,7 @@
 namespace App\Controller\Api;
 
 use App\Entity\Svistyn;
+use App\Entity\Comment;
 use App\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,7 +19,7 @@ use Knp\Component\Pager\PaginatorInterface;
 /**
  * Class SvistController.
  *
- * @Route("api/")
+ * @Route("api/svist")
  */
 class SvistController extends Controller
 {
@@ -52,7 +53,7 @@ class SvistController extends Controller
     }
 
     /**
-     * @Route("svist/{id}", name="api_svist_show", methods={"GET"}, requirements={"id": "\d+"})
+     * @Route("/{id}", name="api_svist_show", methods={"GET"}, requirements={"id": "\d+"})
      */
     public function showSvist(Svistyn $svistyn)
     {
@@ -64,7 +65,7 @@ class SvistController extends Controller
     }
 
     /**
-     * @Route("svist", name="api_svist_new", methods={"POST"})
+     * @Route("", name="api_svist_new", methods={"POST"})
      */
     public function newSvisit(Request $request)
     {
@@ -99,7 +100,7 @@ class SvistController extends Controller
     }
 
     /**
-     * @Route("svist/{id}", name="api_svist_delete", methods={"DELETE"}, requirements={"id": "\d+"})
+     * @Route("/{id}", name="api_svist_delete", methods={"DELETE"}, requirements={"id": "\d+"})
      */
     public function removeArticle(Request $request, Svistyn $svistyn)
     {
@@ -129,7 +130,7 @@ class SvistController extends Controller
     }
 
     /**
-     * @Route("svist/{id}/comments", name="api_svist_list_comments", methods={"GET"}, requirements={"id": "\d+"})
+     * @Route("/{id}/comments", name="api_svist_list_comments", methods={"GET"}, requirements={"id": "\d+"})
      */
     public function listCommentsForSvist(Svistyn $svistyn)
     {
@@ -141,5 +142,43 @@ class SvistController extends Controller
         }
 
         return $this->json(['comments' => $svistyn->getComments()], Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/{id}/comments", name="api_svist_add_comments", methods={"POST"}, requirements={"id": "\d+"})
+     */
+    public function addCommentForSvist(Svistyn $svistyn, Request $request)
+    {
+        if (!$svistyn) {
+            throw new NotFoundException(Response::HTTP_NOT_FOUND, 'Svisit Not Found.');
+        }
+        if (!$content = $request->getContent()) {
+            throw new JsonHttpException(400, 'Bad Request');
+        }
+        $em = $this->getDoctrine()->getManager();
+        $apiToken = $request->headers->get('x-api-key');
+
+        /** @var User $user */
+        $user = $em->getRepository(User::class)->findOneBy(['apiToken' => $apiToken]);
+        if (!$user) {
+            throw new JsonHttpException(400, 'Authentication error');
+        }
+
+        /* @var Comment $comment */
+        $comment = $this->serializer->deserialize($request->getContent(), Comment::class, 'json');
+        $comment
+          ->setUser($user)
+          ->setSvistyn($svistyn)
+          ->setCreatedAt(new \DateTime())
+          ->setApproved(true);
+
+        $errors = $this->validator->validate($comment);
+        if (count($errors)) {
+            throw new JsonHttpException(400, (string) $errors->get(0)->getPropertyPath().': '.(string) $errors->get(0)->getMessage());
+        }
+        $this->getDoctrine()->getManager()->persist($comment);
+        $this->getDoctrine()->getManager()->flush();
+
+        return $this->json(['comment' => $comment]);
     }
 }

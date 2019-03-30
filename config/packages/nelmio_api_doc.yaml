@@ -666,3 +666,80 @@ nelmio_api_doc:
                             description: Bad request
                         '404':
                             description: Comments not found
+            /api/comments/{id}:
+                get:
+                    tags:
+                        - Comments API
+                    description: Comments list
+                    produces:
+                        - application/json
+                    parameters:
+                        - name: id
+                          description: Comment Id
+                          in: path
+                          required: true
+                          type: integer
+                    responses:
+                        '200':
+                            description: Comment show successful
+                            schema:
+                                type: object
+                                properties:
+                                    comment:
+                                        type: object
+                                        properties:
+                                            id:
+                                                type: string
+                                                example: 1
+                                            comment:
+                                                type: string
+                                                example: Comment 1 for "First svist"
+                                            svistyn:
+                                                type: object
+                                                properties:
+                                                    id:
+                                                        type: string
+                                                        example: 1
+                                                    text:
+                                                        type: string
+                                                        example: Test text of the first svist
+                                                    photo:
+                                                        type: string
+                                                        example: "da2ede4ce8fb2b8f23d93d59555bb871.jpg"
+                                                    create_at:
+                                                        type: string
+                                                        example: "2019-03-27T14:02:29+02:00"
+                                                    update_at:
+                                                        type: string
+                                                        example: "2019-03-27T14:02:29+02:00"
+                                                    status:
+                                                        type: integer
+                                                        example: 1
+                                                    isParent:
+                                                        type: boolean
+                                                        example: false
+                                                    countSvists:
+                                                        type: integer
+                                                        example: 0
+                                                    countZvizds:
+                                                        type: integer
+                                                        example: 0
+                                            user:
+                                                type: object
+                                                properties:
+                                                    id:
+                                                        type: integer
+                                                        example: 1
+                                                    fullName:
+                                                        type: string
+                                                        example: "Moroz Taras"
+                                            createdAt:
+                                                 type: string
+                                                 example: "2019-01-24T14:22:51+02:00"
+                                            approved:
+                                                 type: string
+                                                 example: true
+                        '400':
+                            description: Bad request
+                        '404':
+                            description: Comment not found

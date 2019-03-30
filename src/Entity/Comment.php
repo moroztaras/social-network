@@ -191,6 +191,7 @@ class Comment implements \JsonSerializable
           'id' => $this->getId(),
           'comment' => $this->getComment(),
           'svistyn' => [
+            'id' => $this->getSvistyn()->getId(),
             'text' => $this->getSvistyn()->getText(),
             'photo' => $this->getSvistyn()->getPhoto()->getUrl(),
             'embedVideo' => $this->getSvistyn()->getEmbedVideo(),

@@ -4,6 +4,7 @@ namespace App\Controller\Api;
 
 use App\Entity\Comment;
 use App\Exception\JsonHttpException;
+use App\Exception\NotFoundException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -66,5 +67,17 @@ class CommentController extends Controller
               $request->query->getInt('page', $page), $limit),
           ],
           Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/{id}", name="api_show_comment", methods={"GET"}, requirements={"id": "\d+"})
+     */
+    public function showComment(Comment $comment)
+    {
+        if (!$comment) {
+            throw new NotFoundException(Response::HTTP_NOT_FOUND, 'Comment Not Found.');
+        }
+
+        return $this->json(['comment' => $comment], Response::HTTP_OK);
     }
 }

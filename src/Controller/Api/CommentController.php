@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Knp\Component\Pager\PaginatorInterface;
 
@@ -79,5 +80,26 @@ class CommentController extends Controller
         }
 
         return $this->json(['comment' => $comment], Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/{id}", name="api_edit_comment", methods={"PUT"}, requirements={"id": "\d+"})
+     */
+    public function editComment($id, Request $request, SerializerInterface $serializer)
+    {
+        if (!($comment = $this->getDoctrine()->getRepository(Comment::class)->find($id))) {
+            throw new NotFoundException(Response::HTTP_NOT_FOUND, 'Comment Not Found.');
+        }
+
+        if (!($content = $request->getContent())) {
+            throw new JsonHttpException(400, 'Bad Request');
+        }
+        $serializer->deserialize($content, Comment::class, 'json', [
+          AbstractNormalizer::OBJECT_TO_POPULATE => $comment,
+          AbstractNormalizer::GROUPS => ['Details'],
+        ]);
+        $this->getDoctrine()->getManager()->flush();
+
+        return $this->json(['comment' => $comment], 200, [], [AbstractNormalizer::GROUPS => ['Details']]);
     }
 }

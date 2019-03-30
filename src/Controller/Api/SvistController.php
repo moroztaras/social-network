@@ -52,33 +52,6 @@ class SvistController extends Controller
     }
 
     /**
-     * @Route("user/{id}/svist/page={page}", name="api_user_list_svist", methods={"GET"}, requirements={"id": "\d+", "page": "\d+"})
-     */
-    public function userListSvists($id, Request $request, string $page, $limit = 10)
-    {
-        $em = $this->getDoctrine()->getManager();
-        /** @var User $user */
-        $user = $em->getRepository(User::class)->findOneBy(['id' => $id]);
-
-        if (!$user) {
-            throw new JsonHttpException(Response::HTTP_NOT_FOUND, 'User not found');
-        }
-        $svists = $em->getRepository(Svistyn::class)->findBy(['user' => $user]);
-
-        if (!$svists) {
-            throw new JsonHttpException(Response::HTTP_NOT_FOUND, 'Svists not found');
-        }
-
-        return $this->json(
-          [
-          'svists' => $this->paginator->paginate(
-            $svists,
-            $request->query->getInt('page', $page), $limit),
-          ],
-          Response::HTTP_OK);
-    }
-
-    /**
      * @Route("svist/{id}", name="api_svist_show", methods={"GET"}, requirements={"id": "\d+"})
      */
     public function showSvist(Svistyn $svistyn)
@@ -153,5 +126,20 @@ class SvistController extends Controller
             'message' => 'Svist was deleted',
           ],
         ], Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("svist/{id}/comments", name="api_svist_list_comments", methods={"GET"}, requirements={"id": "\d+"})
+     */
+    public function listCommentsForSvist(Svistyn $svistyn)
+    {
+        if (!$svistyn) {
+            throw new NotFoundException(Response::HTTP_NOT_FOUND, 'Svisit Not Found.');
+        }
+        if (!$svistyn->getComments()) {
+            throw new NotFoundException(Response::HTTP_NOT_FOUND, 'Comments Not Found.');
+        }
+
+        return $this->json(['comments' => $svistyn->getComments()], Response::HTTP_OK);
     }
 }

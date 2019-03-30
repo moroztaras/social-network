@@ -37,6 +37,13 @@ class SvistController extends Controller
      */
     private $paginator;
 
+    /**
+     * SvistController constructor.
+     *
+     * @param SerializerInterface $serializer
+     * @param ValidatorInterface  $validator
+     * @param PaginatorInterface  $paginator
+     */
     public function __construct(SerializerInterface $serializer, ValidatorInterface $validator, PaginatorInterface $paginator)
     {
         $this->serializer = $serializer;
@@ -45,7 +52,7 @@ class SvistController extends Controller
     }
 
     /**
-     * @Route("user/{id}/svist/page={page}", name="api_user_list_svist", methods={"GET"}, requirements={"id": "\d+"})
+     * @Route("user/{id}/svist/page={page}", name="api_user_list_svist", methods={"GET"}, requirements={"id": "\d+", "page": "\d+"})
      */
     public function userListSvists($id, Request $request, string $page, $limit = 10)
     {

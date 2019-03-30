@@ -50,6 +50,9 @@ class Comment implements \JsonSerializable
      */
     private $approved;
 
+    /**
+     * Comment constructor.
+     */
     public function __construct()
     {
         $this->createdAt = new \DateTime();
@@ -187,13 +190,18 @@ class Comment implements \JsonSerializable
         return[
           'id' => $this->getId(),
           'comment' => $this->getComment(),
-          'svistyn' => $this->getSvistyn(),
-          'createdAt' => $this->getCreatedAt(),
-          'approved' => $this->getApproved(),
+          'svistyn' => [
+            'text' => $this->getSvistyn()->getText(),
+            'photo' => $this->getSvistyn()->getPhoto()->getUrl(),
+            'embedVideo' => $this->getSvistyn()->getEmbedVideo(),
+            'createdAt' => $this->getSvistyn()->getCreated(),
+          ],
           'user' => [
             'id' => $this->getUser()->getId(),
             'fullName' => $this->getUser()->getFullname(),
           ],
+          'createdAt' => $this->getCreatedAt(),
+          'approved' => $this->getApproved(),
         ];
     }
 }

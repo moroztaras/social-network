@@ -642,6 +642,103 @@ nelmio_api_doc:
                                                         example: "Moroz Taras"
                         '400':
                             description: Authentication error
+            /api/svist/{id}/share:
+                post:
+                    tags:
+                        - Svist API
+                    description: Svist share
+                    produces:
+                        - application/json
+                    parameters:
+                        - name:  x-api-key
+                          description: X-API-KEY
+                          in: header
+                          required: true
+                        - name: id
+                          description: Svist ID
+                          in: path
+                          required: true
+                          type: string
+                        - name: svist
+                          description: Svist object used for create svisit
+                          in: body
+                          required: true
+                          schema:
+                              type: object
+                              properties:
+                                 text:
+                                    type: string
+                                    example: New text for share svist
+                    responses:
+                        '200':
+                            description: Svist share successful
+                            schema:
+                                type: object
+                                properties:
+                                    newsvist:
+                                        type: object
+                                        properties:
+                                            id:
+                                                type: string
+                                                example: 1
+                                            text:
+                                                type: string
+                                                example: New text for share svist
+                                            photo:
+                                                type: object
+                                                properties:
+                                                    fileName:
+                                                        type: string
+                                                        example: "da2ede4ce8fb2b8f23d93d59555bb871.jpg"
+                                                    url:
+                                                        type: string
+                                                        example: "public://svistyn/1/da2ede4ce8fb2b8f23d93d59555bb871.jpg"
+                                                    fileSize:
+                                                        type: string
+                                                        example: "310677"
+                                                    create_at:
+                                                        type: string
+                                                        example: "2019-03-27T14:02:29+02:00"
+                                            embedVideo:
+                                                type: string
+                                                example: https://www.youtube.com/watch?v=mNnknknWAKg
+                                            create_at:
+                                                type: string
+                                                example: "2019-03-27T14:02:29+02:00"
+                                            update_at:
+                                                type: string
+                                                example: "2019-03-27T14:02:29+02:00"
+                                            comments:
+                                                type: object
+                                                properties:
+                                                    comment:
+                                                        type: string
+                                                        example: []
+                                            status:
+                                                type: integer
+                                                example: 1
+                                            isParent:
+                                                type: boolean
+                                                example: false
+                                            countSvists:
+                                                type: integer
+                                                example: 0
+                                            countZvizds:
+                                                type: integer
+                                                example: 0
+                                            user:
+                                                type: object
+                                                properties:
+                                                    id:
+                                                        type: integer
+                                                        example: 1
+                                                    fullName:
+                                                        type: string
+                                                        example: "Moroz Taras"
+                        '400':
+                            description: Share the svist is not allowed
+                        '404':
+                            description: Svist Not Found.
             /api/svist/{id}:
                 get:
                     tags:

@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Exception\NotFoundException;
+use App\Exception\JsonHttpException;
+use App\Exception\AccessDeniedException;
 
 /**
  * Class FriendsController.
@@ -89,5 +91,48 @@ class FriendsController extends Controller
               $request->query->getInt('page', $page), $limit),
           ],
           Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("user/friend/{id_friend}/add", methods={"POST"}, name="api_user_friend_add", requirements={"id_friend": "\d+"})
+     */
+    public function userFriendAdd($id_friend, Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $apiToken = $request->headers->get('x-api-key');
+
+        /** @var User $user */
+        $user = $em->getRepository(User::class)->findOneBy(['apiToken' => $apiToken]);
+        if (!$user) {
+            throw new JsonHttpException(Response::HTTP_BAD_REQUEST, 'Authentication error');
+        }
+
+        $friend = $this->getDoctrine()->getRepository(User::class)->find($id_friend);
+        if (!$friend) {
+            throw new NotFoundException(Response::HTTP_NOT_FOUND, 'Friend Not Found.');
+        }
+        if ($user == $friend) {
+            throw new AccessDeniedException(Response::HTTP_FORBIDDEN, 'Access Denied.');
+        }
+        $friendship = $this->getDoctrine()->getRepository(Friends::class)->findOneBy(['user' => $user, 'friend' => $friend]);
+
+        if ($friendship) {
+            $this->getDoctrine()->getManager()->remove($friendship);
+            $message = 'You unsubscribed from a friend';
+        } else {
+            $fr = new Friends();
+            $fr->setUser($user);
+            $fr->setFriend($friend);
+            $this->getDoctrine()->getManager()->persist($fr);
+            $message = 'You are subscribed to a friend';
+        }
+        $this->getDoctrine()->getManager()->flush();
+
+        return $this->json([
+          'success' => [
+            'code' => Response::HTTP_OK,
+            'message' => $message,
+          ],
+        ], Response::HTTP_OK);
     }
 }

@@ -452,6 +452,32 @@ nelmio_api_doc:
                                                 example: "2019-04-01T10:38:04+03:00"
                         '404':
                             description: User Not Found.
+            /api/user/friend/{id_friend}/add:
+                post:
+                    tags:
+                        - Friends API
+                    description: User friend add into the api
+                    produces:
+                        - application/json
+                    parameters:
+                        - name:  x-api-key
+                          description: X-API-KEY
+                          in: header
+                          required: true
+                        - name: id_friend
+                          description: Friend ID
+                          in: path
+                          required: true
+                          type: string
+                    responses:
+                        '200':
+                            description: You are subscribed to a friend
+                        '400':
+                            description: Authentication error
+                        '403':
+                            description: Access Denied.
+                        '404':
+                            description: Friend Not Found.
             /api/user/{id}/svist/page={page}:
                 get:
                     tags:

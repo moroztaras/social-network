@@ -3,6 +3,7 @@
 namespace App\Controller\Api;
 
 use App\Entity\User;
+use App\Entity\Friends;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -49,7 +50,7 @@ class FriendsController extends Controller
     }
 
     /**
-     * @Route("user/{id}/followers/page/{page}", methods={"GET"}, name="api_user_list_followers")
+     * @Route("user/{id}/followers/page/{page}", methods={"GET"}, name="api_user_list_followers", requirements={"id": "\d+", "page": "\d+"})
      */
     public function userListFollowers($id, Request $request, string $page, $limit = 10)
     {
@@ -60,8 +61,31 @@ class FriendsController extends Controller
 
         return $this->json(
           [
-            'friends' => $this->paginator->paginate(
+            'followers' => $this->paginator->paginate(
               $user->getFriends(),
+              $request->query->getInt('page', $page), $limit),
+          ],
+          Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("user/{id}/following/page/{page}", methods={"GET"}, name="api_user_list_following", requirements={"id": "\d+", "page": "\d+"})
+     */
+    public function userListFollowing($id, Request $request, string $page, $limit = 10)
+    {
+        $user = $this->getDoctrine()->getRepository(User::class)->find($id);
+        if (!$user) {
+            throw new NotFoundException(Response::HTTP_NOT_FOUND, 'User Not Found.');
+        }
+        $following = $this->getDoctrine()->getRepository(Friends::class)->findBy(['user' => $user]);
+        if (!$following) {
+            throw new NotFoundException(Response::HTTP_NOT_FOUND, 'Following Not Found.');
+        }
+
+        return $this->json(
+          [
+            'following' => $this->paginator->paginate(
+              $following,
               $request->query->getInt('page', $page), $limit),
           ],
           Response::HTTP_OK);

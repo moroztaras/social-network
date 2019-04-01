@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="friends")
  */
-class Friends
+class Friends implements \JsonSerializable
 {
     /**
      * @ORM\Column(type="integer")
@@ -102,5 +102,25 @@ class Friends
         $this->user = $user;
 
         return $this;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+          'id' => $this->getId(),
+          'user' => [
+            'id' => $this->getUser()->getId(),
+            'fullName' => $this->getUser()->getFullname(),
+            'email' => $this->getUser()->getEmail(),
+            'gender' => $this->getUser()->getGender(),
+            'birthday' => $this->getUser()->getBirthday(),
+            'country' => $this->getUser()->getRegion(),
+            'roles' => $this->getUser()->getRoles(),
+            'create_at' => $this->getUser()->getCreated(),
+            'updated_at' => $this->getUser()->getUpdated(),
+            'status' => $this->getUser()->getStatus(),
+          ],
+          'created_at' => $this->getCreatedAt(),
+        ];
     }
 }

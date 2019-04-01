@@ -181,4 +181,54 @@ class SvistController extends Controller
 
         return $this->json(['comment' => $comment]);
     }
+
+    /**
+     * @Route("/{id}/share", name="api_svist_share", methods={"POST"}, requirements={"id"="\d+", "state" : "1|2"}, defaults={"id" = null})
+     */
+    public function shareSvisit($id, $state = 1, Request $request)
+    {
+        if (!$content = $request->getContent()) {
+            throw new JsonHttpException(Response::HTTP_BAD_REQUEST, 'Bad Request');
+        }
+        $em = $this->getDoctrine()->getManager();
+        $apiToken = $request->headers->get('x-api-key');
+
+        /** @var User $user */
+        $user = $em->getRepository(User::class)->findOneBy(['apiToken' => $apiToken]);
+        if (!$user) {
+            throw new JsonHttpException(Response::HTTP_BAD_REQUEST, 'Authentication error');
+        }
+        /* @var Svistyn $svistyn */
+        $svistyn = $em->getRepository(Svistyn::class)->find($id);
+        if (!$svistyn) {
+            throw new JsonHttpException(Response::HTTP_NOT_FOUND, 'Svist Not Found.');
+        }
+        if (!$svistyn || $svistyn->getUser()->getId() == $user->getId() || null != $svistyn->getParent()) {
+            throw new JsonHttpException(Response::HTTP_BAD_REQUEST, 'Share the svist is not allowed');
+        }
+
+        $this->serializer->deserialize($request->getContent(), Svistyn::class, 'json');
+
+        $newSvist = new Svistyn();
+        $newSvist
+          ->setState($state)
+          ->setParent($svistyn)
+          ->setUser($user)
+          ->setCreated(new \DateTime())
+          ->setUpdated(new \DateTime())
+        ;
+        $newSvist
+          ->setUpdatedAtValue()
+        ;
+        $newSvist->setMarking('active');
+
+        $errors = $this->validator->validate($newSvist);
+        if (count($errors)) {
+            throw new JsonHttpException(Response::HTTP_BAD_REQUEST, (string) $errors->get(0)->getPropertyPath().': '.(string) $errors->get(0)->getMessage());
+        }
+        $this->getDoctrine()->getManager()->persist($newSvist);
+        $this->getDoctrine()->getManager()->flush();
+
+        return $this->json(['newSvist' => $newSvist]);
+    }
 }

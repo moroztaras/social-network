@@ -316,6 +316,168 @@ nelmio_api_doc:
                                       example: "USER_ROLE"
                         '404':
                             description: User object not found
+            /api/user/{id}/followers/page/{page}:
+                get:
+                    tags:
+                        - Friends API
+                    description: User list followers into the api
+                    produces:
+                        - application/json
+                    parameters:
+                        - name: id
+                          description: User ID
+                          in: path
+                          required: true
+                          type: string
+                        - name: page
+                          description: Page
+                          in: path
+                          required: true
+                          type: string
+                    responses:
+                        '200':
+                            description: Returns User list followers
+                            schema:
+                                type: object
+                                properties:
+                                    followers:
+                                        type: object
+                                        properties:
+                                            id:
+                                                type: string
+                                                example: 1
+                                            user:
+                                                type: object
+                                                properties:
+                                                    id:
+                                                        type: integer
+                                                        example: 5
+                                                    fullName:
+                                                        type: string
+                                                        example: "Moroz Katya"
+                                                    email:
+                                                        type: string
+                                                        example: "morozkatya@i.ua"
+                                                    gerder:
+                                                        type: string
+                                                        example: "w"
+                                                    birthday:
+                                                        type: string
+                                                        example: "1995-02-05T00:00:00+02:00"
+                                                    country:
+                                                        type: string
+                                                        example: "UA"
+                                                    roles:
+                                                        type: string
+                                                        example: "['USER_ROLE']"
+                                                    create_at:
+                                                        type: string
+                                                        example: "2019-04-01T10:38:04+03:00"
+                                                    updeted_at:
+                                                        type: string
+                                                        example: "2019-04-01T10:38:04+03:00"
+                                                    status:
+                                                        type: integer
+                                                        example: 1
+                                            create_at:
+                                                type: string
+                                                example: "2019-04-01T10:38:04+03:00"
+                        '404':
+                            description: User Not Found.
+            /api/user/{id}/following/page/{page}:
+                get:
+                    tags:
+                        - Friends API
+                    description: User list following into the api
+                    produces:
+                        - application/json
+                    parameters:
+                        - name: id
+                          description: User ID
+                          in: path
+                          required: true
+                          type: string
+                        - name: page
+                          description: Page
+                          in: path
+                          required: true
+                          type: string
+                    responses:
+                        '200':
+                            description: Returns User list following
+                            schema:
+                                type: object
+                                properties:
+                                    following:
+                                        type: object
+                                        properties:
+                                            id:
+                                                type: string
+                                                example: 1
+                                            user:
+                                                type: object
+                                                properties:
+                                                    id:
+                                                        type: integer
+                                                        example: 5
+                                                    fullName:
+                                                        type: string
+                                                        example: "Moroz Katya"
+                                                    email:
+                                                        type: string
+                                                        example: "morozkatya@i.ua"
+                                                    gerder:
+                                                        type: string
+                                                        example: "w"
+                                                    birthday:
+                                                        type: string
+                                                        example: "1995-02-05T00:00:00+02:00"
+                                                    country:
+                                                        type: string
+                                                        example: "UA"
+                                                    roles:
+                                                        type: string
+                                                        example: "['USER_ROLE']"
+                                                    create_at:
+                                                        type: string
+                                                        example: "2019-04-01T10:38:04+03:00"
+                                                    updeted_at:
+                                                        type: string
+                                                        example: "2019-04-01T10:38:04+03:00"
+                                                    status:
+                                                        type: integer
+                                                        example: 1
+                                            create_at:
+                                                type: string
+                                                example: "2019-04-01T10:38:04+03:00"
+                        '404':
+                            description: User Not Found.
+            /api/user/friend/{id_friend}/add:
+                post:
+                    tags:
+                        - Friends API
+                    description: User friend add into the api
+                    produces:
+                        - application/json
+                    parameters:
+                        - name:  x-api-key
+                          description: X-API-KEY
+                          in: header
+                          required: true
+                        - name: id_friend
+                          description: Friend ID
+                          in: path
+                          required: true
+                          type: string
+                    responses:
+                        '200':
+                            description: You are subscribed to a friend
+                        '400':
+                            description: Authentication error
+                        '403':
+                            description: Access Denied.
+                        '404':
+                            description: Friend Not Found.
             /api/user/{id}/svist/page={page}:
                 get:
                     tags:
@@ -478,7 +640,6 @@ nelmio_api_doc:
                                                     fullName:
                                                         type: string
                                                         example: "Moroz Taras"
-
                         '400':
                             description: Authentication error
             /api/svist/{id}:

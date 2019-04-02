@@ -73,6 +73,8 @@ home_page: 'Главная'
 feed: 'Новости'
 search: 'Поиск'
 results: 'Результатов'
+dear: 'Уважаемый'
+link_to_recover_password: 'Ссылка для восстановления пароля'
 
 #flash_messages
 added_new_svist_successfully: 'Новый свист добавлен успешно'

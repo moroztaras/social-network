@@ -1,5 +1,4 @@
 # Social Network - Svistyn
-© 2019 Project Social Network for company eKreative
 
 **Clone repository to your local machine**
 
@@ -65,3 +64,5 @@ $ php bin/console server:start
  email: user@mail.ua
  
  pass: user_pass
+
+© 2019 Project Social Network for company eKreative

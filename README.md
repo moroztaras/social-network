@@ -65,4 +65,4 @@ $ php bin/console server:start
  
  pass: user_pass
 
-© 2019 Project Social Network for company eKreative
+© 2019 Project Social Network - Svistyn, for Lektorium company eKreative.

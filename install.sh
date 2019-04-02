@@ -16,6 +16,7 @@ case "$Keypress" in
 #    php bin/console doctrine:schema:update --force
     php bin/console doctrine:migrations:migrate
     php bin/console doctrine:fixtures:load
+    php bin/console server:start
 ;;
 2) echo "clears cache";
     script_dir=$(dirname $0)

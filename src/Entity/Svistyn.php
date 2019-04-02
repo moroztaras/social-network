@@ -92,6 +92,9 @@ class Svistyn implements \JsonSerializable
 
     private $isParent = false;
 
+    /**
+     * Svistyn constructor.
+     */
     public function __construct()
     {
         $this->state = 0; //null of start

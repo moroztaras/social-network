@@ -61,6 +61,13 @@ class Media implements \JsonSerializable
      */
     private $url;
 
+    /**
+     * Media constructor.
+     *
+     * @param null $prefix
+     *
+     * @throws \Exception
+     */
     public function __construct($prefix = null)
     {
         $name = bin2hex(random_bytes(16));

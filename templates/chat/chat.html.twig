@@ -1,0 +1,13 @@
+{% extends "Layout/layout-default.html.twig" %}
+{% block main %}
+
+    <link rel="stylesheet" href="{{ asset('css/components/chat.css') }}">
+
+<ul id="chat-list"></ul>
+<hr>
+<label for="form-message"></label>
+    <textarea id="form-message" placeholder="Your message here"></textarea>
+<input type="button" id="form-submit" value="Send message"/>
+
+<script src="{{ asset('scripts/chat.js') }}"></script>
+{% endblock %}

@@ -561,17 +561,17 @@ class User implements \Serializable, UserInterface, \JsonSerializable
     public function jsonSerialize()
     {
         return [
-          'id' => $this->getId(),
-          'fullName' => $this->getFullname(),
-          'email' => $this->getEmail(),
-          'gender' => $this->getGender(),
-          'birthday' => $this->getBirthday(),
-          'country' => $this->getRegion(),
-          'roles' => $this->getRoles(),
-          'create_at' => $this->getCreated(),
-          'updated_at' => $this->getUpdated(),
-          'status' => $this->getStatus(),
-          'api_token' => $this->getApiToken(),
+            'id' => $this->getId(),
+            'fullName' => $this->getFullname(),
+            'email' => $this->getEmail(),
+            'gender' => $this->getGender(),
+            'birthday' => $this->getBirthday(),
+            'country' => $this->getRegion(),
+            'roles' => $this->getRoles(),
+            'create_at' => $this->getCreated(),
+            'updated_at' => $this->getUpdated(),
+            'status' => $this->getStatus(),
+            'api_token' => $this->getApiToken(),
         ];
     }
 }

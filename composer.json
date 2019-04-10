@@ -6,6 +6,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "aws/aws-sdk-php": "^3.90",
+        "cboden/ratchet": "^0.4.1",
         "friendsofphp/php-cs-fixer": "^2.14",
         "gumlet/php-image-resize": "^1.9",
         "guzzlehttp/guzzle": "^6.3",

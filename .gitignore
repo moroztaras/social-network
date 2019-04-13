@@ -4,6 +4,7 @@
 /var/
 /vendor/
 .phpunit
+.phpunit.result.cache
 /phpunit.xml
 /.web-server-pid
 /.php_cs

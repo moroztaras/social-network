@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Tests;
+use App\Tests\MyException;
 
 class Math
 {
@@ -24,5 +25,17 @@ class Math
     public function getArray($array)
     {
         return explode("|",$array);
+    }
+
+    public function getEx($x)
+    {
+        if ($x == 10)
+        {
+            throw new MyException('Wrong data');
+        }
+        else
+        {
+            return true;
+        }
     }
 }

@@ -16,7 +16,7 @@
   </div>
   <div class="item">
     <span uk-icon="icon: comments"></span>
-    <i>0</i>
+    <i>{{ render(controller('App\\Controller\\CommentController::getCountComments',{ 'id': svistyn.id })) }}</i>
       {{ 'comments'|trans }}
   </div>
 </div>

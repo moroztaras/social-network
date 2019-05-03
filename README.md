@@ -5,28 +5,45 @@
 $ git clone git@github.com:moroztaras/social-network.git
 
 
+**Create project config**
+
+$ cd social-network
+
+$ cp env-example .env
+
+
 **Quick start of the project**
 
-Adjust .env line 16
+Adjust .env line 6
 
 
 **Run install.sh in the directory**
 
 $ sh install.sh
 
-enter 1+Enter
+in menu select item 1
 
 
 **Go to the link at http://127.0.0.1:8000**
 
 or
 
+**Create project config**
+
+$ cd social-network
+
+$ cp env-example .env
+
+
+**Quick start of the project**
+
+Adjust .env line 6
+
+
 **Run composer install in the directory**
 
 $ composer install
 
-
-**Adjust .env line 16**
 
 
 **Create database**

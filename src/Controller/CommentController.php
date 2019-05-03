@@ -10,6 +10,7 @@ use App\Services\CommentService;
 use App\Security\CommentVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
@@ -152,5 +153,11 @@ class CommentController extends Controller
         $this->flashBag->add('danger', 'delete_comment_is_forbidden');
 
         return $this->redirect($referer);
+    }
+
+    public function getCountComments($id)
+    {
+//        $comments = $this->getDoctrine()->getRepository(Comment::class)->getCommentsForSvistyn($id);
+        return new Response(count($this->getDoctrine()->getRepository(Comment::class)->getCommentsForSvistyn($id)));
     }
 }

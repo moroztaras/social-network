@@ -28,9 +28,17 @@
       <div class="uk-padding uk-padding-small uk-background uk-background-default">
         <nav class="uk-navbar-container">
           <ul class="uk-navbar-nav">
-            <li class="{% if app.request.attributes.get('_route') == 'user_canonical' %}uk-active{% endif %}"><a href="{{ path('user_canonical', {'id' : user.id}) }}">{{ 'profile'|trans }}</a></li>
-            <li class="{% if app.request.attributes.get('_route') == 'user_edit_canonical' %}uk-active{% endif %}"><a href="{{ path('user_edit_canonical', {'id' : user.id}) }}">{{ 'edit'|trans }}</a></li>
-            <li class="{% if app.request.attributes.get('_route') == 'user_security_canonical' %}uk-active{% endif %}"><a href="{{ path('user_security_canonical', {'id' : user.id}) }}">{{ 'security'|trans }}</a></li>
+            <li class="{% if app.request.attributes.get('_route') == 'user_canonical' %}uk-active{% endif %}">
+              <a href="{{ path('user_canonical', {'id' : user.id}) }}">{{ 'profile'|trans }}</a>
+            </li>
+            {% if app.user == user  %}
+                <li class="{% if app.request.attributes.get('_route') == 'user_edit_canonical' %}uk-active{% endif %}">
+                  <a href="{{ path('user_edit_canonical', {'id' : user.id}) }}">{{ 'edit'|trans }}</a>
+                </li>
+                <li class="{% if app.request.attributes.get('_route') == 'user_security_canonical' %}uk-active{% endif %}">
+                  <a href="{{ path('user_security_canonical', {'id' : user.id}) }}">{{ 'security'|trans }}</a>
+                </li>
+            {% endif %}
           </ul>
         </nav>
         <h3 class="uk-heading-line uk-margin-small-top"><span>{% block profile_title %}{{ 'information'|trans }}{% endblock %}</span></h3>

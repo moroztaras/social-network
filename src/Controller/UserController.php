@@ -57,6 +57,11 @@ class UserController extends Controller
     public function dashboard($id)
     {
         $user = $this->getDoctrine()->getRepository(User::class)->find($id);
+        if (!$user) {
+            $this->flashBag->add('danger', 'user_not_found');
+
+            return $this->redirectToRoute('user_default');
+        }
 
         return $this->render('User/dashboard.html.twig', [
           'user' => $user,

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Friends;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -21,6 +22,11 @@ class DefaultController extends Controller
 //        $this->addFlash('warning', 'this is warning');
 
 //        return $this->render('front.html.twig');
-        return $this->redirectToRoute('svistyn_feed_following');
+
+        if (0 != count($this->getDoctrine()->getRepository(Friends::class)->findBy(['user' => $this->getUser()]))) {
+            return $this->redirectToRoute('svistyn_feed_following');
+        } else {
+            return $this->redirectToRoute('svistyn_post');
+        }
     }
 }

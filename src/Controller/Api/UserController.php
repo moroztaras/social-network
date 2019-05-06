@@ -80,7 +80,7 @@ class UserController extends Controller
     /**
      * @Route("/{id}/profile", name="api_user_profile", methods={"GET"}, requirements={"id": "\d+"})
      */
-    public function profileUserAction(User $user)
+    public function profileUser(User $user)
     {
         if (!$user) {
             throw new NotFoundException(Response::HTTP_NOT_FOUND, 'Not Found.');
@@ -88,6 +88,30 @@ class UserController extends Controller
 
         return $this->json(['user' => $user], Response::HTTP_OK);
     }
+
+    /**
+     * @Route("/profile", name="api_edit_user_profile", methods={"PUT"})
+     */
+    public function editProfileUser(Request $request)
+    {
+        if (!$content = $request->getContent()) {
+            throw new JsonHttpException(Response::HTTP_BAD_REQUEST, 'Bad Request');
+        }
+        $em = $this->getDoctrine()->getManager();
+        $apiToken = $request->headers->get('x-api-key');
+
+        $user = $em->getRepository(User::class)->findOneBy(['apiToken' => $apiToken]);
+        if (!$user) {
+            throw new JsonHttpException(Response::HTTP_UNAUTHORIZED, 'Authentication error');
+        }
+
+        $this->serializer->deserialize($request->getContent(), User::class, 'json', ['object_to_populate' => $user]);
+
+        $this->getDoctrine()->getManager()->persist($user);
+        $this->getDoctrine()->getManager()->flush();
+
+        return $this->json(['user' => $user]);
+        }
 
     /**
      * @Route("/{id}/svist/page={page}", name="api_user_list_svist", methods={"GET"}, requirements={"id": "\d+", "page": "\d+"})

@@ -157,7 +157,6 @@ class CommentController extends Controller
 
     public function getCountComments($id)
     {
-//        $comments = $this->getDoctrine()->getRepository(Comment::class)->getCommentsForSvistyn($id);
         return new Response(count($this->getDoctrine()->getRepository(Comment::class)->getCommentsForSvistyn($id)));
     }
 }

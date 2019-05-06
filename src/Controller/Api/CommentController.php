@@ -87,22 +87,26 @@ class CommentController extends Controller
     /**
      * @Route("/{id}", name="api_edit_comment", methods={"PUT"}, requirements={"id": "\d+"})
      */
-    public function editComment($id, Request $request, SerializerInterface $serializer)
+    public function editComment(Request $request, Comment $comment)
     {
-        if (!($comment = $this->getDoctrine()->getRepository(Comment::class)->find($id))) {
-            throw new NotFoundException(Response::HTTP_NOT_FOUND, 'Comment Not Found.');
+        if (!$content = $request->getContent()) {
+            throw new JsonHttpException(Response::HTTP_BAD_REQUEST, 'Bad Request');
+        }
+        $em = $this->getDoctrine()->getManager();
+        $apiToken = $request->headers->get('x-api-key');
+
+        /** @var User $user */
+        $user = $em->getRepository(User::class)->findOneBy(['apiToken' => $apiToken]);
+        if (!$user) {
+            throw new JsonHttpException(Response::HTTP_UNAUTHORIZED, 'Authentication error');
         }
 
-        if (!($content = $request->getContent())) {
-            throw new JsonHttpException(400, 'Bad Request');
-        }
-        $serializer->deserialize($content, Comment::class, 'json', [
-          AbstractNormalizer::OBJECT_TO_POPULATE => $comment,
-          AbstractNormalizer::GROUPS => ['Details'],
-        ]);
+        $this->serializer->deserialize($request->getContent(), Comment::class, 'json', ['object_to_populate' => $comment]);
+
+        $this->getDoctrine()->getManager()->persist($comment);
         $this->getDoctrine()->getManager()->flush();
 
-        return $this->json(['comment' => $comment], 200, [], [AbstractNormalizer::GROUPS => ['Details']]);
+        return $this->json(['comment' => $comment]);
     }
 
     /**

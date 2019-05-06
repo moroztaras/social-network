@@ -116,6 +116,10 @@ class SvistController extends Controller
             throw new JsonHttpException(Response::HTTP_UNAUTHORIZED, 'Authentication error');
         }
 
+        if ($user !== $svistyn->getUser()) {
+            throw new AccessDeniedException(Response::HTTP_FORBIDDEN, 'Access Denied.');
+        }
+
         $this->serializer->deserialize($request->getContent(), Svistyn::class, 'json', ['object_to_populate' => $svistyn]);
 
         $this->getDoctrine()->getManager()->persist($svistyn);

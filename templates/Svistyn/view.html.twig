@@ -27,6 +27,9 @@
                     {% if svistyn.embedVideo is not null %}
                         <div class="st-post-fd st-post-fd--embed">{{ svistyn.embedVideo|video_embed_iframe }}</div>
                     {% endif %}
+                    {% if svistyn.parent is not null %}
+                        {{ include('Svistyn/ModeView/share.html.twig', {'svistyn.parent': svistyn.parent } ) }}
+                    {% endif %}
                 </div>
                 <div class="uk-card-footer">
                     {% if svistyn.parent is null and app.user and app.user.id != svistyn.user.id %}

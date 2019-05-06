@@ -102,7 +102,7 @@ class SvistController extends Controller
     /**
      * @Route("/{id}", name="api_svist_edit", methods={"PUT"}, requirements={"id": "\d+"})
      */
-    public function editComment(Request $request, Svistyn $svistyn)
+    public function editSvist(Request $request, Svistyn $svistyn)
     {
         if (!$content = $request->getContent()) {
             throw new JsonHttpException(Response::HTTP_BAD_REQUEST, 'Bad Request');

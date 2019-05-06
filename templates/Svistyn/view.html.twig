@@ -43,6 +43,7 @@
                 {{ render(controller('App\\Controller\\CommentController::new', {'id':svistyn.id})) }}
             {% endif %}
             {{ include('Comment/list.html.twig', {'comments' : comments}) }}
+            {{ include('Pagination/kpn_pagination.html.twig', {'field' : comments}) }}
         </div>
     </div>
 {% endblock %}

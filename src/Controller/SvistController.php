@@ -32,15 +32,21 @@ class SvistController extends Controller
     private $flashBag;
 
     /**
+     * @var PaginatorInterface
+     */
+    private $paginator;
+
+    /**
      * SvistController constructor.
      *
      * @param CommentService    $commentService
      * @param FlashBagInterface $flashBag
      */
-    public function __construct(CommentService $commentService, FlashBagInterface $flashBag)
+    public function __construct(CommentService $commentService, FlashBagInterface $flashBag, PaginatorInterface $paginator)
     {
         $this->commentService = $commentService;
         $this->flashBag = $flashBag;
+        $this->paginator = $paginator;
     }
 
     /**
@@ -111,7 +117,11 @@ class SvistController extends Controller
 
             return $this->redirectToRoute('svistyn_post');
         }
-        $comments = $this->commentService->getCommentsForSvistyn($svistyn);
+        $comments = $this->paginator->paginate(
+          $this->commentService->getCommentsForSvistyn($svistyn),
+          $request->query->getInt('page', 1),
+          $request->query->getInt('limit', 10)
+        );
 
         return $this->render('Svistyn/view.html.twig', [
           'svistyn' => $svistyn,

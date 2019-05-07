@@ -76,6 +76,7 @@ search: 'Пошук'
 results: 'Результатів'
 dear: 'Шановний'
 link_to_recover_password: 'Посилання для відновлення пароля'
+admin_panel: 'Адмін панель'
 
 #flash_messages
 added_new_svist_successfully: 'Новий свист добавлений успішно'

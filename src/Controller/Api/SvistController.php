@@ -100,6 +100,35 @@ class SvistController extends Controller
     }
 
     /**
+     * @Route("/{id}", name="api_svist_edit", methods={"PUT"}, requirements={"id": "\d+"})
+     */
+    public function editSvist(Request $request, Svistyn $svistyn)
+    {
+        if (!$content = $request->getContent()) {
+            throw new JsonHttpException(Response::HTTP_BAD_REQUEST, 'Bad Request');
+        }
+        $em = $this->getDoctrine()->getManager();
+        $apiToken = $request->headers->get('x-api-key');
+
+        /** @var User $user */
+        $user = $em->getRepository(User::class)->findOneBy(['apiToken' => $apiToken]);
+        if (!$user) {
+            throw new JsonHttpException(Response::HTTP_UNAUTHORIZED, 'Authentication error');
+        }
+
+        if ($user !== $svistyn->getUser()) {
+            throw new AccessDeniedException(Response::HTTP_FORBIDDEN, 'Access Denied.');
+        }
+
+        $this->serializer->deserialize($request->getContent(), Svistyn::class, 'json', ['object_to_populate' => $svistyn]);
+
+        $this->getDoctrine()->getManager()->persist($svistyn);
+        $this->getDoctrine()->getManager()->flush();
+
+        return $this->json(['svist' => $svistyn]);
+    }
+
+    /**
      * @Route("/{id}", name="api_svist_delete", methods={"DELETE"}, requirements={"id": "\d+"})
      */
     public function removeSvist(Request $request, Svistyn $svistyn)

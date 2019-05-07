@@ -74,7 +74,7 @@ nelmio_api_doc:
                                         type: string
                                         example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
                         '400':
-                            description: Authentication error
+                            description: Authentication error - Bad Request
             /api/user/registration:
                 post:
                     tags:
@@ -218,15 +218,26 @@ nelmio_api_doc:
                           in: body
                           required: true
                           schema:
-                             type: object
-                             properties:
-                                email:
-                                    type: string
-                                    example: edit_mail@mail.ua
-
+                              type: object
+                              properties:
+                                  fullName:
+                                      type: string
+                                      example: edit_fullName
+                                  email:
+                                      type: string
+                                      example: edit_mail@mail.ua
+                                  gender:
+                                      type: string
+                                      example: m
+                                  region:
+                                      type: string
+                                      example: UA
+                                  birthday:
+                                      type: string
+                                      example: "1986-07-16T15:21:20+02:00"
                     responses:
                         '200':
-                            description: Returns my profile user
+                            description: Returns my edit profile user
                             schema:
                                 type: object
                                 properties:
@@ -820,6 +831,108 @@ nelmio_api_doc:
                                                         example: "Moroz Taras"
                         '400':
                             description: Bad request
+                        '404':
+                            description: Svisit Not Found.
+                put:
+                    tags:
+                        - Svist API
+                    description: Svist edit
+                    produces:
+                        - application/json
+                    parameters:
+                        - name:  x-api-key
+                          description: X-API-KEY
+                          in: header
+                          required: true
+                        - name: id
+                          description: Svist ID
+                          in: path
+                          required: true
+                          type: string
+                        - name: svist
+                          description: Svist object used for edit svisit
+                          in: body
+                          required: true
+                          schema:
+                              type: object
+                              properties:
+                                  text:
+                                      type: string
+                                      example: Edit fake text for svist
+                                  embedVideo:
+                                      type: string
+                                      example: https://www.youtube.com/watch?v=mNnknknWAKg&t=1s
+
+                    responses:
+                        '200':
+                            description: Svist edit successful
+                            schema:
+                                type: object
+                                properties:
+                                    svist:
+                                        type: object
+                                        properties:
+                                            id:
+                                                type: string
+                                                example: 1
+                                            text:
+                                                type: string
+                                                example: Edit text of the first svist
+                                            photo:
+                                                type: object
+                                                properties:
+                                                    fileName:
+                                                        type: string
+                                                        example: "da2ede4ce8fb2b8f23d93d59555bb871.jpg"
+                                                    url:
+                                                        type: string
+                                                        example: "public://svistyn/1/da2ede4ce8fb2b8f23d93d59555bb871.jpg"
+                                                    fileSize:
+                                                        type: string
+                                                        example: "310677"
+                                                    create_at:
+                                                        type: string
+                                                        example: "2019-03-27T14:02:29+02:00"
+                                            embedVideo:
+                                                type: string
+                                                example: https://www.youtube.com/watch?v=mNnknknWAKg
+                                            create_at:
+                                                type: string
+                                                example: "2019-03-27T14:02:29+02:00"
+                                            update_at:
+                                                type: string
+                                                example: "2019-03-27T14:02:29+02:00"
+                                            comments:
+                                                type: object
+                                                properties:
+                                                    comment:
+                                                        type: string
+                                                        example: []
+                                            status:
+                                                type: integer
+                                                example: 1
+                                            isParent:
+                                                type: boolean
+                                                example: false
+                                            countSvists:
+                                                type: integer
+                                                example: 0
+                                            countZvizds:
+                                                type: integer
+                                                example: 0
+                                            user:
+                                                type: object
+                                                properties:
+                                                    id:
+                                                        type: integer
+                                                        example: 1
+                                                    fullName:
+                                                        type: string
+                                                        example: "Moroz Taras"
+                        '400':
+                            description: Bad request
+                        '403':
+                            description: Access Denied.
                         '404':
                             description: Svisit Not Found.
                 delete:

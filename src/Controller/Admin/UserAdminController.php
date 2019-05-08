@@ -38,7 +38,7 @@ class UserAdminController extends Controller
     }
 
     /**
-     * @Route("/admin", methods={"GET"}, name="admin_user")
+     * @Route("/admin", methods={"GET"}, name="admin_dashboard")
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      *
      * @return Response
@@ -65,6 +65,8 @@ class UserAdminController extends Controller
      */
     public function userList(Request $request)
     {
+        $user = $this->getUser();
+
         $users = $this->paginator->paginate(
           $this->getDoctrine()->getManager()->getRepository(User::class)->findAll(),
           $request->query->getInt('page', 1),
@@ -73,6 +75,7 @@ class UserAdminController extends Controller
 
         return $this->render('Admin/User/list.html.twig', [
           'users' => $users,
+          'user' => $user,
         ]);
     }
 

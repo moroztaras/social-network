@@ -1,19 +1,23 @@
 {% extends "Layout/layout-default.html.twig" %}
 {% block main %}
+    {% if user is not null %}
+        {{ render(controller('App\\Controller\\BlockController::userAdminCover')) }}
+    {% endif %}
+    <div class="uk-text-center uk-margin">
+        <a href="{{ path('admin_dashboard') }}" class="uk-button uk-button-default" style="margin-right: 5px;">{{ 'admin_panel'|trans }}</a>
+    </div>
     <div class="uk-section uk-section-xsmall">
         <div class="uk-container uk-container-xsmall">
-            {#<nav class="uk-navbar-container" uk-navbar>#}
-                {#<div class="uk-navbar-left">#}
-                    {#<div class="uk-navbar-item">#}
-                        {#<form class="uk-search uk-search-navbar">#}
-                            {#<span uk-search-icon></span>#}
-                            {#<input class="uk-search-input" type="search" name="search_input" placeholder="{{ 'search'|trans }}...">#}
-                        {#</form>#}
-                    {#</div>#}
-                {#</div>#}
-            {#</nav>#}
-            <div class="center">
-                {{ 'registered_users'|trans }}: {{ render(controller('App\\Controller\\Admin\\UserAdminController::getAdminCountAllUsers')) }}
+            <div uk-grid class="uk-grid-small uk-text-small">
+                <div class="item">
+                    <span uk-icon="icon: users"></span>
+                    <i>{{ render(controller('App\\Controller\\Admin\\UserAdminController::getAdminCountAllUsers')) }}</i>
+                    {{ 'registered_users'|trans }}
+                </div>
+                <div class="item">
+                    <span uk-icon="icon: ban"></span>
+                    <i><a href="#">0</a></i> {{ 'ban_users'|trans }}
+                </div>
             </div>
             {% for user in users %}
                 <div class="uk-card uk-card-default uk-card-small uk-margin-small">
@@ -31,6 +35,7 @@
                                 </div>
                                 <p class="uk-text-meta uk-margin-remove-top"><time datetime="{{ user.created|date('Y-m-d H:i:s') }}">{{ user.created|date('M d, Y') }}</time></p>
                             </div>
+                            {{ include('Admin/User/menu.html.twig', { 'user' : user }) }}
                         </div>
                     </div>
                 </div>

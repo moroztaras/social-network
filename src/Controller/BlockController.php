@@ -42,9 +42,9 @@ class BlockController extends Controller
         ]);
     }
 
-    public function userAdminCover($id)
+    public function userAdminCover()
     {
-        $user = $this->getDoctrine()->getRepository(User::class)->find($id);
+        $user = $this->getUser();
         if (!$user) {
             return new Response();
         }

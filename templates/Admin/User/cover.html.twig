@@ -26,7 +26,7 @@
         <ul class="uk-list uk-list-striped uk-background-default uk-text-center">
           <li>Свісти<br>
             <span class="uk-text-large">
-              <a href="#">
+              <a href="{{ path('admin_svistyn_list') }}">
                 {{ render(controller('App\\Controller\\Admin\\UserAdminController::getAdminCountAllSvistyns')) }}
               </a>
             </span>

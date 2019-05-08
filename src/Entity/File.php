@@ -24,10 +24,12 @@ class File
      * @ORM\Column(type="integer", name="user_id", nullable=true )
      */
     private $user;
+
     /**
      * @ORM\Column(type="string")
      */
     private $filename;
+
     /**
      * @ORM\Column(type="string")
      */
@@ -72,6 +74,9 @@ class File
 
     private $isPrivate = false;
 
+    /**
+     * File constructor.
+     */
     public function __construct()
     {
         $this->created = new \DateTime();

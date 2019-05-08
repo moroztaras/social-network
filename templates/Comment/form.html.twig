@@ -6,12 +6,10 @@
             </div>
             <div class="uk-width-expand">
                 {{ form_start(form_comment, { 'action': path('comment_add' , { 'id' : comment.svistyn.id }), 'method': 'POST' }) }}
-                <ul class="uk-flex-inline uk-nav uk-text-small">
-                    <li>{{ form_widget(form_comment) }}</li>
-                    <li>
-                        <button type="submit" class="uk-icon-button" uk-icon="icon: commenting"></button>
-                    </li>
-                </ul>
+                <div class="uk-margin">
+                    <br>
+                    {{ form_widget(form_comment) }}
+                </div>
                 {{ form_end(form_comment) }}
             </div>
         </div>

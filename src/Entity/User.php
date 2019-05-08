@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="\App\Repository\UserRepository")
  * @ORM\Table(name="user")
  */
-class User implements \Serializable, UserInterface
+class User implements \Serializable, UserInterface, \JsonSerializable
 {
     /**
      * @ORM\Column(type="integer")
@@ -39,7 +39,6 @@ class User implements \Serializable, UserInterface
      *
      * @Assert\Length(
      *      min = 8,
-     *      max = 50,
      *      minMessage = "Password must be at least 8 characters",
      *      maxMessage = "The password must be no more than 50 characters"
      * )
@@ -119,6 +118,12 @@ class User implements \Serializable, UserInterface
      * @ORM\OrderBy({"id" = "DESC"})
      */
     private $friends;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=255, unique=true, nullable=true)
+     */
+    private $apiToken;
 
     /**
      * User constructor.
@@ -527,5 +532,46 @@ class User implements \Serializable, UserInterface
         }
 
         return $this;
+    }
+
+    /**
+     * Get apiToken.
+     *
+     * @return null|string
+     */
+    public function getApiToken(): ?string
+    {
+        return $this->apiToken;
+    }
+
+    /**
+     * Set apiToken.
+     *
+     * @param string $apiToken
+     *
+     * @return User
+     */
+    public function setApiToken(string $apiToken): self
+    {
+        $this->apiToken = $apiToken;
+
+        return $this;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+          'id' => $this->getId(),
+          'fullName' => $this->getFullname(),
+          'email' => $this->getEmail(),
+          'gender' => $this->getGender(),
+          'birthday' => $this->getBirthday(),
+          'country' => $this->getRegion(),
+          'roles' => $this->getRoles(),
+          'create_at' => $this->getCreated(),
+          'updated_at' => $this->getUpdated(),
+          'status' => $this->getStatus(),
+          'api_token' => $this->getApiToken(),
+        ];
     }
 }

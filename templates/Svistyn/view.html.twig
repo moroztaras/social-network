@@ -12,6 +12,9 @@
                             <div><a class="uk-text-small uk-text-muted" href="{{ path('user_canonical', { 'id' : svistyn.user.id }) }}">{{ svistyn.user.fullname }}</a></div>
                             <p class="uk-text-meta uk-margin-remove-top"><time datetime="{{ svistyn.created|date('Y-m-d H:i:s') }}">{{ svistyn.created|date('M d, Y') }}</time></p>
                         </div>
+                        {% if app.user %}
+                            {{ include('Svistyn/menu.html.twig', { 'svistyn' : svistyn }) }}
+                        {% endif %}
                     </div>
                 </div>
                 <div class="uk-card uk-card-body">
@@ -23,6 +26,9 @@
                     {% endif %}
                     {% if svistyn.embedVideo is not null %}
                         <div class="st-post-fd st-post-fd--embed">{{ svistyn.embedVideo|video_embed_iframe }}</div>
+                    {% endif %}
+                    {% if svistyn.parent is not null %}
+                        {{ include('Svistyn/ModeView/share.html.twig', {'svistyn.parent': svistyn.parent } ) }}
                     {% endif %}
                 </div>
                 <div class="uk-card-footer">
@@ -37,6 +43,7 @@
                 {{ render(controller('App\\Controller\\CommentController::new', {'id':svistyn.id})) }}
             {% endif %}
             {{ include('Comment/list.html.twig', {'comments' : comments}) }}
+            {{ include('Pagination/kpn_pagination.html.twig', {'field' : comments}) }}
         </div>
     </div>
 {% endblock %}

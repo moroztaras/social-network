@@ -42,6 +42,18 @@ class BlockController extends Controller
         ]);
     }
 
+    public function userAdminCover()
+    {
+        $user = $this->getUser();
+        if (!$user) {
+            return new Response();
+        }
+
+        return $this->render('Admin/User/cover.html.twig', [
+          'user' => $user,
+        ]);
+    }
+
     public function userCountSvistyn($id)
     {
         $user = $this->getDoctrine()->getRepository(User::class)->find($id);

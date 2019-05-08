@@ -6,6 +6,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use App\Entity\User;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 
 class UserFixtures extends Fixture
 {
@@ -15,13 +16,19 @@ class UserFixtures extends Fixture
     private $passwordEncoder;
 
     /**
+     * @var TokenGeneratorInterface
+     */
+    private $tokenGenerator;
+
+    /**
      * UserFixtures constructor.
      *
      * @param UserPasswordEncoderInterface $passwordEncoder
      */
-    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder, TokenGeneratorInterface $tokenGenerator)
     {
         $this->passwordEncoder = $passwordEncoder;
+        $this->tokenGenerator = $tokenGenerator;
     }
 
     public function load(ObjectManager $manager)
@@ -34,8 +41,9 @@ class UserFixtures extends Fixture
           ->setGender('m')
           ->setBirthday(new \DateTime())
           ->setRegion('UA')
-          ->setFullname('Moroz Taras');
-
+          ->setApiToken($this->tokenGenerator->generateToken())
+          ->setFullname('Moroz Taras')
+        ;
         $manager->persist($userAdmin);
 
         $user = new User();
@@ -46,7 +54,9 @@ class UserFixtures extends Fixture
           ->setBirthday(new \DateTime())
           ->setGender('m')
           ->setRegion('UA')
-          ->setFullname('FullName');
+          ->setApiToken($this->tokenGenerator->generateToken())
+          ->setFullname('FullName')
+        ;
         $manager->persist($user);
 
         $manager->flush();

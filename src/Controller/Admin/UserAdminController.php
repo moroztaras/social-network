@@ -7,6 +7,8 @@ use App\Entity\Svistyn;
 use App\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,18 +21,27 @@ class UserAdminController extends Controller
     private $flashBag;
 
     /**
+     * @var PaginatorInterface
+     */
+    private $paginator;
+
+    /**
      * UserAdminController constructor.
      *
-     * @param FlashBagInterface $flashBag
+     * @param FlashBagInterface  $flashBag
+     * @param PaginatorInterface $paginator
      */
-    public function __construct(FlashBagInterface $flashBag)
+    public function __construct(FlashBagInterface $flashBag, PaginatorInterface $paginator)
     {
         $this->flashBag = $flashBag;
+        $this->paginator = $paginator;
     }
 
     /**
      * @Route("/admin", methods={"GET"}, name="admin_user")
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     *
+     * @return Response
      */
     public function userAdmin()
     {
@@ -45,6 +56,29 @@ class UserAdminController extends Controller
         ]);
     }
 
+    /**
+     * @param Request $request
+     * @Route("/admin/users", methods={"GET"}, name="admin_user_list")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     *
+     * @return Response
+     */
+    public function userList(Request $request)
+    {
+        $users = $this->paginator->paginate(
+          $this->getDoctrine()->getManager()->getRepository(User::class)->findAll(),
+          $request->query->getInt('page', 1),
+          $request->query->getInt('limit', 10)
+        );
+
+        return $this->render('Admin/User/list.html.twig', [
+          'users' => $users,
+        ]);
+    }
+
+    /**
+     * @return Response
+     */
     public function getCountAllUsers()
     {
         $users = $this->getDoctrine()->getManager()->getRepository(User::class)->findAll();
@@ -52,6 +86,9 @@ class UserAdminController extends Controller
         return new Response(count($users));
     }
 
+    /**
+     * @return Response
+     */
     public function getAdminCountAllSvistyns()
     {
         $svistyns = $this->getDoctrine()->getManager()->getRepository(Svistyn::class)->findAll();
@@ -62,6 +99,9 @@ class UserAdminController extends Controller
         }
     }
 
+    /**
+     * @return Response
+     */
     public function getAdminCountAllUsers()
     {
         $users = $this->getDoctrine()->getManager()->getRepository(User::class)->findAll();
@@ -69,6 +109,9 @@ class UserAdminController extends Controller
         return new Response(count($users));
     }
 
+    /**
+     * @return Response
+     */
     public function getAdminCountAllComments()
     {
         $comments = $this->getDoctrine()->getManager()->getRepository(Comment::class)->findAll();

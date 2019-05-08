@@ -1,0 +1,43 @@
+{% extends "Layout/layout-default.html.twig" %}
+{% block main %}
+    <div class="uk-section uk-section-xsmall">
+        <div class="uk-container uk-container-xsmall">
+            {#<nav class="uk-navbar-container" uk-navbar>#}
+                {#<div class="uk-navbar-left">#}
+                    {#<div class="uk-navbar-item">#}
+                        {#<form class="uk-search uk-search-navbar">#}
+                            {#<span uk-search-icon></span>#}
+                            {#<input class="uk-search-input" type="search" name="search_input" placeholder="{{ 'search'|trans }}...">#}
+                        {#</form>#}
+                    {#</div>#}
+                {#</div>#}
+            {#</nav>#}
+            <div class="center">
+                {{ 'registered_users'|trans }}: {{ render(controller('App\\Controller\\Admin\\UserAdminController::getAdminCountAllUsers')) }}
+            </div>
+            {% for user in users %}
+                <div class="uk-card uk-card-default uk-card-small uk-margin-small">
+                    <div class="uk-card-header">
+                        <div class="uk-grid-small uk-flex-middle" uk-grid>
+                            <div class="uk-width-auto">
+                                <img data-src="{{ user.avatar|avatarStyleDefault }}" width="40" height="40" alt uk-img>
+                            </div>
+                            <div class="uk-width-expand">
+                                <div>
+                                    <a class="uk-text-small uk-text-muted"
+                                       href="{{ path('user_canonical', {'id': user.id}) }}">
+                                        {{ user.fullname }}
+                                    </a>
+                                </div>
+                                <p class="uk-text-meta uk-margin-remove-top"><time datetime="{{ user.created|date('Y-m-d H:i:s') }}">{{ user.created|date('M d, Y') }}</time></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            {% if users|length != 0 %}
+                {{ include('Pagination/kpn_pagination.html.twig', {'field' : users}) }}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

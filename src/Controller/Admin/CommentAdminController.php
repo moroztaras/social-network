@@ -2,7 +2,7 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Svistyn;
+use App\Entity\Comment;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class SvistAdminController extends Controller
+class CommentAdminController extends Controller
 {
     /**
      * @var FlashBagInterface
@@ -24,7 +24,7 @@ class SvistAdminController extends Controller
     private $paginator;
 
     /**
-     * SvistAdminController constructor.
+     * CommentAdminController constructor.
      *
      * @param FlashBagInterface  $flashBag
      * @param PaginatorInterface $paginator
@@ -37,22 +37,23 @@ class SvistAdminController extends Controller
 
     /**
      * @param Request $request
-     * @Route("/admin/posts", methods={"GET"}, name="admin_svistyn_list")
+     * @Route("/admin/comments", methods={"GET"}, name="admin_comments_list")
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      *
      * @return Response
      */
-    public function svistynList(Request $request)
+    public function commentList(Request $request)
     {
         $user = $this->getUser();
-        $svistyns = $this->paginator->paginate(
-          $this->getDoctrine()->getManager()->getRepository(Svistyn::class)->findAll(),
+
+        $comments = $this->paginator->paginate(
+          $this->getDoctrine()->getManager()->getRepository(Comment::class)->findAll(),
           $request->query->getInt('page', 1),
           $request->query->getInt('limit', 10)
         );
 
-        return $this->render('Admin/Svistyn/list.html.twig', [
-          'svistyns' => $svistyns,
+        return $this->render('Admin/Comment/list.html.twig', [
+          'comments' => $comments,
           'user' => $user,
         ]);
     }

@@ -31,9 +31,9 @@
               </a>
             </span>
           </li>
-          <li>{{ 'comments'|trans }}<br>
+          <li>{{ 'COMMENTS'|trans }}<br>
             <span class="uk-text-large">
-              <a href="#">
+              <a href="{{ path('admin_comments_list') }}">
                 {{ render(controller('App\\Controller\\Admin\\UserAdminController::getAdminCountAllComments')) }}
               </a>
             </span>

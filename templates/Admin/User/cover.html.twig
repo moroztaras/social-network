@@ -24,14 +24,14 @@
       </div>
       <div class="uk-width-medium">
         <ul class="uk-list uk-list-striped uk-background-default uk-text-center">
-          <li>Свісти<br>
+          <li>{{ 'svistyns'|trans }}<br>
             <span class="uk-text-large">
               <a href="{{ path('admin_svistyn_list') }}">
                 {{ render(controller('App\\Controller\\Admin\\UserAdminController::getAdminCountAllSvistyns')) }}
               </a>
             </span>
           </li>
-          <li>Коментарії<br>
+          <li>{{ 'comments'|trans }}<br>
             <span class="uk-text-large">
               <a href="#">
                 {{ render(controller('App\\Controller\\Admin\\UserAdminController::getAdminCountAllComments')) }}

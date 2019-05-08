@@ -3,9 +3,7 @@
     {% if user is not null %}
         {{ render(controller('App\\Controller\\BlockController::userAdminCover')) }}
     {% endif %}
-    <div class="uk-text-center uk-margin">
-        <a href="{{ path('admin_dashboard') }}" class="uk-button uk-button-default" style="margin-right: 5px;">{{ 'admin_panel'|trans }}</a>
-    </div>
+    {{ include('Admin/Block/link.html.twig') }}
     <div class="uk-section uk-section-xsmall">
         <div class="uk-container uk-container-xsmall">
             <div uk-grid class="uk-grid-small uk-text-small">

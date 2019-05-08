@@ -111,7 +111,7 @@ class UserController extends Controller
         $this->getDoctrine()->getManager()->flush();
 
         return $this->json(['user' => $user]);
-        }
+    }
 
     /**
      * @Route("/{id}/svist/page={page}", name="api_user_list_svist", methods={"GET"}, requirements={"id": "\d+", "page": "\d+"})

@@ -33,4 +33,14 @@ class CommentRepository extends ServiceEntityRepository
 
         return $query->getQuery()->getResult();
     }
+
+    public function getAllComments()
+    {
+        return $this
+          ->createQueryBuilder('c')
+          ->select('c')
+          ->addOrderBy('c.id', 'DESC')
+          ->getQuery()
+          ->getResult();
+    }
 }

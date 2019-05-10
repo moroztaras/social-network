@@ -7,6 +7,7 @@ use App\Form\Svistyn\Model\SvistynModel;
 use App\Components\Svistyn\SvistynApi;
 use App\Components\Utils\Form\EntityDeleteForm;
 use App\Components\Utils\Pagination;
+use App\Services\SvistService;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Entity\Svistyn;
 use App\Entity\User;
@@ -21,6 +22,11 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class SvistController extends Controller
 {
+    /**
+     * @var SvistService
+     */
+    private $svistService;
+
     /**
      * @var CommentService
      */
@@ -39,11 +45,13 @@ class SvistController extends Controller
     /**
      * SvistController constructor.
      *
+     * @param SvistService      $svistService
      * @param CommentService    $commentService
      * @param FlashBagInterface $flashBag
      */
-    public function __construct(CommentService $commentService, FlashBagInterface $flashBag, PaginatorInterface $paginator)
+    public function __construct(SvistService $svistService, CommentService $commentService, FlashBagInterface $flashBag, PaginatorInterface $paginator)
     {
+        $this->svistService = $svistService;
         $this->commentService = $commentService;
         $this->flashBag = $flashBag;
         $this->paginator = $paginator;
@@ -54,7 +62,7 @@ class SvistController extends Controller
      */
     public function list(Request $request)
     {
-        $repo = $this->svistynRepo();
+        $repo = $this->svistService->svistynRepo();
         $user = $this->getUser();
         $router = $this->container->get('router');
         $pagination = new Pagination($router);
@@ -86,7 +94,7 @@ class SvistController extends Controller
             return $this->redirectToRoute('svistyn_post');
         }
 
-        $repo = $this->svistynRepo();
+        $repo = $this->svistService->svistynRepo();
         $router = $this->container->get('router');
         $pagination = new Pagination($router);
         $pagination->setRoute('svistyn_post');
@@ -111,7 +119,7 @@ class SvistController extends Controller
      */
     public function view($id, Request $request)
     {
-        $svistyn = $this->getDoctrine()->getRepository(Svistyn::class)->find($id);
+        $svistyn = $this->svistService->getSvistyn($id);
         if (!$svistyn) {
             $this->flashBag->add('danger', 'svist_not_found');
 
@@ -139,7 +147,7 @@ class SvistController extends Controller
      */
     public function add(Request $request, SvistynModel $svistynModel)
     {
-        $svistRepo = $this->getDoctrine()->getRepository(Svistyn::class);
+        $svistRepo = $this->svistService->svistynRepo();
         $svistyn = $svistRepo->findNew($this->getUser());
         $svistynModel->setSvistynEntity($svistyn);
         $form = $this->createForm(SvistynForm::class, $svistynModel);
@@ -160,12 +168,14 @@ class SvistController extends Controller
     /**
      * @Route("/post/{id}/edit", name="svistyn_edit", requirements={"id"="\d+"}, defaults={"id" = null})
      * @Security("is_granted('ROLE_USER')")
+     *
+     * @return Response
      */
     public function edit($id, Request $request, SvistynModel $svistynModel)
     {
         /** @var User $user */
         $user = $this->getUser();
-        $svistyn = $this->svistynRepo()->find($id);
+        $svistyn = $this->svistService->svistynRepo()->find($id);
         if ($user != $svistyn->getUser()) {
             $this->flashBag->add('danger', 'edit_svist_is_forbidden');
 
@@ -196,8 +206,7 @@ class SvistController extends Controller
     {
         /** @var User $user */
         $user = $this->getUser();
-        $svistynRepo = $this->svistynRepo();
-        $svistyn = $svistynRepo->find($id);
+        $svistyn = $this->svistService->getSvistyn($id);
 
         if (!$svistyn || !$svistyn->getUser() || $svistyn->getUser()->getId() != $user->getId()) {
             $this->flashBag->add('danger', 'delete_svist_is_forbidden');
@@ -208,7 +217,6 @@ class SvistController extends Controller
         $form = $this->createForm(EntityDeleteForm::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-//            $svistynModel->save();
             $entityManager->remove($svistyn);
             $entityManager->flush();
             $this->flashBag->add('danger', 'svist_was_deleted_successfully');
@@ -229,9 +237,8 @@ class SvistController extends Controller
     {
         /** @var User $user */
         $user = $this->getUser();
-        $svistynRepo = $this->svistynRepo();
         /** @var Svistyn $svistyn */
-        $svistyn = $svistynRepo->find($id);
+        $svistyn = $this->svistService->getSvistyn($id);
         if (!$svistyn || $svistyn->getUser()->getId() == $user->getId() || null != $svistyn->getParent()) {
             return $this->redirectToRoute('svistyn_post');
         }
@@ -265,7 +272,7 @@ class SvistController extends Controller
         $user = $this->getDoctrine()->getRepository(User::class)->find($this->getUser());
 
         $svistyns = $paginator->paginate(
-          $this->getDoctrine()->getRepository(Svistyn::class)->findAllPostsOfFriends($user),
+          $this->svistService->svistynRepo()->findAllPostsOfFriends($user),
           $request->query->getInt('page', 1),
           $request->query->getInt('limit', 10)
         );
@@ -281,10 +288,5 @@ class SvistController extends Controller
     public function api(SvistynApi $svistynApi)
     {
         return $svistynApi->handlerRequest();
-    }
-
-    protected function svistynRepo()
-    {
-        return  $this->getDoctrine()->getManager()->getRepository(Svistyn::class);
     }
 }

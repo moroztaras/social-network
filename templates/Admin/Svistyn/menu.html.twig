@@ -6,7 +6,7 @@
         <nav class="uk-padding-small">
             <ul class="uk-nav uk-list-divider uk-text-small">
                 <li><a href="#"><span uk-icon="icon: ban" class="uk-margin-small-right"></span> {{ 'ban'|trans }}</a></li>
-                <li><a href="#"><span uk-icon="icon: trash" class="uk-margin-small-right"></span> {{ 'delete'|trans }}</a></li>
+                <li><a href="{{ path('admin_svistyn_delete',{'id': svistyn.id}) }}"><span uk-icon="icon: trash" class="uk-margin-small-right"></span> {{ 'delete'|trans }}</a></li>
             </ul>
         </nav>
     </div>

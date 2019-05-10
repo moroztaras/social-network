@@ -150,4 +150,14 @@ class SvistynRepository extends EntityRepository
           ->getQuery()
           ->getResult();
     }
+
+    public function getAllSvistyns()
+    {
+        return $this
+          ->createQueryBuilder('sv')
+          ->select('sv')
+          ->addOrderBy('sv.id', 'DESC')
+          ->getQuery()
+          ->getResult();
+    }
 }

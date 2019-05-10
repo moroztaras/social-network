@@ -218,7 +218,7 @@ class SvistController extends Controller
 
         return $this->render('Svistyn/delete.html.twig', [
           'form' => $form->createView(),
-    ]);
+        ]);
     }
 
     /**

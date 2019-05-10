@@ -1,6 +1,7 @@
 /.idea
 /.env
 /public/bundles/
+/public/files/
 /var/
 /vendor/
 .phpunit

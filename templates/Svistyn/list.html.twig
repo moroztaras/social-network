@@ -1,4 +1,7 @@
 {% extends "Layout/layout-default.html.twig" %}
+
+{% block title %}{% if user is not null %}{{ user.fullname }}{% endif %}{% endblock %}
+
 {% block main %}
   {% if user is not null %}
     {{ render(controller('App\\Controller\\BlockController::userCover',{ 'id': user.id })) }}

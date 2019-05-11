@@ -88,6 +88,29 @@ class UserAdminController extends Controller
 
     /**
      * @param Request $request
+     * @Route("/admin/users/block", methods={"GET"}, name="admin_user_list_block")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     *
+     * @return Response
+     */
+    public function userListBlock(Request $request)
+    {
+        $user = $this->getUser();
+
+        $users = $this->paginator->paginate(
+          $this->getDoctrine()->getManager()->getRepository(User::class)->findUsersBlock(),
+          $request->query->getInt('page', 1),
+          $request->query->getInt('limit', 10)
+        );
+
+        return $this->render('Admin/User/list.html.twig', [
+          'users' => $users,
+          'user' => $user,
+        ]);
+    }
+
+    /**
+     * @param Request $request
      * @Route("/admin/user/{id}/block", methods={"GET"}, name="admin_user_block")
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      *
@@ -113,6 +136,20 @@ class UserAdminController extends Controller
         $users = $this->getDoctrine()->getManager()->getRepository(User::class)->findAll();
 
         return new Response(count($users));
+    }
+    /**
+     * @return Response
+     */
+    public function getAdminCountBlockUsers()
+    {
+        $users = $this->getDoctrine()->getManager()->getRepository(User::class)->findUsersBlock();
+        if (!$users){
+            return new Response("0");
+        }
+        else
+        {
+            return new Response(count($users));
+        }
     }
 
     /**

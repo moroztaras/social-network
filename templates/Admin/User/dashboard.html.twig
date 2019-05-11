@@ -1,4 +1,5 @@
 {% extends "Layout/layout-default.html.twig" %}
+{% block title %}{{ 'admin_panel'|trans }}{% endblock %}
 {% block main %}
     {% if user is not null %}
         {{ render(controller('App\\Controller\\BlockController::userAdminCover',{ 'id': user.id })) }}

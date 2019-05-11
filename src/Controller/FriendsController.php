@@ -35,6 +35,10 @@ class FriendsController extends Controller
      */
     public function add($id_user, $id_friend)
     {
+        $user = $this->getUser();
+        if (null != $user && 0 == $user->getStatus()) {
+            return $this->redirectToRoute('user_check_block');
+        }
         $this->friendsService->save($id_user, $id_friend);
 
         return $this->redirectToRoute('svistyn_post_user',
@@ -58,6 +62,10 @@ class FriendsController extends Controller
      */
     public function userListFollowers($id)
     {
+        $user = $this->getUser();
+        if (null != $user && 0 == $user->getStatus()) {
+            return $this->redirectToRoute('user_check_block');
+        }
         $user = $this->getDoctrine()->getRepository(User::class)->find($id);
 
         return $this->render('Friends/followers_list.html.twig', [

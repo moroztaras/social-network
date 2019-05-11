@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Comment;
 use App\Entity\Svistyn;
 use App\Entity\User;
+use App\Services\UserService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,6 +16,10 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class UserAdminController extends Controller
 {
+    /**
+     * @var UserService
+     */
+    private $userService;
     /**
      * @var FlashBagInterface
      */
@@ -28,11 +33,13 @@ class UserAdminController extends Controller
     /**
      * UserAdminController constructor.
      *
+     * @param UserService        $userService
      * @param FlashBagInterface  $flashBag
      * @param PaginatorInterface $paginator
      */
-    public function __construct(FlashBagInterface $flashBag, PaginatorInterface $paginator)
+    public function __construct(UserService $userService, FlashBagInterface $flashBag, PaginatorInterface $paginator)
     {
+        $this->userService = $userService;
         $this->flashBag = $flashBag;
         $this->paginator = $paginator;
     }
@@ -77,6 +84,25 @@ class UserAdminController extends Controller
           'users' => $users,
           'user' => $user,
         ]);
+    }
+
+    /**
+     * @param Request $request
+     * @Route("/admin/user/{id}/block", methods={"GET"}, name="admin_user_block")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     *
+     * @return Response
+     */
+    public function userBlock($id, Request $request)
+    {
+        $user = $this->getDoctrine()->getManager()->getRepository(User::class)->find($id);
+        if ($user == $this->getUser()) {
+            $this->flashBag->add('danger', 'blocking_user_is_prohibited');
+        } else {
+            $this->userService->block($user);
+        }
+
+        return $this->redirectToRoute('admin_user_list');
     }
 
     /**

@@ -8,7 +8,14 @@
                 <li><a href="{{ path('user_canonical', {'id': user.id}) }}"><span uk-icon="icon: user" class="uk-margin-small-right"></span> {{ 'profile'|trans }}</a></li>
             </ul>
             <ul class="uk-nav uk-list-divider uk-text-small">
-                <li><a href="#"><span uk-icon="icon: ban" class="uk-margin-small-right"></span> {{ 'ban'|trans }}</a></li>
+                <li><a href="{{ path('admin_user_block', {'id': user.id}) }}"><span uk-icon="icon: ban" class="uk-margin-small-right"></span>
+                        {% if (user.status == 1) %}
+                            {{ 'ban'|trans }}
+                        {% else %}
+                            {{ 'unblocked'|trans }}
+                        {% endif %}
+                    </a>
+                </li>
             </ul>
         </nav>
     </div>

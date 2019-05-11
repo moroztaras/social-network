@@ -64,6 +64,9 @@ class SvistController extends Controller
     {
         $repo = $this->svistService->svistynRepo();
         $user = $this->getUser();
+        if (null != $user && 0 == $user->getStatus()) {
+            return $this->redirectToRoute('user_check_block');
+        }
         $router = $this->container->get('router');
         $pagination = new Pagination($router);
         $pagination->setRoute('svistyn_post');
@@ -147,6 +150,11 @@ class SvistController extends Controller
      */
     public function add(Request $request, SvistynModel $svistynModel)
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        if (0 == $user->getStatus()) {
+            return $this->redirectToRoute('user_check_block');
+        }
         $svistRepo = $this->svistService->svistynRepo();
         $svistyn = $svistRepo->findNew($this->getUser());
         $svistynModel->setSvistynEntity($svistyn);
@@ -175,6 +183,9 @@ class SvistController extends Controller
     {
         /** @var User $user */
         $user = $this->getUser();
+        if (0 == $user->getStatus()) {
+            return $this->redirectToRoute('user_check_block');
+        }
         $svistyn = $this->svistService->svistynRepo()->find($id);
         if ($user != $svistyn->getUser()) {
             $this->flashBag->add('danger', 'edit_svist_is_forbidden');
@@ -206,6 +217,9 @@ class SvistController extends Controller
     {
         /** @var User $user */
         $user = $this->getUser();
+        if (0 == $user->getStatus()) {
+            return $this->redirectToRoute('user_check_block');
+        }
         $svistyn = $this->svistService->getSvistyn($id);
 
         if (!$svistyn || !$svistyn->getUser() || $svistyn->getUser()->getId() != $user->getId()) {
@@ -237,6 +251,9 @@ class SvistController extends Controller
     {
         /** @var User $user */
         $user = $this->getUser();
+        if (0 == $user->getStatus()) {
+            return $this->redirectToRoute('user_check_block');
+        }
         /** @var Svistyn $svistyn */
         $svistyn = $this->svistService->getSvistyn($id);
         if (!$svistyn || $svistyn->getUser()->getId() == $user->getId() || null != $svistyn->getParent()) {
@@ -270,7 +287,9 @@ class SvistController extends Controller
     {
         /** @var User $user */
         $user = $this->getDoctrine()->getRepository(User::class)->find($this->getUser());
-
+        if (0 == $user->getStatus()) {
+            return $this->redirectToRoute('user_check_block');
+        }
         $svistyns = $paginator->paginate(
           $this->svistService->svistynRepo()->findAllPostsOfFriends($user),
           $request->query->getInt('page', 1),
@@ -288,5 +307,16 @@ class SvistController extends Controller
     public function api(SvistynApi $svistynApi)
     {
         return $svistynApi->handlerRequest();
+    }
+
+    public function check()
+    {
+        $user = $this->getUser();
+        $user = $this->getDoctrine()->getRepository(User::class)->find($user->getId());
+        if (0 == $user->getStatus()) {
+            return $this->redirectToRoute('user_check_block');
+        } else {
+            return $this;
+        }
     }
 }

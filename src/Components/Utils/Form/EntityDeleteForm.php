@@ -10,6 +10,6 @@ class EntityDeleteForm extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('Delete', SubmitType::class);
+        $builder->add('delete', SubmitType::class);
     }
 }

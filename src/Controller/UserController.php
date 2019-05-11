@@ -46,6 +46,9 @@ class UserController extends Controller
     public function user()
     {
         $user = $this->getUser();
+        if (null != $user && 0 == $user->getStatus()) {
+            return $this->redirectToRoute('user_check_block');
+        }
 
         return $this->dashboard($user->getId());
     }
@@ -75,6 +78,9 @@ class UserController extends Controller
     public function edit(ProfileModel $profileModel, Request $request)
     {
         $user = $this->getUser();
+        if (null != $user && 0 == $user->getStatus()) {
+            return $this->redirectToRoute('user_check_block');
+        }
 
         return $this->editCanonical($user->getId(), $profileModel, $request);
     }
@@ -86,6 +92,9 @@ class UserController extends Controller
     public function editCanonical($id, ProfileModel $profileModel, Request $request)
     {
         $user = $this->getDoctrine()->getRepository(User::class)->find($id);
+        if (null != $user && 0 == $user->getStatus()) {
+            return $this->redirectToRoute('user_check_block');
+        }
         $this->denyAccessUnlessGranted('edit', $user);
         $profileModel->setUser($user);
         $form = $this->createForm(ProfileForm::class, $profileModel);
@@ -110,6 +119,9 @@ class UserController extends Controller
     public function securityCanonical($id, ProfileSecurityModel $profileSecurityModel, UserSecurityManager $userSecurityManager, Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
         $user = $this->getDoctrine()->getRepository(User::class)->find($id);
+        if (null != $user && 0 == $user->getStatus()) {
+            return $this->redirectToRoute('user_check_block');
+        }
         $this->denyAccessUnlessGranted('edit', $user);
         $profileSecurityModel->setUser($user);
         $form = $this->createForm(AccountSecurityForm::class, $profileSecurityModel);
@@ -129,6 +141,19 @@ class UserController extends Controller
 
         return $this->render('User/security.html.twig', [
           'form' => $form->createView(),
+          'user' => $user,
+        ]);
+    }
+
+    /**
+     * @Route("/user/block", name="user_check_block")
+     * @Security("is_granted('ROLE_USER')")
+     */
+    public function userBlock()
+    {
+        $user = $this->getUser();
+
+        return $this->render('User/block.html.twig', [
           'user' => $user,
         ]);
     }

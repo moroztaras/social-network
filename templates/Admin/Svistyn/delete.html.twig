@@ -1,0 +1,13 @@
+{% extends "Layout/layout-default.html.twig" %}
+{% block main %}
+  <div class="m-panel size-tb mg-c">
+    <div class="m-content">
+      <div class="x_panel">
+        <div class="x_content center">
+          <p class="bd-highlight">{{ 'delete_svistyn_question'|trans }}?</p>
+          {{ include('Form/delete.html.twig', { 'form' : form, 'cancel_url' : path('admin_svistyn_list') }) }}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -10,7 +10,7 @@
             <div uk-grid class="uk-grid-small uk-text-small">
                 <div class="item">
                     <span uk-icon="icon: users"></span>
-                    <i>{{ render(controller('App\\Controller\\Admin\\UserAdminController::getAdminCountAllUsers')) }}</i>
+                    <i><a href="{{ path('admin_user_list') }}">{{ render(controller('App\\Controller\\Admin\\UserAdminController::getAdminCountAllUsers')) }}</a></i>
                     {{ 'registered_users'|trans }}
                 </div>
                 <div class="item">

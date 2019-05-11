@@ -9,21 +9,27 @@
                     <div><a class="uk-text-small uk-text-muted" href="{{ path('user_canonical', { 'id' : comment.user.id }) }}">{{ comment.user.fullname }}</a></div>
                     <p class="uk-text-meta uk-margin-remove-top"><time datetime="{{ comment.createdAt|date('Y-m-d H:i:s') }}">{{ comment.createdAt|date('M d, Y') }}</time></p>
                 </div>
-                {% if app.user %}
-                    <li>
-                        <div class="us-prof-header">
-                            <span uk-icon="icon: chevron-down"></span>
-                        </div>
-                        <div uk-drop="mode: click; offset: 20; pos: bottom-right" class="uk-card uk-card-default kuk-width-small">
-                            <nav class="uk-padding-small">
-                                <ul class="uk-nav uk-list-divider uk-text-small">
-                                    <li><a href="#"><span uk-icon="icon: ban" class="uk-margin-small-right"></span> {{ 'ban'|trans }}</a></li>
-                                    <li><a href="{{ path('admin_comment_delete',{'id': comment.id}) }}"><span uk-icon="icon: trash" class="uk-margin-small-right"></span> {{ 'delete'|trans }}</a></li>
-                                </ul>
-                            </nav>
-                        </div>
-                    </li>
-                {% endif %}
+                <li>
+                    <div class="us-prof-header">
+                        <span uk-icon="icon: chevron-down"></span>
+                    </div>
+                    <div uk-drop="mode: click; offset: 20; pos: bottom-right" class="uk-card uk-card-default kuk-width-small">
+                        <nav class="uk-padding-small">
+                            <ul class="uk-nav uk-list-divider uk-text-small">
+                                <li>
+                                    <a href="{{ path('admin_comment_block', {'id': comment.id}) }}"><span uk-icon="icon: ban" class="uk-margin-small-right"></span>
+                                        {% if (comment.approved == true) %}
+                                            {{ 'ban'|trans }}
+                                        {% else %}
+                                            {{ 'unblocked'|trans }}
+                                        {% endif %}
+                                    </a>
+                                </li>
+                                <li><a href="{{ path('admin_comment_delete',{'id': comment.id}) }}"><span uk-icon="icon: trash" class="uk-margin-small-right"></span> {{ 'delete'|trans }}</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </li>
             </div>
         </div>
         <div class="uk-card uk-card-body">

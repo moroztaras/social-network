@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Entity\Svistyn;
 use App\Entity\Comment;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class CommentService
 {
@@ -14,13 +15,20 @@ class CommentService
     private $doctrine;
 
     /**
+     * @var FlashBagInterface
+     */
+    private $flashBag;
+
+    /**
      * CommentService constructor.
      *
-     * @param ManagerRegistry $doctrine
+     * @param ManagerRegistry   $doctrine
+     * @param FlashBagInterface $flashBag
      */
-    public function __construct(ManagerRegistry $doctrine)
+    public function __construct(ManagerRegistry $doctrine, FlashBagInterface $flashBag)
     {
         $this->doctrine = $doctrine;
+        $this->flashBag = $flashBag;
     }
 
     public function new($id, $user)
@@ -48,6 +56,27 @@ class CommentService
         return $comments;
     }
 
+    public function findBlockComments()
+    {
+        $comments = $this->doctrine->getManager()->getRepository('App:Comment')->findBlockComments();
+
+        return $comments;
+    }
+
+    public function block(Comment $comment)
+    {
+        if (true == $comment->getApproved()) {
+            $comment->setApproved(false);
+            $this->flashBag->add('danger', 'comment_is_blocked');
+        } else {
+            $comment->setApproved(true);
+            $this->flashBag->add('success', 'comment_unblocked');
+        }
+        $this->save($comment);
+
+        return $this;
+    }
+
     public function remove(Comment $comment)
     {
         $this->doctrine->getManager()->remove($comment);
@@ -58,8 +87,15 @@ class CommentService
 
     private function getSvistyn($id)
     {
-        $article = $this->doctrine->getManager()->getRepository('App:Svistyn')->find($id);
+        $svistyn = $this->doctrine->getManager()->getRepository('App:Svistyn')->find($id);
 
-        return $article;
+        return $svistyn;
+    }
+
+    private function getComment($id)
+    {
+        $comment = $this->doctrine->getManager()->getRepository('Comment')->find($id);
+
+        return $comment;
     }
 }

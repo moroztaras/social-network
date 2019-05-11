@@ -10,12 +10,17 @@
             <div uk-grid class="uk-grid-small uk-text-small">
                 <div class="item">
                     <span uk-icon="icon: comments"></span>
-                    <i>{{ render(controller('App\\Controller\\Admin\\UserAdminController::getAdminCountAllComments')) }}</i>
+                    <i><a href="{{ path('admin_comments_list') }}">
+                            {{ render(controller('App\\Controller\\Admin\\UserAdminController::getAdminCountAllComments')) }}</a></i>
                     {{ 'comments'|trans }}
                 </div>
                 <div class="item">
                     <span uk-icon="icon: ban"></span>
-                    <i><a href="#">0</a></i> {{ 'ban_comments'|trans }}
+                    <i>
+                        <a href="{{ path('admin_comments_list_block') }}">
+                            {{ render(controller('App\\Controller\\Admin\\CommentAdminController::getAdminCountBlockComments')) }}
+                        </a>
+                    </i> {{ 'ban_comments'|trans }}
                 </div>
             </div>
             {% for comment in comments %}

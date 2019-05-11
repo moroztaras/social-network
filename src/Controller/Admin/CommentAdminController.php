@@ -72,6 +72,44 @@ class CommentAdminController extends Controller
     }
 
     /**
+     * @Route("/admin/user/{id}/block", methods={"GET"}, name="admin_comment_block")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     *
+     * @return Response
+     */
+    public function commentBlock($id)
+    {
+        $comment = $this->getDoctrine()->getManager()->getRepository(Comment::class)->find($id);
+
+        $this->commentService->block($comment);
+
+        return $this->redirectToRoute('admin_comments_list');
+    }
+
+    /**
+     * @param Request $request
+     * @Route("/block", methods={"GET"}, name="admin_comments_list_block")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     *
+     * @return Response
+     */
+    public function commentListBlock(Request $request)
+    {
+        $user = $this->getUser();
+
+        $comments = $this->paginator->paginate(
+          $this->getDoctrine()->getManager()->getRepository(Comment::class)->findBlockComments(),
+          $request->query->getInt('page', 1),
+          $request->query->getInt('limit', 10)
+        );
+
+        return $this->render('Admin/Comment/list.html.twig', [
+          'comments' => $comments,
+          'user' => $user,
+        ]);
+    }
+
+    /**
      * @Route("/{id}/delete", methods={"GET", "DELETE"}, name="admin_comment_delete")
      */
     public function deleteAction(Request $request, Comment $comment)
@@ -86,5 +124,18 @@ class CommentAdminController extends Controller
         $this->flashBag->add('danger', 'comment_was_deleted');
 
         return $this->redirect($referer);
+    }
+
+    /**
+     * @return Response
+     */
+    public function getAdminCountBlockComments()
+    {
+        $comments = $this->getDoctrine()->getManager()->getRepository(Comment::class)->findBlockComments();
+        if (!$comments) {
+            return new Response('0');
+        } else {
+            return new Response(count($comments));
+        }
     }
 }

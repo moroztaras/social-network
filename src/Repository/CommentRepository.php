@@ -43,4 +43,15 @@ class CommentRepository extends ServiceEntityRepository
           ->getQuery()
           ->getResult();
     }
+
+    public function findBlockComments()
+    {
+        return $this->createQueryBuilder('c')
+          ->select('c')
+          ->where('c.approved = :approved')
+          ->setParameter('approved', false)
+          ->addOrderBy('c.id', 'DESC')
+          ->getQuery()
+          ->getResult();
+    }
 }

@@ -110,13 +110,12 @@ class UserAdminController extends Controller
     }
 
     /**
-     * @param Request $request
      * @Route("/admin/user/{id}/block", methods={"GET"}, name="admin_user_block")
      * @Security("is_granted('ROLE_SUPER_ADMIN')")
      *
      * @return Response
      */
-    public function userBlock($id, Request $request)
+    public function userBlock($id)
     {
         $user = $this->getDoctrine()->getManager()->getRepository(User::class)->find($id);
         if ($user == $this->getUser()) {
@@ -137,17 +136,16 @@ class UserAdminController extends Controller
 
         return new Response(count($users));
     }
+
     /**
      * @return Response
      */
     public function getAdminCountBlockUsers()
     {
         $users = $this->getDoctrine()->getManager()->getRepository(User::class)->findUsersBlock();
-        if (!$users){
-            return new Response("0");
-        }
-        else
-        {
+        if (!$users) {
+            return new Response('0');
+        } else {
             return new Response(count($users));
         }
     }

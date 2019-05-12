@@ -2,7 +2,8 @@
 clear
 
 echo "1 - install"
-echo "2 - clears cache"
+echo "2 - import SQL file to Database"
+echo "3 - clears cache"
 echo "0 - exit"
 
 read Keypress
@@ -19,7 +20,14 @@ case "$Keypress" in
     php bin/console doctrine:fixtures:load
     php bin/console server:start
 ;;
-2) echo "clears cache";
+2) echo "import SQL file to Database";
+    script_dir=$(dirname $0)
+    cd $script_dir
+    php bin/console doctrine:database:drop --force
+    php bin/console doctrine:database:create
+    php bin/console doctrine:database:import social_network.sql
+;;
+3) echo "clears cache";
     script_dir=$(dirname $0)
     cd $script_dir
     php bin/console cache:clear

@@ -24,6 +24,12 @@ $ sh install.sh
 in menu select item 1
 
 
+**Import social_network.sql to Database**
+
+$ sh install.sh
+
+in menu select item 2
+
 **Go to the link at http://127.0.0.1:8000**
 
 or

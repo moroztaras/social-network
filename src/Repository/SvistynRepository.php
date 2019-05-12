@@ -35,6 +35,8 @@ class SvistynRepository extends EntityRepository
             $query->andWhere('sv.user = :user');
             $query->setParameter('user', $user->getId());
         }
+        $query->andWhere('sv.status = :status');
+        $query->setParameter('status', 1);
         $this->queryByOptions($query, $options);
         $query->orderBy('sv.id', 'desc');
         $results = $query->getQuery()->execute();
@@ -133,6 +135,8 @@ class SvistynRepository extends EntityRepository
     {
         return $this
           ->createQueryBuilder('sv')
+          ->andWhere('sv.status = :status')
+          ->setParameter('status', 1)
           ->andWhere('sv.user = :user')
           ->setParameter('user', $user->getId())
           ->getQuery()
@@ -156,6 +160,18 @@ class SvistynRepository extends EntityRepository
         return $this
           ->createQueryBuilder('sv')
           ->select('sv')
+          ->addOrderBy('sv.id', 'DESC')
+          ->getQuery()
+          ->getResult();
+    }
+
+    public function findBlockSvistyns()
+    {
+        return $this
+          ->createQueryBuilder('sv')
+          ->select('sv')
+          ->where('sv.status = :status')
+          ->setParameter('status', 0)
           ->addOrderBy('sv.id', 'DESC')
           ->getQuery()
           ->getResult();

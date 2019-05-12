@@ -10,12 +10,15 @@
             <div uk-grid class="uk-grid-small uk-text-small">
                 <div class="item">
                     <span uk-icon="icon: twitter"></span>
-                    <i>{{ render(controller('App\\Controller\\Admin\\UserAdminController::getAdminCountAllSvistyns')) }}</i>
+                    <i><a href="{{ path('admin_svistyn_list') }}">{{ render(controller('App\\Controller\\Admin\\UserAdminController::getAdminCountAllSvistyns')) }}</a></i>
                     {{ 'posts'|trans }}
                 </div>
                 <div class="item">
                     <span uk-icon="icon: ban"></span>
-                    <i><a href="#">0</a></i> {{ 'ban_svistyns'|trans }}
+                    <i><a href="{{ path('admin_svists_list_block') }}">
+                            {{ render(controller('App\\Controller\\Admin\\SvistAdminController::getAdminCountBlockSvistyns')) }}
+                        </a>
+                    </i> {{ 'ban_svistyns'|trans }}
                 </div>
             </div>
             {% for svistyn in svistyns %}

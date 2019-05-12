@@ -74,6 +74,42 @@ class SvistAdminController extends Controller
     }
 
     /**
+     * @Route("/{id}/block", methods={"GET"}, name="admin_svist_block")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     *
+     * @return Response
+     */
+    public function svistBlock($id)
+    {
+        $this->svistService->block($id);
+
+        return $this->redirectToRoute('admin_svistyn_list');
+    }
+
+    /**
+     * @param Request $request
+     * @Route("/block", methods={"GET"}, name="admin_svists_list_block")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     *
+     * @return Response
+     */
+    public function svistListBlock(Request $request)
+    {
+        $user = $this->getUser();
+
+        $svistyns = $this->paginator->paginate(
+          $this->getDoctrine()->getManager()->getRepository(Svistyn::class)->findBlockSvistyns(),
+          $request->query->getInt('page', 1),
+          $request->query->getInt('limit', 10)
+        );
+
+        return $this->render('Admin/Svistyn/list.html.twig', [
+          'svistyns' => $svistyns,
+          'user' => $user,
+        ]);
+    }
+
+    /**
      * @param Request $request
      * @param $id
      * @param SvistynModel           $svistynModel
@@ -101,5 +137,18 @@ class SvistAdminController extends Controller
         return $this->render('Admin/Svistyn/delete.html.twig', [
           'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @return Response
+     */
+    public function getAdminCountBlockSvistyns()
+    {
+        $svistyns = $this->getDoctrine()->getManager()->getRepository(Svistyn::class)->findBlockSvistyns();
+        if (!$svistyns) {
+            return new Response('0');
+        } else {
+            return new Response(count($svistyns));
+        }
     }
 }

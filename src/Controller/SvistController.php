@@ -128,6 +128,7 @@ class SvistController extends Controller
 
             return $this->redirectToRoute('svistyn_post');
         }
+        $this->svistService->addViewSvistyn($svistyn);
         $comments = $this->paginator->paginate(
           $this->commentService->getCommentsForSvistyn($svistyn),
           $request->query->getInt('page', 1),

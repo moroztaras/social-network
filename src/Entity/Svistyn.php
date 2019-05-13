@@ -59,6 +59,12 @@ class Svistyn implements \JsonSerializable
     private $status;
 
     /**
+     * @ORM\Column(type="integer")
+     * //the number of post views
+     */
+    private $views;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     private $created;
@@ -99,6 +105,7 @@ class Svistyn implements \JsonSerializable
     {
         $this->state = 0; //null of start
         $this->status = 1; //is published
+        $this->views = 0; //null number views
         $this->marking = 'new';
         $this->comments = new ArrayCollection();
     }
@@ -255,6 +262,30 @@ class Svistyn implements \JsonSerializable
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * Set views.
+     *
+     * @param int $views
+     *
+     * @return Svistyn
+     */
+    public function setViews($views)
+    {
+        $this->views = $views;
+
+        return $this;
+    }
+
+    /**
+     * Get views.
+     *
+     * @return int
+     */
+    public function getViews()
+    {
+        return $this->views;
     }
 
     /**

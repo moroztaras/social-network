@@ -55,6 +55,12 @@ class SvistService
         return  $this->doctrine->getManager()->getRepository(Svistyn::class)->find($id);
     }
 
+    public function addViewSvistyn(Svistyn $svistyn)
+    {
+        $svistyn->setViews($svistyn->getViews() + 1);
+        $this->save($svistyn);
+    }
+
     public function save(Svistyn $svistyn)
     {
         $this->doctrine->getManager()->persist($svistyn);

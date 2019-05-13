@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Час створення: Трв 12 2019 р., 19:27
+-- Час створення: Трв 13 2019 р., 07:56
 -- Версія сервера: 5.7.24-0ubuntu0.16.04.1
 -- Версія PHP: 7.2.17-1+ubuntu16.04.1+deb.sury.org+3
 
@@ -145,7 +145,8 @@ INSERT INTO `migration_versions` (`version`, `executed_at`) VALUES
 ('20190312085102', '2019-05-12 18:30:23'),
 ('20190315094922', '2019-05-12 18:30:26'),
 ('20190316095607', '2019-05-12 18:30:26'),
-('20190327112900', '2019-05-12 18:30:27');
+('20190327112900', '2019-05-12 18:30:27'),
+('20190513075410', '2019-05-13 07:55:00');
 
 -- --------------------------------------------------------
 
@@ -164,21 +165,22 @@ CREATE TABLE `svistyn` (
   `status` int(11) NOT NULL,
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL,
-  `marking` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
+  `marking` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `views` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Дамп даних таблиці `svistyn`
 --
 
-INSERT INTO `svistyn` (`id`, `user_id`, `photo_id`, `parent_id`, `text`, `embed_video`, `state`, `status`, `created`, `updated`, `marking`) VALUES
-(1, 1, 3, NULL, 'AWS - Amazon Web Services - Що це і чому тобі це потрібно', 'https://www.youtube.com/watch?v=8jbx8O3wuLg', 0, 1, '2019-05-12 21:36:13', '2019-05-12 21:38:17', 'active'),
-(2, 1, 4, NULL, 'Docker - Все що потрібно знати щоб почати працювати з Docker, всі основи в одному уроці', 'https://www.youtube.com/watch?v=I18TNwZ2Nqg&t=445s', 0, 1, '2019-05-12 21:41:53', '2019-05-12 21:42:56', 'active'),
-(3, 1, 5, NULL, 'Команду eKreative переповнюють емоції\r\nАдже відбувся випуск Першого сезону Lektorium!\r\nВітаємо наших випускників!', NULL, 0, 1, '2019-05-12 21:47:35', '2019-05-12 21:51:46', 'active'),
-(4, 1, 6, NULL, 'Євпаторія, Крим. Коротко про курорт. Пляж, Житло, Відпочинок', 'https://www.youtube.com/watch?v=Djm1FphB0WQ', 0, 1, '2019-05-12 21:53:44', '2019-05-12 22:00:46', 'active'),
-(5, 1, 7, NULL, 'Lektorium', NULL, 0, 1, '2019-05-12 22:11:49', '2019-05-12 22:15:47', 'active'),
-(6, 2, 8, NULL, 'EKreative - web and mobile app development', NULL, 0, 1, '2019-05-12 22:16:50', '2019-05-12 22:20:46', 'active'),
-(7, 1, NULL, 6, 'IT company Cherkasy', NULL, 1, 1, '2019-05-12 22:22:52', '2019-05-12 22:22:52', 'active');
+INSERT INTO `svistyn` (`id`, `user_id`, `photo_id`, `parent_id`, `text`, `embed_video`, `state`, `status`, `created`, `updated`, `marking`, `views`) VALUES
+(1, 1, 3, NULL, 'AWS - Amazon Web Services - Що це і чому тобі це потрібно', 'https://www.youtube.com/watch?v=8jbx8O3wuLg', 0, 1, '2019-05-12 21:36:13', '2019-05-12 21:38:17', 'active', 0),
+(2, 1, 4, NULL, 'Docker - Все що потрібно знати щоб почати працювати з Docker, всі основи в одному уроці', 'https://www.youtube.com/watch?v=I18TNwZ2Nqg&t=445s', 0, 1, '2019-05-12 21:41:53', '2019-05-12 21:42:56', 'active', 0),
+(3, 1, 5, NULL, 'Команду eKreative переповнюють емоції\r\nАдже відбувся випуск Першого сезону Lektorium!\r\nВітаємо наших випускників!', NULL, 0, 1, '2019-05-12 21:47:35', '2019-05-12 21:51:46', 'active', 0),
+(4, 1, 6, NULL, 'Євпаторія, Крим. Коротко про курорт. Пляж, Житло, Відпочинок', 'https://www.youtube.com/watch?v=Djm1FphB0WQ', 0, 1, '2019-05-12 21:53:44', '2019-05-12 22:00:46', 'active', 0),
+(5, 1, 7, NULL, 'Lektorium', NULL, 0, 1, '2019-05-12 22:11:49', '2019-05-12 22:15:47', 'active', 0),
+(6, 2, 8, NULL, 'EKreative - web and mobile app development', NULL, 0, 1, '2019-05-12 22:16:50', '2019-05-12 22:20:46', 'active', 0),
+(7, 1, NULL, 6, 'IT company Cherkasy', NULL, 1, 1, '2019-05-12 22:22:52', '2019-05-12 22:22:52', 'active', 0);
 
 -- --------------------------------------------------------
 

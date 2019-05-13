@@ -93,6 +93,7 @@ edit_svist: 'Редагування свисту'
 users_list: 'Список користувачів'
 svists_list: 'Список свистів'
 comments_list: 'Список коментарів'
+views: 'Переглядів'
 
 #flash_messages
 added_new_svist_successfully: 'Новий свист добавлений успішно'

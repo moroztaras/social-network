@@ -176,4 +176,15 @@ class SvistynRepository extends EntityRepository
           ->getQuery()
           ->getResult();
     }
+
+    public function FindSvistynsByMonth($month)
+    {
+        return $this
+          ->createQueryBuilder('sv')
+          ->select()
+          ->andWhere('MONTH(sv.created) = :month')
+          ->setParameter('month', $month)
+          ->getQuery()
+          ->getResult();
+    }
 }

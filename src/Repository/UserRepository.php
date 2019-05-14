@@ -37,4 +37,16 @@ class UserRepository extends EntityRepository implements UserLoaderInterface
           ->getQuery()
           ->getResult();
     }
+
+    public function FindUsersByMonth($month)
+    {
+        return count($this
+            ->createQueryBuilder('u')
+            ->select()
+            ->andWhere('MONTH(u.created) = :month')
+            ->setParameter('month', $month)
+            ->getQuery()
+            ->getResult()
+        );
+    }
 }

@@ -7,7 +7,9 @@
     <div class="uk-section uk-section-xsmall">
         <div class="uk-container uk-container-xsmall">
             <div class="uk-text-center uk-margin">
-                {{ 'admin_panel'|trans }}
+                {{ 'admin_panel'|trans }} |
+                <img src="{{ asset('/images/charts_icon.jpg')}}" width="17px">
+                <a href="{{ path('admin_highcharts') }}">{{ 'schedule'| trans }}</a>
             </div>
         </div>
     </div>

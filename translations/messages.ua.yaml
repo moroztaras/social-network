@@ -94,6 +94,7 @@ users_list: 'Список користувачів'
 svists_list: 'Список свистів'
 comments_list: 'Список коментарів'
 views: 'Переглядів'
+VIEWS: 'ПЕРЕГЛЯДІВ'
 number: 'Кількість'
 
 #flash_messages

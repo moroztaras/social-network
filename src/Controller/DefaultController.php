@@ -72,6 +72,7 @@ class DefaultController extends Controller
         $users = [];
         $svistyns = [];
         $comments = [];
+        $views = [];
         foreach ($months as $value) {
             array_push(
               $users,
@@ -82,12 +83,16 @@ class DefaultController extends Controller
             array_push(
               $comments,
               $this->getDoctrine()->getRepository(Comment::class)->findCommentsByMonth($value));
+            array_push(
+              $views,
+              $this->getDoctrine()->getRepository(Svistyn::class)->getCountAllViewsSvistynsByMonth($value)
+            );
         }
-
         return $this->render('Admin/highcharts.html.twig', [
           'users' => $users,
           'svistyns' => $svistyns,
           'comments' => $comments,
+          'views' => $views,
         ]);
     }
 }

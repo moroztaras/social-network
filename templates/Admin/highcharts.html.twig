@@ -59,6 +59,10 @@
             {
                 name: '{{ 'COMMENTS'|trans }}',
                 data: [{% for comment in comments %} {{ comment }}, {% endfor %}]
+            },
+            {
+                name: '{{ 'VIEWS'|trans }}',
+                data: [{% for view in views %} {{ view }}, {% endfor %}]
             }
         ]
       });

@@ -47,6 +47,7 @@ class HighchartsController extends Controller
               $this->getDoctrine()->getRepository(Svistyn::class)->getCountAllViewsSvistynsByMonth($value)
             );
         }
+
         return $this->render('Admin/Highcharts/highcharts.html.twig', [
           'users' => $users,
           'svistyns' => $svistyns,

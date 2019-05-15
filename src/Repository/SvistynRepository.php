@@ -197,12 +197,11 @@ class SvistynRepository extends EntityRepository
             ->setParameter('month', $month)
             ->getQuery()
             ->getResult();
-        $views=0;
-        foreach ($svistyns as $svistyn)
-        {
+        $views = 0;
+        foreach ($svistyns as $svistyn) {
             $views += $svistyn->getViews();
         }
+
         return $views;
     }
-
 }

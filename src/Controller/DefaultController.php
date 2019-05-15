@@ -2,9 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Comment;
 use App\Entity\Friends;
-use App\Entity\Svistyn;
 use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;

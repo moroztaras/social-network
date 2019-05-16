@@ -56,7 +56,7 @@ class CommentRepository extends ServiceEntityRepository
           ->getResult();
     }
 
-    public function FindCommentsByMonth($month)
+    public function FindCommentsByMonth($month, $year)
     {
         return count($this
           ->createQueryBuilder('c')

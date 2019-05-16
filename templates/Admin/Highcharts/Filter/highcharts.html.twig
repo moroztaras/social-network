@@ -3,7 +3,7 @@
 
 {% block main %}
     {#{% if user is not null %}#}
-        {#{{ render(controller('App\\Controller\\BlockController::userAdminCover',{ 'id': user.id })) }}#}
+    {#{{ render(controller('App\\Controller\\BlockController::userAdminCover',{ 'id': user.id })) }}#}
     {#{% endif %}#}
     <div class="uk-section uk-section-xsmall">
         <div class="uk-container uk-container-xsmall">
@@ -31,7 +31,8 @@
           text: '{{ 'schedule_of_social_network_activity'|trans }}'
         },
         xAxis: {
-          categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+          // categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+          categories: [{% for month in months %} {{ month }}, {% endfor %}]
         },
         yAxis: {
           title: {
@@ -47,22 +48,22 @@
           }
         },
         series: [
-            {
-                name: '{{ 'users'|trans }}',
-                data: [{% for user in users %} {{ user }}, {% endfor %}]
-            },
-            {
-                name: '{{ 'svistyns'|trans }}',
-                data: [{% for svistyn in svistyns %} {{ svistyn }}, {% endfor %}]
-            },
-            {
-                name: '{{ 'COMMENTS'|trans }}',
-                data: [{% for comment in comments %} {{ comment }}, {% endfor %}]
-            },
-            {
-                name: '{{ 'VIEWS'|trans }}',
-                data: [{% for view in views %} {{ view }}, {% endfor %}]
-            }
+          {
+            name: '{{ 'users'|trans }}',
+            data: [{% for user in users %} {{ user }}, {% endfor %}]
+          },
+          {
+            name: '{{ 'svistyns'|trans }}',
+            data: [{% for svistyn in svistyns %} {{ svistyn }}, {% endfor %}]
+          },
+          {
+            name: '{{ 'COMMENTS'|trans }}',
+            data: [{% for comment in comments %} {{ comment }}, {% endfor %}]
+          },
+          {
+            name: '{{ 'VIEWS'|trans }}',
+            data: [{% for view in views %} {{ view }}, {% endfor %}]
+          }
         ]
       });
     </script>

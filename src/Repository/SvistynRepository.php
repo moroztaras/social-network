@@ -177,22 +177,26 @@ class SvistynRepository extends EntityRepository
           ->getResult();
     }
 
-    public function FindSvistynsByMonth($month)
+    public function FindSvistynsByMonth($month, $year)
     {
         return $this
           ->createQueryBuilder('sv')
           ->select()
+          ->andWhere('YEAR(sv.created) = :year')
+          ->setParameter('year', $year)
           ->andWhere('MONTH(sv.created) = :month')
           ->setParameter('month', $month)
           ->getQuery()
           ->getResult();
     }
 
-    public function getCountAllViewsSvistynsByMonth($month)
+    public function getCountAllViewsSvistynsByMonth($month, $year)
     {
         $svistyns = $this
             ->createQueryBuilder('sv')
             ->select()
+            ->andWhere('YEAR(sv.created) = :year')
+            ->setParameter('year', $year)
             ->andWhere('MONTH(sv.created) = :month')
             ->setParameter('month', $month)
             ->getQuery()

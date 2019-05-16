@@ -9,7 +9,9 @@
             <div class="uk-text-center uk-margin">
                 {{ 'admin_panel'|trans }} |
                 <img src="{{ asset('/images/charts_icon.jpg')}}" width="17px">
-                <a href="{{ path('admin_highcharts') }}">{{ 'schedule'| trans }}</a>
+                <a href="{{ path('admin_highcharts') }}">{{ 'schedule'| trans }}</a> |
+                <img src="{{ asset('/images/filter_icon.png')}}" width="14px">
+                <a href="{{ path('admin_filter_form_highcharts') }}">{{ 'filter'| trans }}</a>
             </div>
         </div>
     </div>

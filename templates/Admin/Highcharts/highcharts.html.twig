@@ -1,14 +1,12 @@
-{#{% extends "Layout/layout-default.html.twig" %}#}
-{#{% block title %}HighChart | {{ 'admin_panel'|trans }}{% endblock %}#}
-
 {% block main %}
-    {#{% if user is not null %}#}
-        {#{{ render(controller('App\\Controller\\BlockController::userAdminCover',{ 'id': user.id })) }}#}
-    {#{% endif %}#}
     <div class="uk-section uk-section-xsmall">
         <div class="uk-container uk-container-xsmall">
             <div class="uk-text-center uk-margin">
+                {{ include('Admin/Highcharts/Filter/form.html.twig', ['form', form]) }}
                 <div id="container"></div>
+                {% if formIsSubmitted == true %}
+                    {{ include('Admin/Highcharts/Filter/highcharts.html.twig', {'users': filter_users, 'svistyns': filter_svistyns, 'months': filter_months, 'comments': filter_comments, 'views': filter_views}) }}
+                {% endif %}
             </div>
         </div>
     </div>

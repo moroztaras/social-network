@@ -1,28 +1,17 @@
-{% extends "Layout/layout-default.html.twig" %}
-{% block title %}{{ 'filter'|trans }} | {{ 'admin_panel'|trans }}{% endblock %}
-
-{% block main %}
-    {% if user is not null %}
-    {{ render(controller('App\\Controller\\BlockController::userAdminCover',{ 'id': user.id })) }}
-    {% endif %}
-    <div class="uk-section uk-section-xsmall">
-        <div class="uk-container uk-container-xsmall">
-            <div class="uk-text-center uk-margin">
-                {{ form_start(form) }}
-                    <table border="0" align="center">
-                        <tr>
-                            <td>{{ 'month'|trans }}</td><td>{{ 'year'|trans }}</td><td></td></td><td>{{ 'month'|trans }}</td><td>{{ 'year'|trans }}</td>
-                        </tr>
-                        <tr>
-                            <td>{{ form_widget(form['initial_month']) }}</td><td>{{ form_widget(form['initial_year']) }}</td><td>&nbsp;&nbsp;-&nbsp;&nbsp;</td></td><td>{{ form_widget(form['final_month']) }}</td><td>{{ form_widget(form['final_year']) }}</td>
-                        </tr>
-                    </table>
-                    <br>
-                    <button class="uk-button uk-button-default uk-margin-small-right" type="submit">
-                        {{ 'filter'|trans }}
-                    </button>
-                {{ form_end(form) }}
-            </div>
-        </div>
-    </div>
-{% endblock %}
+{{ form_start(form) }}
+<table align="center">
+    <tr>
+        <td align="center">{{ 'month'|trans }}</td><td align="center">{{ 'year'|trans }}</td><td></td></td><td align="center">{{ 'month'|trans }}</td><td align="center">{{ 'year'|trans }}</td>
+    </tr>
+    <tr>
+        <td align="center">{{ form_widget(form['initial_month']) }}</td><td align="center">{{ form_widget(form['initial_year']) }}</td><td align="center">&nbsp;&nbsp;-&nbsp;&nbsp;</td></td><td align="center">{{ form_widget(form['final_month']) }}</td><td align="center">{{ form_widget(form['final_year']) }}</td>
+    </tr>
+    <tr>
+        <td colspan="5" align="center"><br>
+            <button class="uk-button uk-button-default uk-margin-small-right" type="submit">
+                {{ 'filter'|trans }}
+            </button>
+        </td>
+    </tr>
+</table>
+{{ form_end(form) }}

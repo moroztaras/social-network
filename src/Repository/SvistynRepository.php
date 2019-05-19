@@ -208,4 +208,23 @@ class SvistynRepository extends EntityRepository
 
         return $views;
     }
+
+    public function getFilterSvistyns()
+    {
+        $svistyns = $this
+          ->createQueryBuilder('sv')
+          ->select()
+          ->getQuery()
+          ->getResult();
+
+        $svists = [];
+        foreach ($svistyns as $svistyn) {
+            $user = $svistyn->getUser();
+            if(count($user->getSvistyns())>=2)
+            {
+                array_push($svists, $svistyn);
+            }
+        }
+    return $svists;
+    }
 }

@@ -245,17 +245,18 @@ class SvistynRepository extends EntityRepository
 //        }
 //    return $svists;
 
-        $svistQb = $this->_em->createQueryBuilder();
-        $svistQb
-          ->from(User::class, 'user2')
-          ->join('user2.svistyns', 'svistyns')
-          ->select('count(svistyns.id)')
-          ->getQuery()
-          ->getResult()
-        ;
+//        $svistQb = $this->_em->createQueryBuilder();
+//        $svistQb
+//          ->from(User::class, 'user2')
+//          ->join('user2.svistyns', 'svistyns')
+//          ->select('count(svistyns.id)')
+//          ->getQuery()
+//          ->getResult()
+//        ;
 
         $userQb = $this->_em->createQueryBuilder();
-        $userQb->from(User::class, 'user1')
+        $userQb
+          ->from(User::class, 'user1')
           ->select('user1.id')
           ->join('user1.svistyns', 'svistyns1')
           ->groupBy('user1.id')

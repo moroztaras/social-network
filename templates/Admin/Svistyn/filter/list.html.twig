@@ -1,0 +1,15 @@
+{% extends "Layout/layout-default.html.twig" %}
+{% block title %}{{ 'svists_list'|trans }}{% endblock %}
+{% block main %}
+    {% if user is not null %}
+        {{ render(controller('App\\Controller\\BlockController::userAdminCover')) }}
+    {% endif %}
+    {{ include('Admin/Block/link.html.twig') }}
+    <div class="uk-section uk-section-xsmall">
+        <div class="uk-container uk-container-xsmall">
+            {% for svistyn in svistyns %}
+                {{ include('Admin/Svistyn/ModeView/full.html.twig', { 'svistyn' : svistyn }) }}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

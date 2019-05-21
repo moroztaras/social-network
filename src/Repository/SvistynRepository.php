@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Components\Utils\Pagination;
-use App\Entity\Friends;
 use App\Entity\Svistyn;
 use App\Entity\User;
 use Doctrine\ORM\EntityRepository;
@@ -175,5 +174,59 @@ class SvistynRepository extends EntityRepository
           ->addOrderBy('sv.id', 'DESC')
           ->getQuery()
           ->getResult();
+    }
+
+    public function FindSvistynsByMonth($month, $year)
+    {
+        return $this
+          ->createQueryBuilder('sv')
+          ->select()
+          ->andWhere('YEAR(sv.created) = :year')
+          ->setParameter('year', $year)
+          ->andWhere('MONTH(sv.created) = :month')
+          ->setParameter('month', $month)
+          ->getQuery()
+          ->getResult();
+    }
+
+    public function getCountAllViewsSvistynsByMonth($month, $year)
+    {
+        $svistyns = $this
+            ->createQueryBuilder('sv')
+            ->select()
+            ->andWhere('YEAR(sv.created) = :year')
+            ->setParameter('year', $year)
+            ->andWhere('MONTH(sv.created) = :month')
+            ->setParameter('month', $month)
+            ->getQuery()
+            ->getResult();
+        $views = 0;
+        foreach ($svistyns as $svistyn) {
+            $views += $svistyn->getViews();
+        }
+
+        return $views;
+    }
+
+    public function getFilterSvistyns()
+    {
+        $userQb = $this->_em->createQueryBuilder();
+        $userQb
+          ->from(User::class, 'user1')
+          ->select('user1.id')
+          ->join('user1.svistyns', 'svistyns1')
+          ->groupBy('user1.id')
+          ->having('COUNT(svistyns1.id) > 2')
+        ;
+
+        $qb = $this
+          ->createQueryBuilder('svistyn')
+          ->select('svistyn')
+          ->join('svistyn.user', 'user')
+          ->andWhere('user.id IN (:cc)')
+          ->setParameter('cc', $userQb->getQuery()->getArrayResult())
+        ;
+
+        return $qb->getQuery()->getResult();
     }
 }

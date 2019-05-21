@@ -25,13 +25,6 @@ class DefaultController extends Controller
 //        return $this->render('front.html.twig');
 
         if (null != $this->getUser()) {
-//            $user = $this->getUser();
-//            $user = $this->getDoctrine()->getRepository(User::class)->find($user->getId());
-//            if ($user->getStatus() == 0)
-//            {
-//                return $this->redirectToRoute('user_check_block');
-//            }
-//            else
             $this->check();
             if (0 != count($this->getDoctrine()->getRepository(Friends::class)->findBy(['user' => $this->getUser()]))) {
                 return $this->redirectToRoute('svistyn_feed_following');

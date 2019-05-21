@@ -126,6 +126,13 @@ class User implements \Serializable, UserInterface, \JsonSerializable
     private $apiToken;
 
     /**
+     * @var ArrayCollection
+     * @ORM\OneToMany(targetEntity="Svistyn", mappedBy="user", cascade={"persist", "remove"})
+     * @ORM\OrderBy({"id" = "DESC"})
+     */
+    private $svistyns;
+
+    /**
      * User constructor.
      */
     public function __construct()
@@ -137,6 +144,7 @@ class User implements \Serializable, UserInterface, \JsonSerializable
         $this->updated = new \DateTime();
         $this->status = 1;
         $this->friends = new ArrayCollection();
+        $this->svistyns = new ArrayCollection();
     }
 
     public function serialize()
@@ -554,6 +562,47 @@ class User implements \Serializable, UserInterface, \JsonSerializable
     public function setApiToken(string $apiToken): self
     {
         $this->apiToken = $apiToken;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Svistyn[]
+     */
+    public function getSvistyns(): Collection
+    {
+        return $this->svistyns;
+    }
+
+    /**
+     * @param Svistyn $svistyn
+     *
+     * @return User
+     */
+    public function addSvistyn(Svistyn $svistyn): self
+    {
+        if (!$this->svistyns->contains($svistyn)) {
+            $this->svistyns[] = $svistyn;
+            $svistyn->setUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Svistyn $svistyn
+     *
+     * @return User
+     */
+    public function removeSvistyn(Svistyn $svistyn): self
+    {
+        if ($this->svistyns->contains($svistyn)) {
+            $this->svistyns->removeElement($svistyn);
+            // set the owning side to null (unless already changed)
+            if ($svistyn->getUser() === $this) {
+                $svistyn->setUser(null);
+            }
+        }
 
         return $this;
     }

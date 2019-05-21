@@ -55,4 +55,16 @@ class CommentRepository extends ServiceEntityRepository
           ->getQuery()
           ->getResult();
     }
+
+    public function FindCommentsByMonth($month, $year)
+    {
+        return count($this
+          ->createQueryBuilder('c')
+          ->select()
+          ->andWhere('MONTH(c.createdAt) = :month')
+          ->setParameter('month', $month)
+          ->getQuery()
+          ->getResult()
+        );
+    }
 }

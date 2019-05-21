@@ -1,0 +1,17 @@
+{{ form_start(form) }}
+<table align="center">
+    <tr>
+        <td align="center">{{ 'month'|trans }}</td><td align="center">{{ 'year'|trans }}</td><td></td></td><td align="center">{{ 'month'|trans }}</td><td align="center">{{ 'year'|trans }}</td>
+    </tr>
+    <tr>
+        <td align="center">{{ form_widget(form['initial_month']) }}</td><td align="center">{{ form_widget(form['initial_year']) }}</td><td align="center">&nbsp;&nbsp;-&nbsp;&nbsp;</td></td><td align="center">{{ form_widget(form['final_month']) }}</td><td align="center">{{ form_widget(form['final_year']) }}</td>
+    </tr>
+    <tr>
+        <td colspan="5" align="center"><br>
+            <button class="uk-button uk-button-default uk-margin-small-right" type="submit">
+                {{ 'filter'|trans }}
+            </button>
+        </td>
+    </tr>
+</table>
+{{ form_end(form) }}

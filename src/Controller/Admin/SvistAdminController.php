@@ -151,4 +151,21 @@ class SvistAdminController extends Controller
             return new Response(count($svistyns));
         }
     }
+
+    /**
+     * @Route("/filter", methods={"GET"}, name="admin_user_filter_list")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     *
+     * @return Response
+     */
+    public function svistynsFilterList()
+    {
+        $user = $this->getUser();
+        $svistyns = $this->getDoctrine()->getManager()->getRepository(Svistyn::class)->getFilterSvistyns();
+
+        return $this->render('Admin/Svistyn/filter/list.html.twig', [
+          'svistyns' => $svistyns,
+          'user' => $user,
+        ]);
+    }
 }

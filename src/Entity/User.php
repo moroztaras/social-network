@@ -566,6 +566,47 @@ class User implements \Serializable, UserInterface, \JsonSerializable
         return $this;
     }
 
+    /**
+     * @return Collection|Svistyn[]
+     */
+    public function getSvistyns(): Collection
+    {
+        return $this->svistyns;
+    }
+
+    /**
+     * @param Svistyn $svistyn
+     *
+     * @return User
+     */
+    public function addSvistyn(Svistyn $svistyn): self
+    {
+        if (!$this->svistyns->contains($svistyn)) {
+            $this->svistyns[] = $svistyn;
+            $svistyn->setUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Svistyn $svistyn
+     *
+     * @return User
+     */
+    public function removeSvistyn(Svistyn $svistyn): self
+    {
+        if ($this->svistyns->contains($svistyn)) {
+            $this->svistyns->removeElement($svistyn);
+            // set the owning side to null (unless already changed)
+            if ($svistyn->getUser() === $this) {
+                $svistyn->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
     public function jsonSerialize()
     {
         return [
@@ -581,44 +622,5 @@ class User implements \Serializable, UserInterface, \JsonSerializable
           'status' => $this->getStatus(),
           'api_token' => $this->getApiToken(),
         ];
-    }
-
-    /**
-     * @return Collection|Svistyn[]
-     */
-    public function getSvistyns(): Collection
-    {
-        return $this->svistyns;
-    }
-
-    /**
-     * @param Svistyn $svistyn
-     * @return User
-     */
-    public function addSvistyn(Svistyn $svistyn): self
-    {
-        if (!$this->svistyns->contains($svistyn)) {
-            $this->svistyns[] = $svistyn;
-            $svistyn->setUser($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param Svistyn $svistyn
-     * @return User
-     */
-    public function removeSvistyn(Svistyn $svistyn): self
-    {
-        if ($this->svistyns->contains($svistyn)) {
-            $this->svistyns->removeElement($svistyn);
-            // set the owning side to null (unless already changed)
-            if ($svistyn->getUser() === $this) {
-                $svistyn->setUser(null);
-            }
-        }
-
-        return $this;
     }
 }

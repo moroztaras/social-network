@@ -3,32 +3,13 @@
 namespace App\Repository;
 
 use App\Components\Utils\Pagination;
-//use App\Entity\Friends;
 use App\Entity\Svistyn;
 use App\Entity\User;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Mapping;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\Common\Persistence\ManagerRegistry;
 
 class SvistynRepository extends EntityRepository
 {
-//    /**
-//     * @var ManagerRegistry
-//     */
-//    private $em;
-//
-//    /**
-//     * SvistynRepository constructor.
-//     *
-//     * @param ManagerRegistry $em
-//     */
-//    public function __construct(ManagerRegistry $em)
-//    {
-//        $this->em = $em;
-//    }
-
     public function queryByOptions(QueryBuilder $query, $options)
     {
         $limit = isset($options['limit']) ? $options['limit'] : 10;
@@ -229,31 +210,6 @@ class SvistynRepository extends EntityRepository
 
     public function getFilterSvistyns()
     {
-//        $svistyns = $this
-//          ->createQueryBuilder('sv')
-//          ->select()
-//          ->getQuery()
-//          ->getResult();
-//
-//        $svists = [];
-//        foreach ($svistyns as $svistyn) {
-//            $user = $svistyn->getUser();
-//            if(count($user->getSvistyns())>=2)
-//            {
-//                array_push($svists, $svistyn);
-//            }
-//        }
-//    return $svists;
-
-//        $svistQb = $this->_em->createQueryBuilder();
-//        $svistQb
-//          ->from(User::class, 'user2')
-//          ->join('user2.svistyns', 'svistyns')
-//          ->select('count(svistyns.id)')
-//          ->getQuery()
-//          ->getResult()
-//        ;
-
         $userQb = $this->_em->createQueryBuilder();
         $userQb
           ->from(User::class, 'user1')
@@ -261,24 +217,15 @@ class SvistynRepository extends EntityRepository
           ->join('user1.svistyns', 'svistyns1')
           ->groupBy('user1.id')
           ->having('COUNT(svistyns1.id) > 2')
-//          ->andWhere('ccc > 2')
-//            $userQb->expr()->in('user1.id', $svistQb->getDQL()).'>=: number')
-//          ->setParameter('number',2)
-//          ->distinct()
         ;
 
-        $res = $userQb->getQuery()->getResult();
-
-        $qb = $this->createQueryBuilder('svistyn');
-        $qb->select('svistyn');
-        $qb->join('svistyn.user', 'user');
-        $qb->andWhere(
-//          $qb->expr()->in('user.id', $userQb->getQuery()->getResult())
-          'user.id IN (:cc)'
-          )
-        ->setParameter('cc', $userQb->getQuery()->getArrayResult())
+        $qb = $this
+          ->createQueryBuilder('svistyn')
+          ->select('svistyn')
+          ->join('svistyn.user', 'user')
+          ->andWhere('user.id IN (:cc)')
+          ->setParameter('cc', $userQb->getQuery()->getArrayResult())
         ;
-//        $res = $qb->getQuery()->getResult();
 
         return $qb->getQuery()->getResult();
     }

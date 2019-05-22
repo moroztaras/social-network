@@ -1,0 +1,30 @@
+<div class="uk-card uk-card-default uk-card-small uk-margin-small">
+    <div class="uk-card-header">
+        <div class="uk-grid-small uk-flex-middle" uk-grid>
+            <div class="uk-width-auto">
+                <img data-src="{{ user.avatar|avatarStyleDefault }}" width="40" height="40" alt uk-img>
+            </div>
+            <div class="uk-width-expand">
+                <div><a class="uk-text-small uk-text-muted" href="{{ path('user_canonical', { 'id' : user.id }) }}">{{ user.fullname }}</a></div>
+                <p class="uk-text-meta uk-margin-remove-top"><time datetime="{{ user.created|date('H:i:s Y-m-d') }}">{{ user.created|date('H:i:s M d, Y') }}</time></p>
+            </div>
+            <li>
+                <div class="us-prof-header">
+                    <span uk-icon="icon: chevron-down"></span>
+                </div>
+                <div uk-drop="mode: click; offset: 20; pos: bottom-right" class="uk-card uk-card-default kuk-width-small">
+                    <nav class="uk-padding-small">
+                        <ul class="uk-nav uk-list-divider uk-text-small">
+                            <li><a href="#"><span uk-icon="icon: trash" class="uk-margin-small-right"></span> {{ 'delete'|trans }}</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </li>
+        </div>
+    </div>
+    <div class="uk-card uk-card-body">
+        <div class="st-post-fd st-post-fd--text">
+            <p>{{ 'messages'|trans }}</p>
+        </div>
+    </div>
+</div>

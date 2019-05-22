@@ -96,6 +96,10 @@ comments_list: 'Список коментарів'
 views: 'Переглядів'
 VIEWS: 'ПЕРЕГЛЯДІВ'
 number: 'Кількість'
+messages: 'Повідомлення'
+not_read: 'Не прочитані'
+send: 'Відправити'
+MESSAGE: 'ПОВІДОМЛЕННЯ'
 
 #flash_messages
 added_new_svist_successfully: 'Новий свист добавлений успішно'

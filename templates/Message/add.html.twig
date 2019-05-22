@@ -1,0 +1,23 @@
+{% extends "Layout/layout-default.html.twig" %}
+
+{% block title %}{{ 'messages'|trans }}{% endblock %}
+
+{% block main %}
+  <div class="uk-container uk-container-xsmall">
+      <div class="uk-section uk-padding uk-background-default kuk-shadow">
+          <div class="uk-card-header">
+              <div class="uk-grid-small uk-flex-middle" uk-grid>
+                  <div class="uk-width-auto">
+                      <img data-src="{{ receiver.avatar|avatarStyleDefault }}" width="40" height="40" alt uk-img>
+                  </div>
+                  <div class="uk-width-expand">
+                      {{ form_start (form) }}
+                        {{ form_widget(form) }}
+                          <button type="submit" class="uk-button uk-button-default">{{ 'send'|trans }}</button>
+                      {{ form_end (form) }}
+                  </div>
+              </div>
+          </div>
+    </div>
+  </div>
+{% endblock %}

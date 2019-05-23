@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Class Dialogue.
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\DialogueRepository")
  * @ORM\Table(name="dialogue")
  * @ORM\HasLifecycleCallbacks()
  */

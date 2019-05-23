@@ -8,7 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Class Message.
  *
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="App\Repository\MessageRepository")
  * @ORM\Table(name="message")
  * @ORM\HasLifecycleCallbacks()
  */

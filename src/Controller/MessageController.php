@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Dialogue;
+use App\Entity\Message;
 use App\Entity\User;
 use App\Form\Message\MessageForm;
 use App\Form\Message\Model\MessageModel;
@@ -36,9 +38,31 @@ class MessageController extends Controller
         if (null != $user && 0 == $user->getStatus()) {
             return $this->redirectToRoute('user_check_block');
         }
+        $dialogues = $this->getDoctrine()->getRepository(Dialogue::class)->getDialoguesForUser($user);
+
+        return $this->render('Message/index.html.twig', [
+          'user' => $user,
+          'dialogues' => $dialogues,
+        ]);
+    }
+
+    /**
+     * @Route("/messages/{id}/dialogue", name="user_dialogue_messages_list")
+     */
+    public function userDialogueMessages($id)
+    {
+        $user = $this->getUser();
+        if (null != $user && 0 == $user->getStatus()) {
+            return $this->redirectToRoute('user_check_block');
+        }
+        $dialogues = $this->getDoctrine()->getRepository(Dialogue::class)->getDialoguesForUser($user);
+
+        $messages = $this->getDoctrine()->getRepository(Message::class)->getMessagesForDialogue($id);
 
         return $this->render('Message/list.html.twig', [
           'user' => $user,
+          'dialogues' => $dialogues,
+          'messages' => $messages,
         ]);
     }
 

@@ -100,7 +100,9 @@ messages: 'Повідомлення'
 not_read: 'Не прочитані'
 send: 'Відправити'
 MESSAGE: 'ПОВІДОМЛЕННЯ'
-
+new_message: 'Нове повідомлення'
+go_to_the_dialogue_with: 'Перейти до діалогу з'
+message_send: 'Повідомлення відправлено'
 #flash_messages
 added_new_svist_successfully: 'Новий свист добавлений успішно'
 svist_edited_successfully: 'Свист відредаговано успішно'

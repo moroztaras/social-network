@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Час створення: Трв 13 2019 р., 07:56
+-- Час створення: Трв 22 2019 р., 09:10
 -- Версія сервера: 5.7.24-0ubuntu0.16.04.1
 -- Версія PHP: 7.2.17-1+ubuntu16.04.1+deb.sury.org+3
 
@@ -41,6 +41,19 @@ CREATE TABLE `comment` (
 
 INSERT INTO `comment` (`id`, `svistyn_id`, `user_id`, `comment`, `created_at`, `approved`) VALUES
 (1, 6, 1, 'The best IT company in Cherkassy', '2019-05-12 22:25:04', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблиці `dialogue`
+--
+
+CREATE TABLE `dialogue` (
+  `id` int(11) NOT NULL,
+  `creator_id` int(11) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -127,6 +140,22 @@ CREATE TABLE `media` (
 -- --------------------------------------------------------
 
 --
+-- Структура таблиці `message`
+--
+
+CREATE TABLE `message` (
+  `id` int(11) NOT NULL,
+  `sender_id` int(11) DEFAULT NULL,
+  `receiver_id` int(11) DEFAULT NULL,
+  `dialogue_id` int(11) DEFAULT NULL,
+  `message` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` datetime NOT NULL,
+  `status` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Структура таблиці `migration_versions`
 --
 
@@ -146,7 +175,8 @@ INSERT INTO `migration_versions` (`version`, `executed_at`) VALUES
 ('20190315094922', '2019-05-12 18:30:26'),
 ('20190316095607', '2019-05-12 18:30:26'),
 ('20190327112900', '2019-05-12 18:30:27'),
-('20190513075410', '2019-05-13 07:55:00');
+('20190513075410', '2019-05-13 07:55:00'),
+('20190522090525', '2019-05-22 09:07:44');
 
 -- --------------------------------------------------------
 
@@ -228,6 +258,13 @@ ALTER TABLE `comment`
   ADD KEY `IDX_9474526CA76ED395` (`user_id`);
 
 --
+-- Індекси таблиці `dialogue`
+--
+ALTER TABLE `dialogue`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `IDX_F18A1C3961220EA6` (`creator_id`);
+
+--
 -- Індекси таблиці `file_manager`
 --
 ALTER TABLE `file_manager`
@@ -253,6 +290,15 @@ ALTER TABLE `friends`
 --
 ALTER TABLE `media`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Індекси таблиці `message`
+--
+ALTER TABLE `message`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `IDX_B6BD307FF624B39D` (`sender_id`),
+  ADD KEY `IDX_B6BD307FCD53EDB6` (`receiver_id`),
+  ADD KEY `IDX_B6BD307FA6E12CBD` (`dialogue_id`);
 
 --
 -- Індекси таблиці `migration_versions`
@@ -290,6 +336,11 @@ ALTER TABLE `user`
 ALTER TABLE `comment`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
+-- AUTO_INCREMENT для таблиці `dialogue`
+--
+ALTER TABLE `dialogue`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
 -- AUTO_INCREMENT для таблиці `file_manager`
 --
 ALTER TABLE `file_manager`
@@ -308,6 +359,11 @@ ALTER TABLE `friends`
 -- AUTO_INCREMENT для таблиці `media`
 --
 ALTER TABLE `media`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT для таблиці `message`
+--
+ALTER TABLE `message`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT для таблиці `svistyn`
@@ -331,6 +387,12 @@ ALTER TABLE `comment`
   ADD CONSTRAINT `FK_9474526CA76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
 
 --
+-- Обмеження зовнішнього ключа таблиці `dialogue`
+--
+ALTER TABLE `dialogue`
+  ADD CONSTRAINT `FK_F18A1C3961220EA6` FOREIGN KEY (`creator_id`) REFERENCES `user` (`id`);
+
+--
 -- Обмеження зовнішнього ключа таблиці `file_usage`
 --
 ALTER TABLE `file_usage`
@@ -342,6 +404,14 @@ ALTER TABLE `file_usage`
 ALTER TABLE `friends`
   ADD CONSTRAINT `FK_21EE70696A5458E8` FOREIGN KEY (`friend_id`) REFERENCES `user` (`id`),
   ADD CONSTRAINT `FK_21EE7069A76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
+
+--
+-- Обмеження зовнішнього ключа таблиці `message`
+--
+ALTER TABLE `message`
+  ADD CONSTRAINT `FK_B6BD307FA6E12CBD` FOREIGN KEY (`dialogue_id`) REFERENCES `dialogue` (`id`),
+  ADD CONSTRAINT `FK_B6BD307FCD53EDB6` FOREIGN KEY (`receiver_id`) REFERENCES `user` (`id`),
+  ADD CONSTRAINT `FK_B6BD307FF624B39D` FOREIGN KEY (`sender_id`) REFERENCES `user` (`id`);
 
 --
 -- Обмеження зовнішнього ключа таблиці `svistyn`

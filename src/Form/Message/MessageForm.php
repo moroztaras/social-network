@@ -2,7 +2,7 @@
 
 namespace App\Form\Message;
 
-use App\Entity\Message;
+use App\Form\Message\Model\MessageModel;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -27,8 +27,10 @@ class MessageForm extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-          'data_class' => Message::class,
-          'attr' => ['novalidate' => 'novalidate'],
+          'data_class' => MessageModel::class,
+          'attr' => [
+            'class' => 'form-svistyn-add',
+          ],
         ]);
     }
 }

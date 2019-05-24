@@ -34,10 +34,10 @@ class MessageService
 
     public function send(User $sender, User $receiver, $message)
     {
-        if (null != $this->getDialogue($sender)) {
-            $this->save($this->getDialogue($sender), $sender, $receiver, $message);
-        } elseif (null != $this->getDialogue($receiver)) {
-            $this->save($this->getDialogue($receiver), $sender, $receiver, $message);
+        if (null !== $this->getDialogue($sender, $receiver)) {
+            $this->save($this->getDialogue($sender, $receiver), $sender, $receiver, $message);
+        } elseif (null !== $this->getDialogue($receiver, $sender)) {
+            $this->save($this->getDialogue($receiver, $sender), $sender, $receiver, $message);
         } else {
             $this->newDialogue($sender, $receiver, $message);
         }
@@ -46,9 +46,9 @@ class MessageService
         return $this;
     }
 
-    private function getDialogue($user)
+    private function getDialogue(User $userFirst, User $userSecond)
     {
-        $dialogue = $this->doctrine->getRepository(Dialogue::class)->findOneBy(['creator' => $user]);
+        $dialogue = $this->doctrine->getRepository(Dialogue::class)->findOneBy(['creator' => $userFirst, 'receiver' => $userSecond]);
 
         return $dialogue;
     }

@@ -7,7 +7,7 @@
                 </div>
                 <div class="uk-width-expand">
                     <div><a class="uk-text-small uk-text-muted" href="{{ path('user_canonical', { 'id' : message.sender.id }) }}">{{ message.sender.fullname }}</a></div>
-                    <p class="uk-text-meta uk-margin-remove-top"><time datetime="{{ message.sender.created|date('H:i:s Y-m-d') }}">{{ message.sender.created|date('H:i:s M d, Y') }}</time></p>
+                    <p class="uk-text-meta uk-margin-remove-top"><time datetime="{{ message.createdAt|date('H:i:s Y-m-d') }}">{{ message.createdAt|date('H:i:s M d, Y') }}</time></p>
                 </div>
                 <li>
                     <div class="us-prof-header">

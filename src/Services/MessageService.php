@@ -34,10 +34,10 @@ class MessageService
 
     public function send(User $sender, User $receiver, $message)
     {
-        if (null !== $this->getDialogue($sender, $receiver)) {
-            $this->save($this->getDialogue($sender, $receiver), $sender, $receiver, $message);
-        } elseif (null !== $this->getDialogue($receiver, $sender)) {
-            $this->save($this->getDialogue($receiver, $sender), $sender, $receiver, $message);
+        if ($dialog = $this->getDialogue($sender, $receiver)) {
+            $this->save($dialog, $sender, $receiver, $message);
+        } elseif ($dialog = $this->getDialogue($receiver, $sender)) {
+            $this->save($dialog, $sender, $receiver, $message);
         } else {
             $this->newDialogue($sender, $receiver, $message);
         }
@@ -55,6 +55,7 @@ class MessageService
 
     private function save(Dialogue $dialogue, User $sender, User $receiver, $message)
     {
+        $dialogue->setUpdatedAt(new \DateTime());
         $new_message = new Message();
         $new_message
           ->setMessage($message)

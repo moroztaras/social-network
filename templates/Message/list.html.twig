@@ -17,6 +17,9 @@
                             <li class="{% if app.request.attributes.get('_route') == 'user_canonical' %}uk-active{% endif %}">
                                 <a href="{{ path('user_messages_list') }}">{{ 'messages'|trans }}</a>
                             </li>
+                            <li class="{% if app.request.attributes.get('_route') == 'user_canonical' %}uk-active{% endif %}">
+                                <a href="#"><span uk-icon="icon: trash" class="uk-margin-small-right"></span></a>
+                            </li>
                         </ul>
                     </nav>
                     <h3 class="uk-heading-line uk-margin-small-top"><span>{% block profile_title %}{{ 'messages'|trans }}{% endblock %}</span></h3>

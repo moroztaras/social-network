@@ -9,18 +9,7 @@
                     <div><a class="uk-text-small uk-text-muted" href="{{ path('user_canonical', { 'id' : message.sender.id }) }}">{{ message.sender.fullname }}</a></div>
                     <p class="uk-text-meta uk-margin-remove-top"><time datetime="{{ message.createdAt|date('H:i:s Y-m-d') }}">{{ message.createdAt|date('H:i:s M d, Y') }}</time></p>
                 </div>
-                <li>
-                    <div class="us-prof-header">
-                        <span uk-icon="icon: chevron-down"></span>
-                    </div>
-                    <div uk-drop="mode: click; offset: 20; pos: bottom-right" class="uk-card uk-card-default kuk-width-small">
-                        <nav class="uk-padding-small">
-                            <ul class="uk-nav uk-list-divider uk-text-small">
-                                <li><a href="#"><span uk-icon="icon: trash" class="uk-margin-small-right"></span> {{ 'delete'|trans }}</a></li>
-                            </ul>
-                        </nav>
-                    </div>
-                </li>
+                {{ include('Message/ModeView/menu.html.twig',{'id':message.id}) }}
             </div>
         </div>
         <div class="uk-card uk-card-body">

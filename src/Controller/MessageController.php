@@ -38,11 +38,9 @@ class MessageController extends Controller
         if (null != $user && 0 == $user->getStatus()) {
             return $this->redirectToRoute('user_check_block');
         }
-        $dialogues = $this->getDoctrine()->getRepository(Dialogue::class)->getDialoguesForUser($user);
 
         return $this->render('Message/index.html.twig', [
           'user' => $user,
-          'dialogues' => $dialogues,
         ]);
     }
 
@@ -55,13 +53,10 @@ class MessageController extends Controller
         if (null != $user && 0 == $user->getStatus()) {
             return $this->redirectToRoute('user_check_block');
         }
-        $dialogues = $this->getDoctrine()->getRepository(Dialogue::class)->getDialoguesForUser($user);
-
         $messages = $this->getDoctrine()->getRepository(Message::class)->getMessagesForDialogue($id);
 
         return $this->render('Message/list.html.twig', [
           'user' => $user,
-          'dialogues' => $dialogues,
           'messages' => $messages,
         ]);
     }

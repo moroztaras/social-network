@@ -84,4 +84,10 @@ class MessageService
         $this->doctrine->getManager()->persist($new_dialogue);
         $this->doctrine->getManager()->flush();
     }
+
+    public function edit($message)
+    {
+        $this->doctrine->getManager()->persist($message);
+        $this->doctrine->getManager()->flush();
+    }
 }

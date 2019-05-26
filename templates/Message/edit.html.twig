@@ -25,7 +25,7 @@
                     <h3 class="uk-heading-line uk-margin-small-top"><span>{% block profile_title %}{{ 'messages'|trans }}{% endblock %}</span></h3>
                     {% block profile_content %}
                         {{ include('Message/ModeView/form.html.twig',{'form_message':form_message}) }}
-                        {{ include('Message/ModeView/full.html.twig',{'user':user, 'receiver':receiver, 'id_dialogue':dialogue}) }}
+                        {{ include('Message/ModeView/full.html.twig',{'user':user, 'receiver':receiver, 'id_dialogue':id_dialogue}) }}
                     {% endblock %}
                 </div>
             </div>

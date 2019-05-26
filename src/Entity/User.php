@@ -133,6 +133,13 @@ class User implements \Serializable, UserInterface, \JsonSerializable
     private $svistyns;
 
     /**
+     * @var ArrayCollection
+     * @ORM\OneToMany(targetEntity="Dialogue", mappedBy="creator", cascade={"persist", "remove"})
+     * @ORM\OrderBy({"id" = "DESC"})
+     */
+    private $dialogues;
+
+    /**
      * User constructor.
      */
     public function __construct()
@@ -145,6 +152,7 @@ class User implements \Serializable, UserInterface, \JsonSerializable
         $this->status = 1;
         $this->friends = new ArrayCollection();
         $this->svistyns = new ArrayCollection();
+        $this->dialogues = new ArrayCollection();
     }
 
     public function serialize()
@@ -601,6 +609,37 @@ class User implements \Serializable, UserInterface, \JsonSerializable
             // set the owning side to null (unless already changed)
             if ($svistyn->getUser() === $this) {
                 $svistyn->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Dialogue[]
+     */
+    public function getDialogues(): Collection
+    {
+        return $this->dialogues;
+    }
+
+    public function addDialogue(Dialogue $dialogue): self
+    {
+        if (!$this->dialogues->contains($dialogue)) {
+            $this->dialogues[] = $dialogue;
+            $dialogue->setCreator($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDialogue(Dialogue $dialogue): self
+    {
+        if ($this->dialogues->contains($dialogue)) {
+            $this->dialogues->removeElement($dialogue);
+            // set the owning side to null (unless already changed)
+            if ($dialogue->getCreator() === $this) {
+                $dialogue->setCreator(null);
             }
         }
 

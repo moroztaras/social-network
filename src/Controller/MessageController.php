@@ -175,7 +175,7 @@ class MessageController extends Controller
     }
 
     /**
-     * @Route("/message/{id_message}/delete", name="message_delete", requirements={"id_message"="\d+"}
+     * @Route("/message/{id_message}/delete", name="message_delete", requirements={"id_message"="\d+"})
      * @param $id_message
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse

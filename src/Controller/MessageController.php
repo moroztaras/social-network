@@ -173,4 +173,24 @@ class MessageController extends Controller
           'messages' => $messages,
         ]);
     }
+
+    /**
+     * * @Route("/message/{id_message}/delete", name="message_delete", requirements={"id_message"="\d+"})
+     */
+    public function removeMessage($id_message, Request $request)
+    {
+        $referer = $request->headers->get('referer');
+        $user = $this->getUser();
+        $message = $this->getDoctrine()->getRepository(Message::class)->find($id_message);
+
+        if ($message->getSender() != $user) {
+            $this->flashBag->add('danger', 'delete_message_is_forbidden');
+
+            return $this->redirect($referer);
+        }
+        $this->messageService->remove($message);
+        $this->flashBag->add('danger', 'message_was_deleted_successfully');
+
+        return $this->redirect($referer);
+    }
 }

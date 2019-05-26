@@ -90,4 +90,10 @@ class MessageService
         $this->doctrine->getManager()->persist($message);
         $this->doctrine->getManager()->flush();
     }
+
+    public function remove(Message $message)
+    {
+        $this->doctrine->getManager()->remove($message);
+        $this->doctrine->getManager()->flush();
+    }
 }

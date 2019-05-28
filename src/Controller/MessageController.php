@@ -64,7 +64,7 @@ class MessageController extends Controller
     }
 
     /**
-     * @Route("/messages/{id_dialogue}_{id_receiver}", name="user_dialogue_messages_list", requirements={"id"="\d+"})
+     * @Route("/messages/{id_dialogue}_{id_receiver}", name="user_dialogue_messages_list", requirements={"id_dialogue"="\d+","id_receiver"="\d+"})
      *
      * @param $id_dialogue
      * @param $id_receiver

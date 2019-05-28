@@ -11,6 +11,7 @@ use App\Services\MessageService;
 use Proxies\__CG__\App\Entity\Dialogue;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
@@ -228,4 +229,34 @@ class MessageController extends Controller
 
         return $this->redirectToRoute('user_messages_list');
     }
+
+    public function messageRead(Message $message)
+    {
+        $this->messageService->changeMessageStatus($message);
+
+        return new Response();
+    }
+
+//    /**
+//     * @Route("/messages/{id_dialogue}/scroll", name="message_infinite_scroll")
+//     * @return \Symfony\Component\HttpFoundation\Response
+//     */
+//    public function infiniteScroll($id_dialogue)
+//    {
+//        return $this->render('Message/infiniteScroll.html.twig', [
+//          'id_dialogue' => $id_dialogue
+//        ]);
+//    }
+//
+//    /**
+//     * @Route("/message/{id_dialogue}", name="get_all_messages_for_dialogue")
+//     * @param $id_dialogue
+//     * @return \Symfony\Component\HttpFoundation\JsonResponse
+//     */
+//    public function getMessagesForDialogue($id_dialogue)
+//    {
+//        return $this->json([
+//          'message' => $this->getDoctrine()->getRepository(Message::class)->getMessagesForDialogue($id_dialogue)
+//        ]);
+//    }
 }

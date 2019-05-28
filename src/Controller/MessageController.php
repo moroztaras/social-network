@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 class MessageController extends Controller
 {
@@ -28,15 +29,21 @@ class MessageController extends Controller
     private $flashBag;
 
     /**
+     * @var PaginatorInterface
+     */
+    private $paginator;
+
+    /**
      * MessageController constructor.
      *
      * @param MessageService    $messageService
      * @param FlashBagInterface $flashBag
      */
-    public function __construct(MessageService $messageService, FlashBagInterface $flashBag)
+    public function __construct(MessageService $messageService, FlashBagInterface $flashBag, PaginatorInterface $paginator)
     {
         $this->messageService = $messageService;
         $this->flashBag = $flashBag;
+        $this->paginator = $paginator;
     }
 
     /**
@@ -72,7 +79,13 @@ class MessageController extends Controller
         if (null != $user && 0 == $user->getStatus()) {
             return $this->redirectToRoute('user_check_block');
         }
-        $messages = $this->getDoctrine()->getRepository(Message::class)->getMessagesForDialogue($id_dialogue);
+
+        $messages = $this->paginator->paginate(
+          $this->getDoctrine()->getRepository(Message::class)->getMessagesForDialogue($id_dialogue),
+          $request->query->getInt('page', 1),
+          $request->query->getInt('limit', 10)
+        );
+
         $receiver = $this->getDoctrine()->getRepository(User::class)->find($id_receiver);
         $form = $this->createForm(MessageForm::class, $messageModel);
         $form->handleRequest($request);

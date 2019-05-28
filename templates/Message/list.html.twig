@@ -26,6 +26,7 @@
                     {% block profile_content %}
                         {{ include('Message/ModeView/form.html.twig',{'form_message':form_message}) }}
                         {{ include('Message/ModeView/full.html.twig',{'user':user, 'receiver':receiver, 'id_dialogue':dialogue}) }}
+                        {{ include('Pagination/kpn_pagination.html.twig', {'field' : messages}) }}
                     {% endblock %}
                 </div>
             </div>

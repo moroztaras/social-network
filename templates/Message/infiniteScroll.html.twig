@@ -1,0 +1,67 @@
+{% extends "Layout/layout-default.html.twig" %}
+{% block title %}{{ 'messages'|trans }}{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        #infinite-list {
+            /* We need to limit the height and show a scrollbar */
+            width: 200px;
+            height: 300px;
+            overflow: auto;
+
+            /* Optional, only to check that it works with margin/padding */
+            margin: 30px;
+            padding: 20px;
+            border: 0;
+        }
+
+        /* Optional eye candy below: */
+        li {
+            padding: 10px;
+            list-style-type: none;
+        }
+        li:hover {
+            background: #ccc;
+        }
+    </style>
+{% endblock %}
+{% block main %}
+    <ul id='infinite-list'></ul>
+{% endblock %}
+{% block javascripts %}
+    <script>
+      var listElm = document.querySelector('#infinite-list');
+
+      // Add 20 items.
+      // var nextItem = 1;
+      // var loadMore = function() {
+      //   for (var i = 0; i < 10; i++) {
+      //     var item = document.createElement('li');
+      //     item.innerText = 'message ' + nextItem++;
+      //     listElm.appendChild(item);
+      //   }
+      // }
+
+      var loadMore = function() {
+        $.ajax({url:"{{ path('get_all_messages_for_dialogue', {'id_dialogue':id_dialogue}) }}",
+          success:function() {
+            alert("Success");
+          },
+          error:function() {
+            alert("Error");
+          },
+          dataType:"json",
+          type:"get"
+        })
+      }
+      // Detect when scrolled to bottom.
+      listElm.addEventListener('scroll', function() {
+        if (listElm.scrollTop + listElm.clientHeight >= listElm.scrollHeight) {
+          loadMore();
+        }
+      });
+
+      // Initially load some items.
+      loadMore();
+    </script>
+{% endblock %}

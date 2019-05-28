@@ -8,6 +8,7 @@ use App\Form\Message\MessageForm;
 use App\Form\Message\MessageEditForm;
 use App\Form\Message\Model\MessageModel;
 use App\Services\MessageService;
+use Proxies\__CG__\App\Entity\Dialogue;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -176,8 +177,10 @@ class MessageController extends Controller
 
     /**
      * @Route("/message/{id_message}/delete", name="message_delete", requirements={"id_message"="\d+"})
+     *
      * @param $id_message
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function removeMessage($id_message, Request $request)
@@ -195,5 +198,34 @@ class MessageController extends Controller
         $this->flashBag->add('danger', 'message_was_deleted_successfully');
 
         return $this->redirect($referer);
+    }
+
+    /**
+     * @Route("/dialogue/{id_dialogue}/delete", methods={"GET"}, name="dialogue_delete", requirements={"id_dialogue"="\d+"})
+     *
+     * @param $id_dialogue
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function removeDialogue($id_dialogue)
+    {
+        $user = $this->getUser();
+        if (null != $user && 0 == $user->getStatus()) {
+            return $this->redirectToRoute('user_check_block');
+        }
+        if (!$dialogue = $this->getDoctrine()->getRepository(Dialogue::class)->find($id_dialogue)) {
+            $this->flashBag->add('danger', 'dialogue_not_found');
+
+            return $this->redirectToRoute('user_messages_list');
+        }
+        if ($dialogue->getCreator() != $user) {
+            $this->flashBag->add('danger', 'delete_dialogue_is_forbidden');
+
+            return $this->redirectToRoute('user_messages_list');
+        }
+        $this->messageService->removeDialogue($dialogue);
+        $this->flashBag->add('success', 'dialogue_was_deleted');
+
+        return $this->redirectToRoute('user_messages_list');
     }
 }

@@ -250,6 +250,16 @@ class MessageController extends Controller
         return new Response();
     }
 
+    public function getCountNotReadMessages($id_dialogue)
+    {
+        $user = $this->getUser();
+        $messages = $this->getDoctrine()->getRepository(Message::class)->getCountNotReadMessagesInDialogue($id_dialogue, $user);
+
+        return $this->render('Dialogue/ModeView/not_read_messages.html.twig', [
+          'messages' => count($messages),
+        ]);
+    }
+
 //    /**
 //     * @Route("/messages/{id_dialogue}/scroll", name="message_infinite_scroll")
 //     * @return \Symfony\Component\HttpFoundation\Response

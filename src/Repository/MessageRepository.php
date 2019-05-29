@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Message;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -21,12 +22,30 @@ class MessageRepository extends ServiceEntityRepository
 
     public function getMessagesForDialogue($id)
     {
-        $query = $this->createQueryBuilder('m')
+        return $this
+          ->createQueryBuilder('m')
           ->select('m')
           ->where('m.dialogue = :id')
           ->addOrderBy('m.id', 'DESC')
-          ->setParameter('id', $id);
+          ->setParameter('id', $id)
+          ->getQuery()
+          ->getResult();
+    }
 
-        return $query->getQuery()->getResult();
+    public function getCountNotReadMessagesInDialogue($id, User $user)
+    {
+        return $this
+          ->createQueryBuilder('m')
+          ->select('m')
+          ->where('m.dialogue = :id')
+          ->addOrderBy('m.id', 'DESC')
+          ->setParameter('id', $id)
+          ->andWhere('m.status = :status')
+          ->setParameter('status', 0)
+          ->leftJoin('m.receiver', 'receiver')
+          ->andWhere('receiver = :user')
+          ->setParameter('user', $user)
+          ->getQuery()
+          ->getResult();
     }
 }

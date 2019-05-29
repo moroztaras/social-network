@@ -96,4 +96,16 @@ class MessageService
         $this->doctrine->getManager()->remove($message);
         $this->doctrine->getManager()->flush();
     }
+
+    public function removeDialogue(Dialogue $dialogue)
+    {
+        $this->doctrine->getManager()->remove($dialogue);
+        $this->doctrine->getManager()->flush();
+    }
+
+    public function changeMessageStatus(Message $message)
+    {
+        $message->setStatus(1);
+        $this->edit($message);
+    }
 }

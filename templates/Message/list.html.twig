@@ -18,7 +18,7 @@
                                 <a href="{{ path('user_messages_list') }}">{{ 'messages'|trans }}</a>
                             </li>
                             <li class="{% if app.request.attributes.get('_route') == 'user_canonical' %}uk-active{% endif %}">
-                                <a href="#"><span uk-icon="icon: trash" class="uk-margin-small-right"></span></a>
+                                <a href="{{ path('dialogue_delete',{'id_dialogue':dialogue}) }}"><span uk-icon="icon: trash" class="uk-margin-small-right"></span></a>
                             </li>
                         </ul>
                     </nav>
@@ -26,6 +26,7 @@
                     {% block profile_content %}
                         {{ include('Message/ModeView/form.html.twig',{'form_message':form_message}) }}
                         {{ include('Message/ModeView/full.html.twig',{'user':user, 'receiver':receiver, 'id_dialogue':dialogue}) }}
+                        {{ include('Pagination/kpn_pagination.html.twig', {'field' : messages}) }}
                     {% endblock %}
                 </div>
             </div>

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Час створення: Трв 22 2019 р., 09:10
+-- Час створення: Трв 28 2019 р., 10:08
 -- Версія сервера: 5.7.24-0ubuntu0.16.04.1
 -- Версія PHP: 7.2.17-1+ubuntu16.04.1+deb.sury.org+3
 
@@ -52,8 +52,16 @@ CREATE TABLE `dialogue` (
   `id` int(11) NOT NULL,
   `creator_id` int(11) DEFAULT NULL,
   `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL
+  `updated_at` datetime NOT NULL,
+  `receiver_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Дамп даних таблиці `dialogue`
+--
+
+INSERT INTO `dialogue` (`id`, `creator_id`, `created_at`, `updated_at`, `receiver_id`) VALUES
+(1, 1, '2019-05-28 13:06:17', '2019-05-28 13:06:17', 2);
 
 -- --------------------------------------------------------
 
@@ -153,6 +161,13 @@ CREATE TABLE `message` (
   `status` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Дамп даних таблиці `message`
+--
+
+INSERT INTO `message` (`id`, `sender_id`, `receiver_id`, `dialogue_id`, `message`, `created_at`, `status`) VALUES
+(1, 1, 2, 1, 'Привіт! Як справи?', '2019-05-28 13:06:17', 0);
+
 -- --------------------------------------------------------
 
 --
@@ -176,7 +191,8 @@ INSERT INTO `migration_versions` (`version`, `executed_at`) VALUES
 ('20190316095607', '2019-05-12 18:30:26'),
 ('20190327112900', '2019-05-12 18:30:27'),
 ('20190513075410', '2019-05-13 07:55:00'),
-('20190522090525', '2019-05-22 09:07:44');
+('20190522090525', '2019-05-22 09:07:44'),
+('20190522123125', '2019-05-28 10:05:35');
 
 -- --------------------------------------------------------
 
@@ -262,7 +278,8 @@ ALTER TABLE `comment`
 --
 ALTER TABLE `dialogue`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `IDX_F18A1C3961220EA6` (`creator_id`);
+  ADD KEY `IDX_F18A1C3961220EA6` (`creator_id`),
+  ADD KEY `IDX_F18A1C39CD53EDB6` (`receiver_id`);
 
 --
 -- Індекси таблиці `file_manager`
@@ -339,7 +356,7 @@ ALTER TABLE `comment`
 -- AUTO_INCREMENT для таблиці `dialogue`
 --
 ALTER TABLE `dialogue`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT для таблиці `file_manager`
 --
@@ -364,7 +381,7 @@ ALTER TABLE `media`
 -- AUTO_INCREMENT для таблиці `message`
 --
 ALTER TABLE `message`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT для таблиці `svistyn`
 --
@@ -390,7 +407,8 @@ ALTER TABLE `comment`
 -- Обмеження зовнішнього ключа таблиці `dialogue`
 --
 ALTER TABLE `dialogue`
-  ADD CONSTRAINT `FK_F18A1C3961220EA6` FOREIGN KEY (`creator_id`) REFERENCES `user` (`id`);
+  ADD CONSTRAINT `FK_F18A1C3961220EA6` FOREIGN KEY (`creator_id`) REFERENCES `user` (`id`),
+  ADD CONSTRAINT `FK_F18A1C39CD53EDB6` FOREIGN KEY (`receiver_id`) REFERENCES `user` (`id`);
 
 --
 -- Обмеження зовнішнього ключа таблиці `file_usage`

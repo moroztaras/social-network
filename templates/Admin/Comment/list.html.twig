@@ -22,6 +22,12 @@
                         </a>
                     </i> {{ 'ban_comments'|trans }}
                 </div>
+                <div class="item">
+                    <span uk-icon="icon: push"></span>
+                    {{ 'export'|trans }}
+                    <a href="{{ path('admin_comments_export_xlsx') }}">Xlsx</a>
+                    <a href="{{ path('admin_comments_export_csv') }}">CSV</a>
+                </div>
             </div>
             {% for comment in comments %}
                 {{ include('Admin/Comment/ModeView/full.html.twig', { 'comment' : comment }) }}

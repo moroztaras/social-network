@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Entity\Comment;
 use App\Entity\User;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -55,6 +56,37 @@ class ExportService
             $sheet->setCellValue('H'.$id, $user->getCreated());
         }
         $sheet->setTitle('Users');
+
+        return $spreadsheet;
+    }
+
+    public function exportComments()
+    {
+        $spreadsheet = new Spreadsheet();
+
+        $id = 1;
+        /* @var $sheet \PhpOffice\PhpSpreadsheet\Writer\Xlsx\Worksheet */
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A'.$id, 'Id');
+        $sheet->setCellValue('B'.$id, 'SvistynId');
+        $sheet->setCellValue('C'.$id, 'UserId');
+        $sheet->setCellValue('D'.$id, 'Comment');
+        $sheet->setCellValue('E'.$id, 'CreatedAt');
+        $sheet->setCellValue('F'.$id, 'Approved');
+
+        while ($id <= count($this->doctrine->getManager()->getRepository(Comment::class)->findAll())) {
+            $comment = $this->doctrine->getManager()->getRepository(Comment::class)->find($id);
+            ++$id;
+            $svistyn = $comment->getSvistyn();
+            $user = $comment->getUser();
+            $sheet->setCellValue('A'.$id, $comment->getId());
+            $sheet->setCellValue('B'.$id, $svistyn->getId());
+            $sheet->setCellValue('C'.$id, $user->getId());
+            $sheet->setCellValue('D'.$id, $comment->getComment());
+            $sheet->setCellValue('E'.$id, $comment->getCreatedAt());
+            $sheet->setCellValue('F'.$id, $comment->getApproved());
+        }
+        $sheet->setTitle('Comments');
 
         return $spreadsheet;
     }

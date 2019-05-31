@@ -109,7 +109,10 @@ delete_message_is_forbidden: 'Видаляти повідомлення забо
 dialogue_not_found: 'Діалог не знайдений'
 delete_dialogue_is_forbidden: 'Видаляти діалог заборонено'
 export: 'Експортувати'
-
+registration: 'Зареєстрований'
+status: 'Статус'
+active: 'Активний'
+blocked: 'Заблокований'
 #flash_messages
 added_new_svist_successfully: 'Новий свист добавлений успішно'
 svist_edited_successfully: 'Свист відредаговано успішно'

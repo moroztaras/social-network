@@ -2,12 +2,9 @@
 
 namespace App\Controller;
 
-use App\Entity\Comment;
-use App\Entity\User;
 use App\Form\Comment\CommentImportForm;
 use App\Form\Comment\Model\CommentImportFileModel;
 use App\Services\ImportService;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -31,8 +28,9 @@ class ImportController extends Controller
     private $importService;
 
     /**
-     * ExportController constructor.
+     * ImportController constructor.
      *
+     * @param ImportService     $importService
      * @param FlashBagInterface $flashBag
      */
     public function __construct(ImportService $importService, FlashBagInterface $flashBag)
@@ -44,7 +42,7 @@ class ImportController extends Controller
     /**
      * @Route("/comments/import/xlsx", methods={"GET","POST"}, name="admin_comments_import_xlsx")
      */
-    public function importCommentsList(Request $request, EntityManagerInterface $entityManager, CommentImportFileModel $commentImportFileModel)
+    public function importCommentsList(Request $request, CommentImportFileModel $commentImportFileModel)
     {
         $form = $this->createForm(CommentImportForm::class, $commentImportFileModel);
         $form->handleRequest($request);

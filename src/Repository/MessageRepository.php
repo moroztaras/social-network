@@ -48,4 +48,19 @@ class MessageRepository extends ServiceEntityRepository
           ->getQuery()
           ->getResult();
     }
+
+    public function getCountAllNotReadMessages(User $user)
+    {
+        return $this
+          ->createQueryBuilder('m')
+          ->select('m')
+          ->addOrderBy('m.id', 'DESC')
+          ->andWhere('m.status = :status')
+          ->setParameter('status', 0)
+          ->leftJoin('m.receiver', 'receiver')
+          ->andWhere('receiver = :user')
+          ->setParameter('user', $user)
+          ->getQuery()
+          ->getResult();
+    }
 }

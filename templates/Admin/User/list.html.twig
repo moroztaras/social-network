@@ -20,6 +20,12 @@
                         </a>
                     </i> {{ 'ban_users'|trans }}
                 </div>
+                <div class="item">
+                    <span uk-icon="icon: push"></span>
+                    {{ 'export'|trans }}
+                    <a href="{{ path('admin_users_export_xlsx') }}">Xlsx</a>
+                    <a href="{{ path('admin_users_export_csv') }}">CSV</a>
+                </div>
             </div>
             {% for user in users %}
                 <div class="uk-card uk-card-default uk-card-small uk-margin-small">

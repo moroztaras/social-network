@@ -108,7 +108,12 @@ edit_message_is_forbidden: 'Редагувати повідомлення заб
 delete_message_is_forbidden: 'Видаляти повідомлення заборонено'
 dialogue_not_found: 'Діалог не знайдений'
 delete_dialogue_is_forbidden: 'Видаляти діалог заборонено'
-
+export: 'Експорт'
+import: 'Імпорт'
+registration: 'Зареєстрований'
+status: 'Статус'
+active: 'Активний'
+blocked: 'Заблокований'
 #flash_messages
 added_new_svist_successfully: 'Новий свист добавлений успішно'
 svist_edited_successfully: 'Свист відредаговано успішно'
@@ -126,6 +131,7 @@ comment_was_deleted: 'Коментар успішно видалений'
 message_was_deleted_successfully: 'Повідомлення видалено успішно'
 comment_not_found: 'Коментар не знайдено'
 dialogue_was_deleted: 'Діалог успішно видалений'
+file_xlsx_successfully_imported: 'Файл XLSX успішно імпортований'
 
 user_not_found: 'Користувач не знайдений'
 

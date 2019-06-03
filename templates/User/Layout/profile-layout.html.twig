@@ -56,6 +56,20 @@
             <div class="uk-text-bold">{{ 'gender'|trans }}:</div>
             <div>{{ user.gender|gender }}</div>
           </div>
+          <div uk-grid class="uk-grid-small">
+            <div class="uk-text-bold">{{ 'status'|trans }}:</div>
+            <div>
+              {% if user.status == 1 %}
+                <span style="color: #66ff33">{{ 'active'|trans }}</span>
+              {% else %}
+                <span style="color: #ff0000">{{ 'blocked'|trans }}</span>
+              {% endif %}
+            </div>
+          </div>
+          <div uk-grid class="uk-grid-small">
+            <div class="uk-text-bold">{{ 'registration'|trans }}:</div>
+            <div>{{ user.created|date('d-m-Y') }}</div>
+          </div>
         {% endblock %}
       </div>
     </div>

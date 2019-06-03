@@ -34,13 +34,15 @@
                     <a href="{{ path('admin_comments_import_xlsx') }}">Xlsx</a>
                     <a href="#">CSV</a>
                 </div>
+            </div><br>
+            <div class="center">
+                {{ form_start(form) }}
+                    {{ form_widget(form) }}
+                    <button class="uk-button uk-button-default uk-margin-small-right" type="submit">
+                        {{ 'import'|trans }}
+                    </button>
+                {{ form_start(form) }}
             </div>
-            {% for comment in comments %}
-                {{ include('Admin/Comment/ModeView/full.html.twig', { 'comment' : comment }) }}
-            {% endfor %}
-            {% if comments|length != 0 %}
-                {{ include('Pagination/kpn_pagination.html.twig', {'field' : comments}) }}
-            {% endif %}
         </div>
     </div>
 {% endblock %}

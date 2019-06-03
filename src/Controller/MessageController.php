@@ -243,6 +243,16 @@ class MessageController extends Controller
         return $this->redirectToRoute('user_messages_list');
     }
 
+    public function getCountAllNotReadMessages()
+    {
+        $user = $this->getUser();
+        $messages = $this->getDoctrine()->getRepository(Message::class)->getCountAllNotReadMessages($user);
+
+        return $this->render('Dialogue/ModeView/not_read_messages.html.twig', [
+          'messages' => count($messages),
+        ]);
+    }
+
     public function messageRead(Message $message)
     {
         $this->messageService->changeMessageStatus($message);

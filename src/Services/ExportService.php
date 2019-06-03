@@ -67,24 +67,22 @@ class ExportService
         $id = 1;
         /* @var $sheet \PhpOffice\PhpSpreadsheet\Writer\Xlsx\Worksheet */
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setCellValue('A'.$id, 'Id');
-        $sheet->setCellValue('B'.$id, 'SvistynId');
-        $sheet->setCellValue('C'.$id, 'UserId');
-        $sheet->setCellValue('D'.$id, 'Comment');
-        $sheet->setCellValue('E'.$id, 'CreatedAt');
-        $sheet->setCellValue('F'.$id, 'Approved');
+        $sheet->setCellValue('A'.$id, 'SvistynId');
+        $sheet->setCellValue('B'.$id, 'UserId');
+        $sheet->setCellValue('C'.$id, 'Comment');
+        $sheet->setCellValue('D'.$id, 'CreatedAt');
+        $sheet->setCellValue('E'.$id, 'Approved');
 
         while ($id <= count($this->doctrine->getManager()->getRepository(Comment::class)->findAll())) {
             $comment = $this->doctrine->getManager()->getRepository(Comment::class)->find($id);
             ++$id;
             $svistyn = $comment->getSvistyn();
             $user = $comment->getUser();
-            $sheet->setCellValue('A'.$id, $comment->getId());
-            $sheet->setCellValue('B'.$id, $svistyn->getId());
-            $sheet->setCellValue('C'.$id, $user->getId());
-            $sheet->setCellValue('D'.$id, $comment->getComment());
-            $sheet->setCellValue('E'.$id, $comment->getCreatedAt());
-            $sheet->setCellValue('F'.$id, $comment->getApproved());
+            $sheet->setCellValue('A'.$id, $svistyn->getId());
+            $sheet->setCellValue('B'.$id, $user->getId());
+            $sheet->setCellValue('C'.$id, $comment->getComment());
+            $sheet->setCellValue('D'.$id, $comment->getCreatedAt());
+            $sheet->setCellValue('E'.$id, $comment->getApproved());
         }
         $sheet->setTitle('Comments');
 

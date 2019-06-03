@@ -2,12 +2,17 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
+use App\Entity\Svistyn;
+use App\Entity\User;
 use PhpOffice\PhpSpreadsheet\Writer\Csv;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use App\Services\ExportService;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 /**
  * Class ExportController.
@@ -17,6 +22,21 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
  */
 class ExportController extends Controller
 {
+    /**
+     * @var FlashBagInterface
+     */
+    private $flashBag;
+
+    /**
+     * ExportController constructor.
+     *
+     * @param FlashBagInterface $flashBag
+     */
+    public function __construct(FlashBagInterface $flashBag)
+    {
+        $this->flashBag = $flashBag;
+    }
+
     /**
      * @Route("/users/export/xlsx", name="admin_users_export_xlsx")
      *
@@ -139,5 +159,47 @@ class ExportController extends Controller
 
         // Return the csv file as an attachment
         return $this->file($temp_file, $fileName, ResponseHeaderBag::DISPOSITION_INLINE);
+    }
+
+    /**
+     * @Route("/comments/import/xlsx", methods={"GET"}, name="admin_comments_import_xlsx")
+     */
+    public function importCommentsList(EntityManagerInterface $entityManager)
+    {
+//        $form = $this->createForm(CommentImportForm::class, $commentModel);
+        $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+        $reader->setReadDataOnly(true);
+        $spreadsheet = $reader->load('comments_social_network.xlsx');
+        $rows = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+        $i = 2;
+        for ($i = 2; $i <= count($rows); ++$i) {
+            $comment = [];
+            foreach ($rows[$i] as $row) {
+                array_push($comment, $row);
+            }
+            $commentRow = new Comment();
+            for ($j = 0; $j <= (count($rows[$i]) - 1); ++$j) {
+                switch ($j) {
+                   case 0: $svist = $this->getDoctrine()->getManager()->getRepository(Svistyn::class)->find($comment[0]);
+                           $commentRow->setSvistyn($svist);
+                   break;
+                   case 1: $user = $this->getDoctrine()->getManager()->getRepository(User::class)->find($comment[1]);
+                           $commentRow->setUser($user);
+                   break;
+                   case 2: $commentRow->setComment($comment[2]);
+                   break;
+                   case 3:$commentRow->setCreatedAt(new \DateTime($comment[3]));
+                   break;
+                   case 4: $commentRow->setApproved($comment[4]);
+                   break;
+                }
+            }
+            $entityManager->persist($commentRow);
+            $entityManager->flush($commentRow);
+            unset($commentRow);
+        }
+        $this->flashBag->add('success', 'file_xlsx_successfully_imported');
+
+        return $this->redirectToRoute('admin_comments_list');
     }
 }

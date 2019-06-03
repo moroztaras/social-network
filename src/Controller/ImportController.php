@@ -41,6 +41,14 @@ class ImportController extends Controller
 
     /**
      * @Route("/comments/import/xlsx", methods={"GET","POST"}, name="admin_comments_import_xlsx")
+     *
+     * @param Request                $request
+     * @param CommentImportFileModel $commentImportFileModel
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     *
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
      */
     public function importCommentsList(Request $request, CommentImportFileModel $commentImportFileModel)
     {

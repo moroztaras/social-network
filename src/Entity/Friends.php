@@ -34,6 +34,12 @@ class Friends implements \JsonSerializable
     private $user;
 
     /**
+     * @ORM\Column(type="integer")
+     * //status add friend
+     */
+    private $status;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
@@ -44,6 +50,7 @@ class Friends implements \JsonSerializable
     public function __construct()
     {
         $this->createdAt = new \DateTime();
+        $this->status = 0;
     }
 
     /**
@@ -102,6 +109,30 @@ class Friends implements \JsonSerializable
         $this->user = $user;
 
         return $this;
+    }
+
+    /**
+     * Set status.
+     *
+     * @param $status
+     *
+     * @return $this
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get status.
+     *
+     * @return int
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 
     public function jsonSerialize()

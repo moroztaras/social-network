@@ -31,24 +31,34 @@ class FriendsService
         $this->flashBag = $flashBag;
     }
 
-    public function save($id_user, $id_friend)
+    public function changeStatusFriendship(User $user, $id_friend, $status)
     {
-        $user = $this->doctrine->getRepository(User::class)->find($id_user);
         $friend = $this->doctrine->getRepository(User::class)->find($id_friend);
-
-        $friendship = $this->doctrine->getRepository(Friends::class)->findOneBy(['user' => $user, 'friend' => $friend]);
-
-        if ($friendship) {
-            $this->doctrine->getManager()->remove($friendship);
-            $this->flashBag->add('danger', 'friend_remove');
+        if (0 == $status) {
+            $friendship = $this->doctrine->getRepository(Friends::class)->findOneBy(['user' => $user, 'friend' => $friend]);
+            if ($friendship) {
+                $this->doctrine->getManager()->remove($friendship);
+                $this->flashBag->add('danger', 'friend_remove');
+            } else {
+                $fr = new Friends();
+                $fr->setUser($user);
+                $fr->setFriend($friend);
+                $this->doctrine->getManager()->persist($fr);
+                $this->flashBag->add('success', 'friend_add');
+            }
+            $this->doctrine->getManager()->flush();
         } else {
-            $fr = new Friends();
-            $fr->setUser($user);
-            $fr->setFriend($friend);
-            $this->doctrine->getManager()->persist($fr);
-            $this->flashBag->add('success', 'friend_add');
+            $friendship = $this->doctrine->getRepository(Friends::class)->findOneBy(['user' => $friend, 'friend' => $user]);
+            $friendship->setStatus($status);
+            $this->doctrine->getManager()->persist($friendship);
+            $this->doctrine->getManager()->flush();
         }
-        $this->doctrine->getManager()->flush();
+        switch ($status) {
+            case 1: $this->flashBag->add('success', 'Заявка підтверджена успішно');
+                break;
+            case 2: $this->flashBag->add('danger', 'Заявка відмінена');
+                break;
+        }
     }
 
     public function check($id_user, $id_friend)

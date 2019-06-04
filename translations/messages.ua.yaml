@@ -114,6 +114,8 @@ registration: 'Зареєстрований'
 status: 'Статус'
 active: 'Активний'
 blocked: 'Заблокований'
+accept: 'Прийняти'
+
 #flash_messages
 added_new_svist_successfully: 'Новий свист добавлений успішно'
 svist_edited_successfully: 'Свист відредаговано успішно'
@@ -160,3 +162,4 @@ schedule: 'Графік'
 filter: 'Фільтрувати'
 month: 'Місяць'
 year: 'Рік'
+no_new_applications: 'Нових заявок немає'

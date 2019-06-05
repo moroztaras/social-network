@@ -75,4 +75,13 @@ class FriendsService
             return true;
         }
     }
+
+    public function getFriendship(User $user, User $receiver)
+    {
+        return $this->doctrine->getRepository(Friends::class)->findOneBy(
+          [
+            'user' => $user,
+            'friend' => $receiver,
+          ]);
+    }
 }

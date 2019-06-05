@@ -52,12 +52,12 @@ class FriendsService
             $friendship->setStatus($status);
             $this->doctrine->getManager()->persist($friendship);
             $this->doctrine->getManager()->flush();
-        }
-        switch ($status) {
-            case 1: $this->flashBag->add('success', 'application_has_been_successfully_verified');
-                break;
-            case 2: $this->flashBag->add('danger', 'application_has_been_canceled');
-                break;
+            switch ($status) {
+                case 1: $this->flashBag->add('success', 'application_has_been_successfully_verified');
+                    break;
+                case 2: $this->flashBag->add('danger', 'application_has_been_canceled');
+                    break;
+            }
         }
     }
 

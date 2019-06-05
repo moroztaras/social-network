@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Час створення: Чрв 03 2019 р., 12:27
+-- Час створення: Чрв 05 2019 р., 11:15
 -- Версія сервера: 5.7.24-0ubuntu0.16.04.1
 -- Версія PHP: 7.2.17-1+ubuntu16.04.1+deb.sury.org+3
 
@@ -61,7 +61,7 @@ CREATE TABLE `dialogue` (
 --
 
 INSERT INTO `dialogue` (`id`, `creator_id`, `created_at`, `updated_at`, `receiver_id`) VALUES
-(1, 1, '2019-05-28 13:06:17', '2019-05-28 13:06:17', 2);
+(1, 1, '2019-05-28 13:06:17', '2019-06-05 12:47:56', 2);
 
 -- --------------------------------------------------------
 
@@ -129,7 +129,7 @@ CREATE TABLE `friends` (
 --
 
 INSERT INTO `friends` (`id`, `created_at`, `user_id`, `friend_id`, `status`) VALUES
-(1, '2019-05-12 22:01:33', 1, 2, 0);
+(39, '2019-06-05 14:08:16', 1, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -167,7 +167,8 @@ CREATE TABLE `message` (
 --
 
 INSERT INTO `message` (`id`, `sender_id`, `receiver_id`, `dialogue_id`, `message`, `created_at`, `status`) VALUES
-(1, 1, 2, 1, 'Привіт! Як справи?', '2019-05-28 13:06:17', 0);
+(1, 1, 2, 1, 'Привіт! Як справи?', '2019-05-28 13:06:17', 1),
+(2, 2, 1, 1, 'Привіт все добре!', '2019-06-03 15:53:42', 1);
 
 -- --------------------------------------------------------
 
@@ -373,7 +374,7 @@ ALTER TABLE `file_usage`
 -- AUTO_INCREMENT для таблиці `friends`
 --
 ALTER TABLE `friends`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 --
 -- AUTO_INCREMENT для таблиці `media`
 --
@@ -383,7 +384,7 @@ ALTER TABLE `media`
 -- AUTO_INCREMENT для таблиці `message`
 --
 ALTER TABLE `message`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 --
 -- AUTO_INCREMENT для таблиці `svistyn`
 --

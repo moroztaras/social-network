@@ -29,20 +29,6 @@ class FriendsController extends Controller
         $this->friendsService = $friendsService;
     }
 
-    /**
-     * @Route("/user/{id_user}/friends/{id_friend}/add", name="friend_add", requirements={"id"="\d+"}, defaults={"id" = null})
-     * @Security("is_granted('ROLE_USER')")
-     */
-    public function add($id_user, $id_friend)
-    {
-        $this->friendsService->save($id_user, $id_friend);
-
-        return $this->redirectToRoute('svistyn_post_user',
-        [
-          'id' => $id_friend,
-        ]);
-    }
-
     public function status($id_user, $id_friend)
     {
         $status = $this->friendsService->check($id_user, $id_friend);
@@ -58,6 +44,10 @@ class FriendsController extends Controller
      */
     public function userListFollowers($id)
     {
+        $user = $this->getUser();
+        if (null != $user && 0 == $user->getStatus()) {
+            return $this->redirectToRoute('user_check_block');
+        }
         $user = $this->getDoctrine()->getRepository(User::class)->find($id);
 
         return $this->render('Friends/followers_list.html.twig', [
@@ -77,5 +67,47 @@ class FriendsController extends Controller
         return $this->render('Friends/following_list.html.twig', [
           'followers' => $followers,
         ]);
+    }
+
+    public function applicationsInFriend()
+    {
+        $user = $this->getUser();
+        $applications = $this->getDoctrine()->getRepository(Friends::class)->findBy(['friend' => $user, 'status' => 0]);
+
+        return $this->render('Dialogue/ModeView/not_read_messages.html.twig', [
+          'messages' => count($applications),
+        ]);
+    }
+
+    /**
+     * @Route("/user/applications", methods={"GET"}, name="user_list_applications")
+     * @Security("is_granted('ROLE_USER')")
+     */
+    public function applications()
+    {
+        $friends = $this->getDoctrine()->getRepository(Friends::class)->findBy(['friend' => $this->getUser(), 'status' => 0]);
+
+        return $this->render('Friends/applications_list.html.twig', [
+          'friends' => $friends,
+        ]);
+    }
+
+    /**
+     * @Route("/user/friend/{id_friend}/status/{status}/add", methods={"GET"}, name="user_friend_add")
+     * @Security("is_granted('ROLE_USER')")
+     */
+    public function addFriend($id_friend, $status)
+    {
+        $user = $this->getUser();
+        if (null != $user && 0 == $user->getStatus()) {
+            return $this->redirectToRoute('user_check_block');
+        }
+        $this->friendsService->changeStatusFriendship($user, $id_friend, $status);
+
+        if (0 == $status) {
+            return $this->redirectToRoute('svistyn_post_user', ['id' => $id_friend]);
+        }
+
+        return $this->redirectToRoute('user_list_applications');
     }
 }

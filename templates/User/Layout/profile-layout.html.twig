@@ -1,4 +1,5 @@
 {% extends "Layout/layout-default.html.twig" %}
+{% block title %}{{ 'profile'|trans }} {{ user.fullname }}{% endblock %}
 {% block main %}
 <div class="uk-container uk-container-small">
   <div uk-grid>
@@ -33,10 +34,10 @@
             </li>
             {% if app.user == user  %}
                 <li class="{% if app.request.attributes.get('_route') == 'user_edit_canonical' %}uk-active{% endif %}">
-                  <a href="{{ path('user_edit_canonical', {'id' : user.id}) }}">{{ 'edit'|trans }}</a>
+                  <a href="{{ path('user_edit_canonical') }}">{{ 'edit'|trans }}</a>
                 </li>
                 <li class="{% if app.request.attributes.get('_route') == 'user_security_canonical' %}uk-active{% endif %}">
-                  <a href="{{ path('user_security_canonical', {'id' : user.id}) }}">{{ 'security'|trans }}</a>
+                  <a href="{{ path('user_security_canonical') }}">{{ 'security'|trans }}</a>
                 </li>
             {% endif %}
           </ul>
@@ -54,6 +55,20 @@
           <div uk-grid class="uk-grid-small">
             <div class="uk-text-bold">{{ 'gender'|trans }}:</div>
             <div>{{ user.gender|gender }}</div>
+          </div>
+          <div uk-grid class="uk-grid-small">
+            <div class="uk-text-bold">{{ 'status'|trans }}:</div>
+            <div>
+              {% if user.status == 1 %}
+                <span style="color: #66ff33">{{ 'active'|trans }}</span>
+              {% else %}
+                <span style="color: #ff0000">{{ 'blocked'|trans }}</span>
+              {% endif %}
+            </div>
+          </div>
+          <div uk-grid class="uk-grid-small">
+            <div class="uk-text-bold">{{ 'registration'|trans }}:</div>
+            <div>{{ user.created|date('d-m-Y') }}</div>
           </div>
         {% endblock %}
       </div>

@@ -1,0 +1,69 @@
+{#{% extends "Layout/layout-default.html.twig" %}#}
+{#{% block title %}HighChart | {{ 'admin_panel'|trans }}{% endblock %}#}
+
+{#{% block main %}#}
+    {#{% if user is not null %}#}
+    {#{{ render(controller('App\\Controller\\BlockController::userAdminCover',{ 'id': user.id })) }}#}
+    {#{% endif %}#}
+    {#<div class="uk-section uk-section-xsmall">#}
+        {#<div class="uk-container uk-container-xsmall">#}
+            {#<div class="uk-text-center uk-margin">#}
+                <div id="container2"></div>
+            {#</div>#}
+        {#</div>#}
+    {#</div>#}
+{#{% endblock %}#}
+
+{% block javascripts %}
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/series-label.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script>
+      Highcharts.chart('container2', {
+        chart: {
+          type: 'line'
+        },
+        title: {
+          text: '{{ 'schedule_of_social_network'|trans }} - Svistyn'
+        },
+        subtitle: {
+          text: '{{ 'schedule_of_social_network_activity'|trans }}'
+        },
+        xAxis: {
+          categories: [{% for month in months %} {{ month }}, {% endfor %}]
+        },
+        yAxis: {
+          title: {
+            text: '{{ 'number' | trans }}'
+          }
+        },
+        plotOptions: {
+          line: {
+            dataLabels: {
+              enabled: true
+            },
+            enableMouseTracking: false
+          }
+        },
+        series: [
+          {
+            name: '{{ 'users'|trans }}',
+            data: [{% for user in users %} {{ user }}, {% endfor %}]
+          },
+          {
+            name: '{{ 'svistyns'|trans }}',
+            data: [{% for svistyn in svistyns %} {{ svistyn }}, {% endfor %}]
+          },
+          {
+            name: '{{ 'COMMENTS'|trans }}',
+            data: [{% for comment in comments %} {{ comment }}, {% endfor %}]
+          },
+          {
+            name: '{{ 'VIEWS'|trans }}',
+            data: [{% for view in views %} {{ view }}, {% endfor %}]
+          }
+        ]
+      });
+    </script>
+{% endblock %}

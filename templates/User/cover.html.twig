@@ -12,6 +12,24 @@
               {{ render(controller('App\\Controller\\BlockController::following',{ 'id': user.id })) }}
             </span>
           </li>
+          {% if (user != app.user)  %}
+            <li>
+              <span class="uk-text-large">
+                <a href="{{ path('user_message', { 'id': user.id }) }}">
+                    <img src="{{ asset('images/message_icon.jpg') }}" width="80px" class="uk-margin-small-right">
+                </a>
+              </span>
+            </li>
+          {% else %}
+            <li>
+              <span class="uk-text-large">
+                <a href="{{ path('user_messages_list') }}" style="text-decoration: none">
+                    <img src="{{ asset('images/message_icon.jpg') }}" width="80px" class="uk-margin-small-right">
+                    {{ render(controller('App\\Controller\\MessageController::getCountAllNotReadMessages')) }}
+                </a>
+              </span>
+            </li>
+          {% endif %}
         </ul>
       </div>
       <div class="uk-width-medium">

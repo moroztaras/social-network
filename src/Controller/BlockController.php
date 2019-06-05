@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Svistyn;
 use App\Entity\User;
 use App\Entity\Friends;
+use App\Entity\Dialogue;
 use App\Services\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -111,6 +112,18 @@ class BlockController extends Controller
           'User/search.html.twig', [
           'users' => $users,
           'count_users' => $count_users,
+        ]);
+    }
+
+    public function dialoguesList()
+    {
+        $user = $this->getUser();
+        $dialogues = $this->getDoctrine()->getRepository(Dialogue::class)->getDialoguesForUser($user);
+
+        return $this->render(
+          'Dialogue/list.html.twig', [
+          'user' => $user,
+          'dialogues' => $dialogues,
         ]);
     }
 }

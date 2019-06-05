@@ -1,4 +1,7 @@
 {% extends "Layout/layout-default.html.twig" %}
+
+{% block title %}{% if user is not null %}{{ user.fullname }}{% endif %}{% endblock %}
+
 {% block main %}
   {% if user is not null %}
     {{ render(controller('App\\Controller\\BlockController::userCover',{ 'id': user.id })) }}
@@ -10,7 +13,7 @@
           </div>
         {% else  %}
             <div class="uk-text-center uk-margin">
-                <a href="{{ path('friend_add', {'id_user': this_user.id, 'id_friend': user.id }) }}" class="uk-button uk-button-default" style="margin-right: 5px;">
+                <a href="{{ path('user_friend_add', {'id_friend': user.id, 'status':0 }) }}" class="uk-button uk-button-default" style="margin-right: 5px;">
                     <i class="fa fa-plus-square-o"></i>
                     {{ render(controller('App\\Controller\\FriendsController::status', {'id_user': this_user.id, 'id_friend': user.id})) }}
                 </a>

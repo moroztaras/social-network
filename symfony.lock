@@ -2,6 +2,12 @@
     "aws/aws-sdk-php": {
         "version": "3.90.0"
     },
+    "beberlei/doctrineextensions": {
+        "version": "v1.2.1"
+    },
+    "behat/transliterator": {
+        "version": "v1.2.0"
+    },
     "composer/semver": {
         "version": "1.4.2"
     },
@@ -131,11 +137,20 @@
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
+    "knplabs/doctrine-behaviors": {
+        "version": "1.6.0"
+    },
     "knplabs/knp-components": {
         "version": "v1.3.10"
     },
     "knplabs/knp-paginator-bundle": {
         "version": "v3.0.0"
+    },
+    "markbaker/complex": {
+        "version": "1.4.7"
+    },
+    "markbaker/matrix": {
+        "version": "1.1.4"
     },
     "monolog/monolog": {
         "version": "1.24.0"
@@ -169,6 +184,9 @@
     },
     "phpdocumentor/type-resolver": {
         "version": "0.4.0"
+    },
+    "phpoffice/phpspreadsheet": {
+        "version": "1.7.0"
     },
     "psr/cache": {
         "version": "1.0.1"

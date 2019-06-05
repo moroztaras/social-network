@@ -10,6 +10,14 @@
         <nav>
           <ul class="uk-nav uk-text-small" uk-grid>
             {% if app.user %}
+              <a href="{{ path('user_list_applications') }}" style="text-decoration: none; color: #777777;">
+                <span uk-icon="icon: bell"></span>
+                  {{ render(controller('App\\Controller\\FriendsController::applicationsInFriend')) }}
+              </a>
+              <a href="{{ path('user_messages_list') }}" style="text-decoration: none; color: #777777;">
+                <span uk-icon="icon: mail"></span>
+                  {{ render(controller('App\\Controller\\MessageController::getCountAllNotReadMessages')) }}
+              </a>
               <li>
                 {#<a href="{{ path('user_canonical', { 'id' : app.user.id }) }}" class="user-profile dropdown-toggle">#}
                 <div class="us-prof-header">
@@ -25,6 +33,9 @@
                       </li>
                       <li>
                         <a href="{{ path('user_canonical') }}"><span uk-icon="user" class="uk-margin-small-right"></span> {{ 'profile'|trans }}</a>
+                      </li>
+                      <li>
+                        <a href="{{ path('user_messages_list') }}"><span uk-icon="mail" class="uk-margin-small-right"></span> {{ 'messages'|trans }}</a>
                       </li>
                         {% if is_granted("ROLE_SUPER_ADMIN") %}
                           <li>

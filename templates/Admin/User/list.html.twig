@@ -1,4 +1,5 @@
 {% extends "Layout/layout-default.html.twig" %}
+{% block title %}{{ 'users_list'|trans }}{% endblock %}
 {% block main %}
     {% if user is not null %}
         {{ render(controller('App\\Controller\\BlockController::userAdminCover')) }}
@@ -9,12 +10,21 @@
             <div uk-grid class="uk-grid-small uk-text-small">
                 <div class="item">
                     <span uk-icon="icon: users"></span>
-                    <i>{{ render(controller('App\\Controller\\Admin\\UserAdminController::getAdminCountAllUsers')) }}</i>
+                    <i><a href="{{ path('admin_user_list') }}">{{ render(controller('App\\Controller\\Admin\\UserAdminController::getAdminCountAllUsers')) }}</a></i>
                     {{ 'registered_users'|trans }}
                 </div>
                 <div class="item">
                     <span uk-icon="icon: ban"></span>
-                    <i><a href="#">0</a></i> {{ 'ban_users'|trans }}
+                    <i><a href="{{ path('admin_user_list_block') }}">
+                            {{ render(controller('App\\Controller\\Admin\\UserAdminController::getAdminCountBlockUsers')) }}
+                        </a>
+                    </i> {{ 'ban_users'|trans }}
+                </div>
+                <div class="item">
+                    <span uk-icon="icon: push"></span>
+                    {{ 'export'|trans }}
+                    <a href="{{ path('admin_users_export_xlsx') }}">Xlsx</a>
+                    <a href="{{ path('admin_users_export_csv') }}">CSV</a>
                 </div>
             </div>
             {% for user in users %}

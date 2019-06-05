@@ -33,4 +33,38 @@ class CommentRepository extends ServiceEntityRepository
 
         return $query->getQuery()->getResult();
     }
+
+    public function getAllComments()
+    {
+        return $this
+          ->createQueryBuilder('c')
+          ->select('c')
+          ->addOrderBy('c.id', 'DESC')
+          ->getQuery()
+          ->getResult();
+    }
+
+    public function findBlockComments()
+    {
+        return $this
+          ->createQueryBuilder('c')
+          ->select('c')
+          ->where('c.approved = :approved')
+          ->setParameter('approved', false)
+          ->addOrderBy('c.id', 'DESC')
+          ->getQuery()
+          ->getResult();
+    }
+
+    public function FindCommentsByMonth($month, $year)
+    {
+        return count($this
+          ->createQueryBuilder('c')
+          ->select()
+          ->andWhere('MONTH(c.createdAt) = :month')
+          ->setParameter('month', $month)
+          ->getQuery()
+          ->getResult()
+        );
+    }
 }

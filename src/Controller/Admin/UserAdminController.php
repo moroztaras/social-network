@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Comment;
 use App\Entity\Svistyn;
 use App\Entity\User;
+use App\Services\UserService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,6 +16,10 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class UserAdminController extends Controller
 {
+    /**
+     * @var UserService
+     */
+    private $userService;
     /**
      * @var FlashBagInterface
      */
@@ -28,11 +33,13 @@ class UserAdminController extends Controller
     /**
      * UserAdminController constructor.
      *
+     * @param UserService        $userService
      * @param FlashBagInterface  $flashBag
      * @param PaginatorInterface $paginator
      */
-    public function __construct(FlashBagInterface $flashBag, PaginatorInterface $paginator)
+    public function __construct(UserService $userService, FlashBagInterface $flashBag, PaginatorInterface $paginator)
     {
+        $this->userService = $userService;
         $this->flashBag = $flashBag;
         $this->paginator = $paginator;
     }
@@ -80,6 +87,47 @@ class UserAdminController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @Route("/admin/users/block", methods={"GET"}, name="admin_user_list_block")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     *
+     * @return Response
+     */
+    public function userListBlock(Request $request)
+    {
+        $user = $this->getUser();
+
+        $users = $this->paginator->paginate(
+          $this->getDoctrine()->getManager()->getRepository(User::class)->findUsersBlock(),
+          $request->query->getInt('page', 1),
+          $request->query->getInt('limit', 10)
+        );
+
+        return $this->render('Admin/User/list.html.twig', [
+          'users' => $users,
+          'user' => $user,
+        ]);
+    }
+
+    /**
+     * @Route("/admin/user/{id}/block", methods={"GET"}, name="admin_user_block")
+     * @Security("is_granted('ROLE_SUPER_ADMIN')")
+     *
+     * @return Response
+     */
+    public function userBlock($id)
+    {
+        $user = $this->getDoctrine()->getManager()->getRepository(User::class)->find($id);
+        if ($user == $this->getUser()) {
+            $this->flashBag->add('danger', 'blocking_user_is_prohibited');
+        } else {
+            $this->userService->block($user);
+        }
+
+        return $this->redirectToRoute('admin_user_list');
+    }
+
+    /**
      * @return Response
      */
     public function getCountAllUsers()
@@ -87,6 +135,19 @@ class UserAdminController extends Controller
         $users = $this->getDoctrine()->getManager()->getRepository(User::class)->findAll();
 
         return new Response(count($users));
+    }
+
+    /**
+     * @return Response
+     */
+    public function getAdminCountBlockUsers()
+    {
+        $users = $this->getDoctrine()->getManager()->getRepository(User::class)->findUsersBlock();
+        if (!$users) {
+            return new Response('0');
+        } else {
+            return new Response(count($users));
+        }
     }
 
     /**

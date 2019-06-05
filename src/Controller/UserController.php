@@ -46,6 +46,9 @@ class UserController extends Controller
     public function user()
     {
         $user = $this->getUser();
+        if (null != $user && 0 == $user->getStatus()) {
+            return $this->redirectToRoute('user_check_block');
+        }
 
         return $this->dashboard($user->getId());
     }
@@ -75,17 +78,23 @@ class UserController extends Controller
     public function edit(ProfileModel $profileModel, Request $request)
     {
         $user = $this->getUser();
+        if (null != $user && 0 == $user->getStatus()) {
+            return $this->redirectToRoute('user_check_block');
+        }
 
-        return $this->editCanonical($user->getId(), $profileModel, $request);
+        return $this->editCanonical($profileModel, $request);
     }
 
     /**
-     * @Route("/user/{id}/edit", methods={"GET", "POST"}, name="user_edit_canonical", requirements={"id"="\d+"}, defaults={"id" = null})
+     * @Route("/user/edit", methods={"GET", "POST"}, name="user_edit_canonical", requirements={"id"="\d+"}, defaults={"id" = null})
      * @Security("is_granted('ROLE_USER')")
      */
-    public function editCanonical($id, ProfileModel $profileModel, Request $request)
+    public function editCanonical(ProfileModel $profileModel, Request $request)
     {
-        $user = $this->getDoctrine()->getRepository(User::class)->find($id);
+        $user = $this->getUser();
+        if (null != $user && 0 == $user->getStatus()) {
+            return $this->redirectToRoute('user_check_block');
+        }
         $this->denyAccessUnlessGranted('edit', $user);
         $profileModel->setUser($user);
         $form = $this->createForm(ProfileForm::class, $profileModel);
@@ -104,12 +113,15 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/user/{id}/security", name="user_security_canonical", requirements={"id"="\d+"}, defaults={"id" = null})
+     * @Route("/user/security", name="user_security_canonical")
      * @Security("is_granted('ROLE_USER')")
      */
-    public function securityCanonical($id, ProfileSecurityModel $profileSecurityModel, UserSecurityManager $userSecurityManager, Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    public function securityCanonical(ProfileSecurityModel $profileSecurityModel, UserSecurityManager $userSecurityManager, Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
-        $user = $this->getDoctrine()->getRepository(User::class)->find($id);
+        $user = $this->getUser();
+        if (null != $user && 0 == $user->getStatus()) {
+            return $this->redirectToRoute('user_check_block');
+        }
         $this->denyAccessUnlessGranted('edit', $user);
         $profileSecurityModel->setUser($user);
         $form = $this->createForm(AccountSecurityForm::class, $profileSecurityModel);
@@ -119,16 +131,29 @@ class UserController extends Controller
                 $userSecurityManager->getChange($user);
                 $this->flashBag->add('success', 'user_change_security_successfully');
 
-                return $this->redirectToRoute('user_canonical', ['id' => $user->getId()]);
+                return $this->redirectToRoute('user_canonical');
             } else {
                 $this->flashBag->add('danger', 'data_is_not_correct');
 
-                return $this->redirectToRoute('user_security_canonical', ['id' => $user->getId()]);
+                return $this->redirectToRoute('user_security_canonical');
             }
         }
 
         return $this->render('User/security.html.twig', [
           'form' => $form->createView(),
+          'user' => $user,
+        ]);
+    }
+
+    /**
+     * @Route("/user/block", name="user_check_block")
+     * @Security("is_granted('ROLE_USER')")
+     */
+    public function userBlock()
+    {
+        $user = $this->getUser();
+
+        return $this->render('User/block.html.twig', [
           'user' => $user,
         ]);
     }

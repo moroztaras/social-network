@@ -1,4 +1,13 @@
 {
+    "aws/aws-sdk-php": {
+        "version": "3.90.0"
+    },
+    "beberlei/doctrineextensions": {
+        "version": "v1.2.1"
+    },
+    "behat/transliterator": {
+        "version": "v1.2.0"
+    },
     "composer/semver": {
         "version": "1.4.2"
     },
@@ -95,6 +104,9 @@
     "egulias/email-validator": {
         "version": "2.1.7"
     },
+    "exsyst/swagger": {
+        "version": "v0.4.1"
+    },
     "facebook/webdriver": {
         "version": "1.6.0"
     },
@@ -125,8 +137,35 @@
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
+    "knplabs/doctrine-behaviors": {
+        "version": "1.6.0"
+    },
+    "knplabs/knp-components": {
+        "version": "v1.3.10"
+    },
+    "knplabs/knp-paginator-bundle": {
+        "version": "v3.0.0"
+    },
+    "markbaker/complex": {
+        "version": "1.4.7"
+    },
+    "markbaker/matrix": {
+        "version": "1.1.4"
+    },
     "monolog/monolog": {
         "version": "1.24.0"
+    },
+    "mtdowling/jmespath.php": {
+        "version": "2.4.0"
+    },
+    "nelmio/api-doc-bundle": {
+        "version": "3.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "3.0",
+            "ref": "c8e0c38e1a280ab9e37587a8fa32b251d5bc1c94"
+        }
     },
     "nikic/php-parser": {
         "version": "v4.2.0"
@@ -145,6 +184,9 @@
     },
     "phpdocumentor/type-resolver": {
         "version": "0.4.0"
+    },
+    "phpoffice/phpspreadsheet": {
+        "version": "1.7.0"
     },
     "psr/cache": {
         "version": "1.0.1"
@@ -166,6 +208,9 @@
     },
     "ralouphie/getallheaders": {
         "version": "2.0.5"
+    },
+    "ramsey/uuid": {
+        "version": "3.8.0"
     },
     "sensio/framework-extra-bundle": {
         "version": "5.2",
@@ -481,5 +526,8 @@
     },
     "zendframework/zend-eventmanager": {
         "version": "3.2.1"
+    },
+    "zircote/swagger-php": {
+        "version": "2.0.13"
     }
 }

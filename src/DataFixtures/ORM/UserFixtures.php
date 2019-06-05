@@ -3,73 +3,62 @@
 namespace App\DataFixtures\ORM;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use App\Entity\Role;
 use App\Entity\User;
-use App\Entity\UserAccount;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 
-class UserFixtures extends Fixture implements DependentFixtureInterface
+class UserFixtures extends Fixture
 {
-    private $container;
+    /**
+     * @var UserPasswordEncoderInterface
+     */
+    private $passwordEncoder;
 
-    public function __construct(ContainerInterface $container)
+    /**
+     * @var TokenGeneratorInterface
+     */
+    private $tokenGenerator;
+
+    /**
+     * UserFixtures constructor.
+     *
+     * @param UserPasswordEncoderInterface $passwordEncoder
+     */
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder, TokenGeneratorInterface $tokenGenerator)
     {
-        $this->container = $container;
+        $this->passwordEncoder = $passwordEncoder;
+        $this->tokenGenerator = $tokenGenerator;
     }
 
     public function load(ObjectManager $manager)
     {
-        $roleRepo = $manager->getRepository(Role::class);
-        $role = $roleRepo->findOneByRole('ROLE_USER');
-        $roleAdmin = $roleRepo->findOneByRole('ROLE_ADMIN');
-        if (!$role) {
-            return;
-        }
-        $encoder = $this->container->get('security.password_encoder');
+        $userAdmin = new User();
+        $userAdmin
+          ->setPassword($this->passwordEncoder->encodePassword($userAdmin, 'moroztaras'))
+          ->setRoles(['ROLE_SUPER_ADMIN'])
+          ->setEmail('moroztaras@i.ua')
+          ->setGender('m')
+          ->setBirthday(new \DateTime())
+          ->setRegion('UA')
+          ->setApiToken($this->tokenGenerator->generateToken())
+          ->setFullname('Moroz Taras')
+        ;
+        $manager->persist($userAdmin);
 
         $user = new User();
-        $password = $encoder->encodePassword($user, 'moroztaras');
-        $user->setPassword($password);
-        $user->addRole($role);
-        $user->addRole($roleAdmin);
-        $user->setEmail('moroztaras@i.ua');
-
-        $userAccount = new UserAccount();
-        $userAccount->setFullname('Moroz Taras');
-        $userAccount->setBirthday(new \DateTime());
-        $userAccount->setSex('m');
+        $user
+          ->setPassword($this->passwordEncoder->encodePassword($user, 'user_pass'))
+          ->setRoles(['ROLE_USER'])
+          ->setEmail('user@mail.ua')
+          ->setBirthday(new \DateTime())
+          ->setGender('m')
+          ->setRegion('UA')
+          ->setApiToken($this->tokenGenerator->generateToken())
+          ->setFullname('FullName')
+        ;
         $manager->persist($user);
-        $manager->flush();
-        $userAccount->setUser($user);
-        $manager->persist($userAccount);
 
         $manager->flush();
-
-        $user = new User();
-        $password = $encoder->encodePassword($user, 'user_pass');
-        $user->setPassword($password);
-        $user->addRole($role);
-        $user->addRole($roleAdmin);
-        $user->setEmail('user@mail.ua');
-
-        $userAccount = new UserAccount();
-        $userAccount->setFullname('User FullName');
-        $userAccount->setBirthday(new \DateTime());
-        $userAccount->setSex('m');
-        $manager->persist($user);
-        $manager->flush();
-        $userAccount->setUser($user);
-        $manager->persist($userAccount);
-
-        $manager->flush();
-    }
-
-    public function getDependencies()
-    {
-        return [
-            RoleFixtures::class,
-        ];
     }
 }

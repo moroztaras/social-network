@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * Class Svistyn.
@@ -11,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="svistyn")
  * @ORM\HasLifecycleCallbacks()
  */
-class Svistyn
+class Svistyn implements \JsonSerializable
 {
     /**
      * @ORM\Column(type="integer")
@@ -57,6 +59,12 @@ class Svistyn
     private $status;
 
     /**
+     * @ORM\Column(type="integer")
+     * //the number of post views
+     */
+    private $views;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     private $created;
@@ -65,6 +73,13 @@ class Svistyn
      * @ORM\Column(type="datetime")
      */
     private $updated;
+
+    /**
+     * @var ArrayCollection
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="svistyn", cascade={"persist", "remove"})
+     * @ORM\OrderBy({"id" = "DESC"})
+     */
+    private $comments;
 
     /**
      * @ORM\ManyToOne(targetEntity="Svistyn")
@@ -83,11 +98,16 @@ class Svistyn
 
     private $isParent = false;
 
+    /**
+     * Svistyn constructor.
+     */
     public function __construct()
     {
         $this->state = 0; //null of start
-    $this->status = 1; //is published
-    $this->marking = 'new';
+        $this->status = 1; //is published
+        $this->views = 0; //null number views
+        $this->marking = 'new';
+        $this->comments = new ArrayCollection();
     }
 
     /**
@@ -245,6 +265,30 @@ class Svistyn
     }
 
     /**
+     * Set views.
+     *
+     * @param int $views
+     *
+     * @return Svistyn
+     */
+    public function setViews($views)
+    {
+        $this->views = $views;
+
+        return $this;
+    }
+
+    /**
+     * Get views.
+     *
+     * @return int
+     */
+    public function getViews()
+    {
+        return $this->views;
+    }
+
+    /**
      * Set created.
      *
      * @param \DateTime $created
@@ -266,6 +310,49 @@ class Svistyn
     public function getCreated()
     {
         return $this->created;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    /**
+     * @param Comment $comment
+     *
+     * @return Svistyn
+     */
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setSvistyn($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove comment.
+     *
+     * @param Comment $comment
+     *
+     * @return Svistyn
+     */
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->contains($comment)) {
+            $this->comments->removeElement($comment);
+            // set the owning side to null (unless already changed)
+            if ($comment->getSvistyn() === $this) {
+                $comment->setSvistyn(null);
+            }
+        }
+
+        return $this;
     }
 
     /**
@@ -397,5 +484,33 @@ class Svistyn
     public function setIsParent(bool $isParent): void
     {
         $this->isParent = $isParent;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+          'id' => $this->getId(),
+          'text' => $this->getText(),
+          'photo' => [
+            'fileName' => $this->getPhoto()->getFilename(),
+            'url' => $this->getPhoto()->getUrl(),
+            'fileSize' => $this->getPhoto()->getFileSize(),
+            'createdAt' => $this->getPhoto()->getCreated(),
+          ],
+          'embedVideo' => $this->getEmbedVideo(),
+          'createdAt' => $this->getCreated(),
+          'updatedAt' => $this->getUpdated(),
+          'comments' => [
+            'comment' => $this->getComments(),
+          ],
+          'status' => $this->getStatus(),
+          'isParent' => $this->isParent(),
+          'user' => [
+            'id' => $this->getUser()->getId(),
+            'fullName' => $this->getUser()->getFullname(),
+          ],
+          'countSvists' => $this->getCountSvists(),
+          'countZvizds' => $this->getCountZvizds(),
+        ];
     }
 }

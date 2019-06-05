@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: pavel
- * Date: 7/13/2018
- * Time: 1:57 PM.
- */
 
 namespace App\Components\Svistyn\Models;
 

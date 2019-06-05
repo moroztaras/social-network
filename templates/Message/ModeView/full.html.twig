@@ -1,0 +1,24 @@
+{% for message in messages %}
+    {% if user == message.receiver %}
+        {{ render(controller('App\\Controller\\MessageController::messageRead',{ 'message': message })) }}
+    {% endif %}
+    <div class="uk-card uk-card-default uk-card-small uk-margin-small">
+        <div class="uk-card-header">
+            <div class="uk-grid-small uk-flex-middle" uk-grid>
+                <div class="uk-width-auto">
+                    <img data-src="{{ message.sender.avatar|avatarStyleDefault }}" width="40" height="40" alt uk-img>
+                </div>
+                <div class="uk-width-expand">
+                    <div><a class="uk-text-small uk-text-muted" href="{{ path('user_canonical', { 'id' : message.sender.id }) }}">{{ message.sender.fullname }}</a></div>
+                    <p class="uk-text-meta uk-margin-remove-top"><time datetime="{{ message.createdAt|date('H:i:s Y-m-d') }}">{{ message.createdAt|date('H:i:s M d, Y') }}</time></p>
+                </div>
+                {{ include('Message/ModeView/menu.html.twig',{'id':message.id, 'receiver':receiver,'id_dialogue':id_dialogue}) }}
+            </div>
+        </div>
+        <div class="uk-card uk-card-body">
+            <div class="st-post-fd st-post-fd--text">
+                <p>{{message.message}}</p>
+            </div>
+        </div>
+    </div>
+{% endfor %}

@@ -9,5 +9,5 @@ class ChangePasswordModel
     /**
      * @Assert\Length(min="8", max="50")
      */
-    public $password;
+    public $plainPassword;
 }

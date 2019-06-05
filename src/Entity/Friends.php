@@ -7,10 +7,10 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Class Friends.
  *
- * @ORM\Entity(repositoryClass="App\Repository\FriendsRepository")
+ * @ORM\Entity
  * @ORM\Table(name="friends")
  */
-class Friends
+class Friends implements \JsonSerializable
 {
     /**
      * @ORM\Column(type="integer")
@@ -18,19 +18,40 @@ class Friends
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
     /**
-     * @ORM\Column(type="integer")
-     */
-    private $user;
-    /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="friends")
+     * @ORM\JoinColumn(name="friend_id", referencedColumnName="id")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $friend;
 
     /**
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(onDelete="CASCADE")
+     */
+    private $user;
+
+    /**
+     * @ORM\Column(type="integer")
+     * //status add friend
+     */
+    private $status;
+
+    /**
      * @ORM\Column(type="datetime")
      */
-    private $created;
+    private $createdAt;
+
+    /**
+     * Friends constructor.
+     */
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+        $this->status = 0;
+    }
 
     /**
      * Get id.
@@ -43,13 +64,47 @@ class Friends
     }
 
     /**
-     * Set user.
+     * Set createdAt.
      *
-     * @param int $user
+     * @param \DateTime $createdAt
      *
      * @return Friends
      */
-    public function setUser($user)
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * Get createdAt.
+     *
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    public function getFriend(): ?User
+    {
+        return $this->friend;
+    }
+
+    public function setFriend(?User $friend): self
+    {
+        $this->friend = $friend;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
     {
         $this->user = $user;
 
@@ -57,60 +112,46 @@ class Friends
     }
 
     /**
-     * Get user.
+     * Set status.
      *
-     * @return int
+     * @param $status
+     *
+     * @return $this
      */
-    public function getUser()
+    public function setStatus($status)
     {
-        return $this->user;
-    }
-
-    /**
-     * Set friend.
-     *
-     * @param int $friend
-     *
-     * @return Friends
-     */
-    public function setFriend($friend)
-    {
-        $this->friend = $friend;
+        $this->status = $status;
 
         return $this;
     }
 
     /**
-     * Get friend.
+     * Get status.
      *
      * @return int
      */
-    public function getFriend()
+    public function getStatus()
     {
-        return $this->friend;
+        return $this->status;
     }
 
-    /**
-     * Set created.
-     *
-     * @param \DateTime $created
-     *
-     * @return Friends
-     */
-    public function setCreated($created)
+    public function jsonSerialize()
     {
-        $this->created = $created;
-
-        return $this;
-    }
-
-    /**
-     * Get created.
-     *
-     * @return \DateTime
-     */
-    public function getCreated()
-    {
-        return $this->created;
+        return [
+          'id' => $this->getId(),
+          'user' => [
+            'id' => $this->getUser()->getId(),
+            'fullName' => $this->getUser()->getFullname(),
+            'email' => $this->getUser()->getEmail(),
+            'gender' => $this->getUser()->getGender(),
+            'birthday' => $this->getUser()->getBirthday(),
+            'country' => $this->getUser()->getRegion(),
+            'roles' => $this->getUser()->getRoles(),
+            'create_at' => $this->getUser()->getCreated(),
+            'updated_at' => $this->getUser()->getUpdated(),
+            'status' => $this->getUser()->getStatus(),
+          ],
+          'created_at' => $this->getCreatedAt(),
+        ];
     }
 }

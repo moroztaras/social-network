@@ -7,29 +7,19 @@
   <div class="uk-container uk-container-small">
     <div class="uk-section uk-padding uk-background-default kuk-shadow">
       <h2 class="uk-heading-divider">{{ 'login'|trans }}</h2>
-      {% if error %}
-        <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-      {% endif %}
-      <form action="{{ path('login') }}" method="post" class="form uk-form-stacked">
-        <div class="form-row">
-          <label class="uk-hidden required uk-form-label" for="username">{{ 'email'|trans }}</label>
-          <div class="uk-form-control uk-margin-small-bottom">
-            <input type="text" id="username" name="_username" class="uk-input" placeholder="{{ 'email'|trans }}" required="">
-          </div>
-        </div>
-        <div class="form-row">
-          <label class="uk-hidden required uk-form-label" for="password">{{ 'password'|trans }}</label>
-          <div class="uk-form-control uk-margin-small-bottom">
-            <input type="password" id="password" name="_password" class="uk-input" placeholder="{{ 'password'|trans }}" required="">
-          </div>
-        </div>
-        <button class="uk-button uk-button-default uk-margin-small-right" type="submit">{{ 'log_in'|trans }}</button>
-        <a href="{{ path('recover') }}" class="uk-link uk-text-small">{{ 'forgot_your_account'|trans }}</a>
-        <hr>
-        <p class="uk-text-small">{{ 'first_time_on_site'|trans }}? <a href="{{ path('register') }}" class="uk-link">{{ 'create_account'|trans }}</a></p>
-
-
-      </form>
+        {{ form_start(form) }}
+        {{ form_rest(form) }}
+          <button class="uk-button uk-button-default uk-margin-small-right" type="submit">
+              {{ 'log_in'|trans }}
+          </button>
+          <a href="{{ path('recover') }}" class="uk-link uk-text-small">
+            {{ 'forgot_your_account'|trans }}
+          </a>
+          <hr>
+          <p class="uk-text-small">
+            {{ 'first_time_on_site'|trans }}? <a href="{{ path('app_registration') }}" class="uk-link">{{ 'create_account'|trans }}</a>
+          </p>
+        {{ form_end(form) }}
     </div>
   </div>
 {% endblock %}

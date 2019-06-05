@@ -3,15 +3,17 @@
 namespace App\Controller;
 
 use App\Components\User\Models\RecoverUserModel;
-use App\Components\User\Models\RegisterUserModel;
+use App\Components\User\Models\RegistrationUserModel;
 use App\Components\User\Security\RecoverPassword;
+use App\Services\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use App\Entity\User;
-use App\Entity\UserAccount;
 use App\Components\User\Forms\RecoverUserForm;
-use App\Components\User\Forms\RegisterUserForm;
+use App\Form\User\LoginForm;
+use App\Form\User\RegistrationForm;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,53 +23,102 @@ use App\Components\User\Forms\ChangePasswordForm;
 class SecurityController extends Controller
 {
     /**
-     * @param AuthenticationUtils           $helper
-     * @param AuthorizationCheckerInterface $authorizationChecker
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("/login", name="login")
+     * @var UserService
      */
-    public function login(AuthenticationUtils $helper, AuthorizationCheckerInterface $authorizationChecker)
-    {
-        if ($authorizationChecker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
-            return $this->redirectToRoute('user_default');
-        }
-        $error = $helper->getLastAuthenticationError();
-        $lastUsername = $helper->getLastUsername();
+    private $userService;
 
-        return $this->render('User/Security/login.html.twig', [
-      'last_username' => $lastUsername,
-      'error' => $error,
-    ]);
+    /**
+     * @var AuthenticationUtils
+     */
+    private $helper;
+
+    /**
+     * @var RegistrationUserModel
+     */
+    private $registrationModel;
+
+    /**
+     * @var AuthenticationUtils
+     */
+    private $authorizationChecker;
+
+    /**
+     * @var FlashBagInterface
+     */
+    private $flashBag;
+
+    /**
+     * SecurityController constructor.
+     *
+     * @param AuthenticationUtils           $helper
+     * @param RegistrationUserModel         $registrationModel
+     * @param AuthorizationCheckerInterface $authorizationChecker
+     * @param UserService                   $userService
+     * @param FlashBagInterface             $flashBag
+     */
+    public function __construct(AuthenticationUtils $helper, RegistrationUserModel $registrationModel, AuthorizationCheckerInterface $authorizationChecker, UserService $userService, FlashBagInterface $flashBag)
+    {
+        $this->helper = $helper;
+        $this->registrationModel = $registrationModel;
+        $this->authorizationChecker = $authorizationChecker;
+        $this->userService = $userService;
+        $this->flashBag = $flashBag;
     }
 
     /**
-     * @param Request                       $request
-     * @param RegisterUserModel             $registerModel
-     * @param AuthorizationCheckerInterface $authorizationChecker
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     * @Route("/register", name="register")
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @Route("/login", methods={"GET", "POST"}, name="app_login")
      */
-    public function register(Request $request, RegisterUserModel $registerModel, AuthorizationCheckerInterface $authorizationChecker)
+    public function loginAction(AuthenticationUtils $authenticationUtils)
     {
-        if ($authorizationChecker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+        if ($this->authorizationChecker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            $this->flashBag->add('warning', 'user_log_in');
+
             return $this->redirectToRoute('user_default');
         }
-        $registerForm = $this->createForm(RegisterUserForm::class, $registerModel);
-        $registerForm->handleRequest($request);
-        if ($registerForm->isSubmitted() && $registerForm->isValid()) {
-            $user = $registerModel->getUserHandler();
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
-            $em->flush();
 
-            return $this->redirectToRoute('login');
+        $user = new User();
+        $user->setEmail($authenticationUtils->getLastUsername());
+
+        $form = $this->createForm(LoginForm::class, $user, [
+          'action' => $this->generateUrl('login_check'),
+        ]);
+
+        if ($error = $authenticationUtils->getLastAuthenticationError()) {
+            $this->addFlash('message', $error->getMessage());
+        }
+
+        return $this->render('User/Security/login.html.twig', [
+          'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @Route("/registration", methods={"GET", "POST"}, name="app_registration")
+     */
+    public function registration(Request $request)
+    {
+        if ($this->authorizationChecker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            $this->flashBag->add('warning', 'user_log_in');
+
+            return $this->redirectToRoute('user_default');
+        }
+        $user = new User();
+        $registrationForm = $this->createForm(RegistrationForm::class, $user);
+        $registrationForm->handleRequest($request);
+        if ($registrationForm->isSubmitted() && $registrationForm->isValid()) {
+            $this->userService->save($user);
+            $this->flashBag->add('success', 'user_registration_successfully');
+
+            return $this->redirectToRoute('app_login');
         }
 
         return $this->render('User/Security/register.html.twig', [
-      'register_form' => $registerForm->createView(),
-    ]);
+            'register_form' => $registrationForm->createView(),
+          ]);
     }
 
     /**
@@ -77,19 +128,21 @@ class SecurityController extends Controller
      * @param AuthorizationCheckerInterface $authorizationChecker
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     * @Route("/recover/{token}", name="recover", defaults={"token": "null"})
+     * @Route("/recover/{token}", methods={"GET","POST"}, name="recover", defaults={"token": "null"})
      */
     public function recover($token, Request $request, RecoverPassword $recoverPassword, AuthorizationCheckerInterface $authorizationChecker)
     {
         if ($authorizationChecker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            $this->flashBag->add('warning', 'user_log_in');
+
             return $this->redirectToRoute('user_default');
         }
         if ($token) {
-            /** @var UserAccount $userRecover */
-            $userAccountRecover = $this->getDoctrine()->getRepository('App:UserAccount')->findOneByTokenRecover($token);
+            /** @var User $userRecover */
+            $userRecover = $this->getDoctrine()->getRepository('App:User')->findOneByTokenRecover($token);
 
-            if ($userAccountRecover) {
-                $userPasswordToken = new UsernamePasswordToken($userAccountRecover->getUser(), null, 'main', $userAccountRecover->getUser()->getRoles());
+            if ($userRecover) {
+                $userPasswordToken = new UsernamePasswordToken($userRecover, null, 'main', $userRecover->getRoles());
                 $this->get('security.token_storage')->setToken($userPasswordToken);
 
                 return $this->redirectToRoute('user_password_recover');
@@ -105,18 +158,19 @@ class SecurityController extends Controller
 
             if ($user) {
                 $status = $recoverPassword->send($user);
+                $this->flashBag->add('warning', 'user_recover_password_send_email');
             }
 
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('app_login');
         }
 
         return $this->render('User/Security/recover.html.twig', [
-      'recover_form' => $recoverForm->createView(),
-    ]);
+          'recover_form' => $recoverForm->createView(),
+        ]);
     }
 
     /**
-     * @Route("/logout", name="logout")
+     * @Route("/logout", name="app_logout")
      */
     public function logout()
     {
@@ -129,27 +183,23 @@ class SecurityController extends Controller
     {
         /** @var User $user */
         $user = $this->getUser();
-        $userAccount = $user->getAccount();
-        if (!$userAccount->getTokenRecover()) {
+        if (!$user->getTokenRecover()) {
+            $this->flashBag->add('danger', 'user_token_not_found');
+
             return $this->redirectToRoute('recover');
         }
         $changePasswordModel = new ChangePasswordModel();
         $formChangePassword = $this->createForm(ChangePasswordForm::class, $changePasswordModel);
         $formChangePassword->handleRequest($request);
         if ($formChangePassword->isSubmitted() && $formChangePassword->isValid()) {
-            $encoder = $this->get('security.password_encoder');
-            $password = $encoder->encodePassword($user, $changePasswordModel->password);
-            $user->setPassword($password);
-            $userAccount->setTokenRecover(null);
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
-            $em->flush();
+            $this->userService->changePasswordModel($user, $changePasswordModel);
+            $this->flashBag->add('success', 'user_recover_password_successfully');
 
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('app_login');
         }
 
         return $this->render('User/Security/recover_password.html.twig', [
-      'recover_form' => $formChangePassword->createView(),
-    ]);
+          'recover_form' => $formChangePassword->createView(),
+        ]);
     }
 }

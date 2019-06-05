@@ -1,0 +1,14 @@
+<div class="uk-card uk-card-default uk-card-small uk-margin-small">
+    <div class="uk-card-header">
+        <div class="uk-grid-small uk-flex-middle" uk-grid>
+            <div class="uk-width-auto">
+                <img data-src="{{ user.avatar|avatarStyleDefault }}" width="40" height="40" alt uk-img>
+            </div>
+            <div class="uk-width-expand">
+                <div><a class="uk-text-small uk-text-muted" href="{{ path('user_dialogue_messages_list', { 'id_dialogue' : dialogue.id, 'id_receiver' : user.id }) }}">{{ user.fullname }}</a>
+                    {{ render(controller('App\\Controller\\MessageController::getCountNotReadMessages',{'id_dialogue' : dialogue.id})) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

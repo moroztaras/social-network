@@ -6,3 +6,10 @@
 
 .kuk-child-margin-small-left > * { margin-left: 15px; }
 .kuk-child-margin-small-left > *:first-child { margin-left: 0; }
+
+#container {
+    min-width: 310px;
+    max-width: 800px;
+    height: 400px;
+    margin: 0 auto
+}

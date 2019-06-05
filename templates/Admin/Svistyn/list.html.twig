@@ -1,0 +1,32 @@
+{% extends "Layout/layout-default.html.twig" %}
+{% block title %}{{ 'svists_list'|trans }}{% endblock %}
+{% block main %}
+    {% if user is not null %}
+        {{ render(controller('App\\Controller\\BlockController::userAdminCover')) }}
+    {% endif %}
+    {{ include('Admin/Block/link.html.twig') }}
+    <div class="uk-section uk-section-xsmall">
+        <div class="uk-container uk-container-xsmall">
+            <div uk-grid class="uk-grid-small uk-text-small">
+                <div class="item">
+                    <span uk-icon="icon: twitter"></span>
+                    <i><a href="{{ path('admin_svistyn_list') }}">{{ render(controller('App\\Controller\\Admin\\UserAdminController::getAdminCountAllSvistyns')) }}</a></i>
+                    {{ 'posts'|trans }}
+                </div>
+                <div class="item">
+                    <span uk-icon="icon: ban"></span>
+                    <i><a href="{{ path('admin_svists_list_block') }}">
+                            {{ render(controller('App\\Controller\\Admin\\SvistAdminController::getAdminCountBlockSvistyns')) }}
+                        </a>
+                    </i> {{ 'ban_svistyns'|trans }}
+                </div>
+            </div>
+            {% for svistyn in svistyns %}
+                {{ include('Admin/Svistyn/ModeView/full.html.twig', { 'svistyn' : svistyn }) }}
+            {% endfor %}
+            {% if svistyns|length != 0 %}
+                {{ include('Pagination/kpn_pagination.html.twig', {'field' : svistyns}) }}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

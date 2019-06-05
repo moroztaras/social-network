@@ -1,3 +1,27 @@
-<div class="item"><i>{{ svistyn.countSvists }}</i> <a href="{{ path('svistyn_share', { 'id' : svistyn.id , 'state' : 1}) }}">{{ 'svistnuti'|trans }}</a></div>
-<div class="item"><i>{{ svistyn.countZvizds }}</i> <a href="{{ path('svistyn_share', { 'id' : svistyn.id , 'state' : 2}) }}">{{ 'zvizdnuti'|trans }}</a></div>
-<div class="item"><i>{{ svistyn.ratingTotal }}</i> {{ 'rating_svist'|trans }}</div>
+<div uk-grid class="uk-grid-small uk-text-small">
+    <div class="item">
+        <span uk-icon="icon: forward"></span>
+        <i>{{ svistyn.countSvists }}</i>
+        <a href="{{ path('svistyn_share', { 'id' : svistyn.id , 'state' : 1}) }}">{{ 'svistnuti'|trans }}</a>
+    </div>
+    <div class="item">
+        <img src="{{ asset('/images/zvizdnyt.png')}}">
+        <i>{{ svistyn.countZvizds }}</i>
+        <a href="{{ path('svistyn_share', { 'id' : svistyn.id , 'state' : 2}) }}">{{ 'zvizdnuti'|trans }}</a>
+    </div>
+    <div class="item">
+        <span uk-icon="icon: heart"></span>
+        <i>{{ svistyn.ratingTotal }}</i>
+        {{ 'rating_svist'|trans }}
+    </div>
+    <div class="item">
+        <span uk-icon="icon: comments"></span>
+        <i>{{ render(controller('App\\Controller\\CommentController::getCountComments',{ 'id': svistyn.id })) }}</i>
+        {{ 'comments'|trans }}
+    </div>
+    <div class="item">
+        <img src="{{ asset('/images/view_icon.jpg')}}">
+        <i>{{ svistyn.views }}</i>
+        {{ 'views'|trans }}
+    </div>
+</div>

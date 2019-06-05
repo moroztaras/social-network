@@ -34,6 +34,8 @@ class SvistynRepository extends EntityRepository
             $query->andWhere('sv.user = :user');
             $query->setParameter('user', $user->getId());
         }
+        $query->andWhere('sv.status = :status');
+        $query->setParameter('status', 1);
         $this->queryByOptions($query, $options);
         $query->orderBy('sv.id', 'desc');
         $results = $query->getQuery()->execute();
@@ -118,13 +120,113 @@ class SvistynRepository extends EntityRepository
             /** @var Svistyn $post */
             $post = $posts[$parent];
             switch ($state) {
-        case 1:
-          $post->setCountSvists($result['ttl']);
-          break;
-        case 2:
-          $post->setCountZvizds($result['ttl']);
-          break;
-      }
+                case 1:
+                    $post->setCountSvists($result['ttl']);
+                    break;
+                case 2:
+                    $post->setCountZvizds($result['ttl']);
+                    break;
+             }
         }
+    }
+
+    public function counterSvistynsByUser(User $user)
+    {
+        return $this
+          ->createQueryBuilder('sv')
+          ->andWhere('sv.status = :status')
+          ->setParameter('status', 1)
+          ->andWhere('sv.user = :user')
+          ->setParameter('user', $user->getId())
+          ->getQuery()
+          ->getResult();
+    }
+
+    public function findAllPostsOfFriends(User $user)
+    {
+        return $this
+          ->createQueryBuilder('sv')
+          ->leftJoin('sv.user', 'user')
+          ->leftJoin('user.friends', 'friends')
+          ->where('friends.user = :user')
+          ->setParameter('user', $user)
+          ->getQuery()
+          ->getResult();
+    }
+
+    public function getAllSvistyns()
+    {
+        return $this
+          ->createQueryBuilder('sv')
+          ->select('sv')
+          ->addOrderBy('sv.id', 'DESC')
+          ->getQuery()
+          ->getResult();
+    }
+
+    public function findBlockSvistyns()
+    {
+        return $this
+          ->createQueryBuilder('sv')
+          ->select('sv')
+          ->where('sv.status = :status')
+          ->setParameter('status', 0)
+          ->addOrderBy('sv.id', 'DESC')
+          ->getQuery()
+          ->getResult();
+    }
+
+    public function FindSvistynsByMonth($month, $year)
+    {
+        return $this
+          ->createQueryBuilder('sv')
+          ->select()
+          ->andWhere('YEAR(sv.created) = :year')
+          ->setParameter('year', $year)
+          ->andWhere('MONTH(sv.created) = :month')
+          ->setParameter('month', $month)
+          ->getQuery()
+          ->getResult();
+    }
+
+    public function getCountAllViewsSvistynsByMonth($month, $year)
+    {
+        $svistyns = $this
+            ->createQueryBuilder('sv')
+            ->select()
+            ->andWhere('YEAR(sv.created) = :year')
+            ->setParameter('year', $year)
+            ->andWhere('MONTH(sv.created) = :month')
+            ->setParameter('month', $month)
+            ->getQuery()
+            ->getResult();
+        $views = 0;
+        foreach ($svistyns as $svistyn) {
+            $views += $svistyn->getViews();
+        }
+
+        return $views;
+    }
+
+    public function getFilterSvistyns()
+    {
+        $userQb = $this->_em->createQueryBuilder();
+        $userQb
+          ->from(User::class, 'user1')
+          ->select('user1.id')
+          ->join('user1.svistyns', 'svistyns1')
+          ->groupBy('user1.id')
+          ->having('COUNT(svistyns1.id) > 2')
+        ;
+
+        $qb = $this
+          ->createQueryBuilder('svistyn')
+          ->select('svistyn')
+          ->join('svistyn.user', 'user')
+          ->andWhere('user.id IN (:cc)')
+          ->setParameter('cc', $userQb->getQuery()->getArrayResult())
+        ;
+
+        return $qb->getQuery()->getResult();
     }
 }

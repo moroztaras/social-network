@@ -74,6 +74,7 @@ class LanguageManager
         if (!isset($languages[$locale])) {
             throw new \Exception('No language in system');
         }
+
         return $languages[$locale];
     }
 

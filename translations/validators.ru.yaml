@@ -5,7 +5,7 @@ user:
     not_blank: 'Полное имя обязательное поле'
   email:
     not_blank: 'Эл. адрес обязательное поле'
-  password:
+  plainPassword:
     not_blank: 'Пароль обязательное поле'
   birthday:
     not_blank: 'Дата рождения обязательное поле'

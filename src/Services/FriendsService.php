@@ -44,7 +44,7 @@ class FriendsService
                 $fr->setUser($user);
                 $fr->setFriend($friend);
                 $this->doctrine->getManager()->persist($fr);
-                $this->flashBag->add('success', 'friend_add');
+                $this->flashBag->add('success', 'application_has_been_sent');
             }
             $this->doctrine->getManager()->flush();
         } else {
@@ -54,9 +54,9 @@ class FriendsService
             $this->doctrine->getManager()->flush();
         }
         switch ($status) {
-            case 1: $this->flashBag->add('success', 'Заявка підтверджена успішно');
+            case 1: $this->flashBag->add('success', 'application_has_been_successfully_verified');
                 break;
-            case 2: $this->flashBag->add('danger', 'Заявка відмінена');
+            case 2: $this->flashBag->add('danger', 'application_has_been_canceled');
                 break;
         }
     }

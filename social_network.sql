@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Час створення: Трв 28 2019 р., 10:08
+-- Час створення: Чрв 05 2019 р., 11:15
 -- Версія сервера: 5.7.24-0ubuntu0.16.04.1
 -- Версія PHP: 7.2.17-1+ubuntu16.04.1+deb.sury.org+3
 
@@ -61,7 +61,7 @@ CREATE TABLE `dialogue` (
 --
 
 INSERT INTO `dialogue` (`id`, `creator_id`, `created_at`, `updated_at`, `receiver_id`) VALUES
-(1, 1, '2019-05-28 13:06:17', '2019-05-28 13:06:17', 2);
+(1, 1, '2019-05-28 13:06:17', '2019-06-05 12:47:56', 2);
 
 -- --------------------------------------------------------
 
@@ -120,15 +120,16 @@ CREATE TABLE `friends` (
   `id` int(11) NOT NULL,
   `created_at` datetime NOT NULL,
   `user_id` int(11) DEFAULT NULL,
-  `friend_id` int(11) DEFAULT NULL
+  `friend_id` int(11) DEFAULT NULL,
+  `status` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Дамп даних таблиці `friends`
 --
 
-INSERT INTO `friends` (`id`, `created_at`, `user_id`, `friend_id`) VALUES
-(1, '2019-05-12 22:01:33', 1, 2);
+INSERT INTO `friends` (`id`, `created_at`, `user_id`, `friend_id`, `status`) VALUES
+(39, '2019-06-05 14:08:16', 1, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -156,7 +157,7 @@ CREATE TABLE `message` (
   `sender_id` int(11) DEFAULT NULL,
   `receiver_id` int(11) DEFAULT NULL,
   `dialogue_id` int(11) DEFAULT NULL,
-  `message` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `message` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` datetime NOT NULL,
   `status` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -166,7 +167,8 @@ CREATE TABLE `message` (
 --
 
 INSERT INTO `message` (`id`, `sender_id`, `receiver_id`, `dialogue_id`, `message`, `created_at`, `status`) VALUES
-(1, 1, 2, 1, 'Привіт! Як справи?', '2019-05-28 13:06:17', 0);
+(1, 1, 2, 1, 'Привіт! Як справи?', '2019-05-28 13:06:17', 1),
+(2, 2, 1, 1, 'Привіт все добре!', '2019-06-03 15:53:42', 1);
 
 -- --------------------------------------------------------
 
@@ -192,7 +194,8 @@ INSERT INTO `migration_versions` (`version`, `executed_at`) VALUES
 ('20190327112900', '2019-05-12 18:30:27'),
 ('20190513075410', '2019-05-13 07:55:00'),
 ('20190522090525', '2019-05-22 09:07:44'),
-('20190522123125', '2019-05-28 10:05:35');
+('20190522123125', '2019-05-28 10:05:35'),
+('20190603122235', '2019-06-03 12:26:03');
 
 -- --------------------------------------------------------
 
@@ -371,7 +374,7 @@ ALTER TABLE `file_usage`
 -- AUTO_INCREMENT для таблиці `friends`
 --
 ALTER TABLE `friends`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 --
 -- AUTO_INCREMENT для таблиці `media`
 --
@@ -381,7 +384,7 @@ ALTER TABLE `media`
 -- AUTO_INCREMENT для таблиці `message`
 --
 ALTER TABLE `message`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 --
 -- AUTO_INCREMENT для таблиці `svistyn`
 --
@@ -407,7 +410,7 @@ ALTER TABLE `comment`
 -- Обмеження зовнішнього ключа таблиці `dialogue`
 --
 ALTER TABLE `dialogue`
-  ADD CONSTRAINT `FK_F18A1C3961220EA6` FOREIGN KEY (`creator_id`) REFERENCES `user` (`id`),
+  ADD CONSTRAINT `FK_F18A1C3961220EA6` FOREIGN KEY (`creator_id`) REFERENCES `user` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `FK_F18A1C39CD53EDB6` FOREIGN KEY (`receiver_id`) REFERENCES `user` (`id`);
 
 --

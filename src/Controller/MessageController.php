@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Form\Message\MessageForm;
 use App\Form\Message\MessageEditForm;
 use App\Form\Message\Model\MessageModel;
+use App\Services\FriendsService;
 use App\Services\MessageService;
 use Proxies\__CG__\App\Entity\Dialogue;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -34,16 +35,24 @@ class MessageController extends Controller
     private $paginator;
 
     /**
+     * @var FriendsService
+     */
+    private $friendsService;
+
+    /**
      * MessageController constructor.
      *
-     * @param MessageService    $messageService
-     * @param FlashBagInterface $flashBag
+     * @param MessageService     $messageService
+     * @param FlashBagInterface  $flashBag
+     * @param PaginatorInterface $paginator
+     * @param FriendsService     $friendsService
      */
-    public function __construct(MessageService $messageService, FlashBagInterface $flashBag, PaginatorInterface $paginator)
+    public function __construct(MessageService $messageService, FlashBagInterface $flashBag, PaginatorInterface $paginator, FriendsService $friendsService)
     {
         $this->messageService = $messageService;
         $this->flashBag = $flashBag;
         $this->paginator = $paginator;
+        $this->friendsService = $friendsService;
     }
 
     /**
@@ -88,15 +97,20 @@ class MessageController extends Controller
 
         $receiver = $this->getDoctrine()->getRepository(User::class)->find($id_receiver);
         $form = $this->createForm(MessageForm::class, $messageModel);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->messageService->send($user, $receiver, $messageModel->getMessage());
+        $friendship = $this->friendsService->getFriendship($user, $receiver);
+        if ($friendship && 1 == $friendship->getStatus()) {
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $this->messageService->send($user, $receiver, $messageModel->getMessage());
 
-            return $this->redirectToRoute('user_dialogue_messages_list',
-              [
-                'id_dialogue' => $id_dialogue,
-                'id_receiver' => $id_receiver,
-              ]);
+                return $this->redirectToRoute('user_dialogue_messages_list',
+                  [
+                    'id_dialogue' => $id_dialogue,
+                    'id_receiver' => $id_receiver,
+                  ]);
+            }
+        } else {
+            $this->flashBag->add('danger', 'you_can_not_send_message_to_the_user');
         }
 
         return $this->render('Message/list.html.twig', [
@@ -125,18 +139,25 @@ class MessageController extends Controller
         }
 
         $receiver = $this->getDoctrine()->getRepository(User::class)->find($id);
-        $form = $this->createForm(MessageForm::class, $messageModel);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->messageService->send($user, $receiver, $messageModel->getMessage());
+        $friendship = $this->friendsService->getFriendship($user, $receiver);
+        if ($friendship && 1 == $friendship->getStatus()) {
+            $form = $this->createForm(MessageForm::class, $messageModel);
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $this->messageService->send($user, $receiver, $messageModel->getMessage());
+
+                return $this->redirectToRoute('svistyn_post_user', ['id' => $id]);
+            }
+
+            return $this->render('Message/add.html.twig', [
+              'receiver' => $receiver,
+              'form' => $form->createView(),
+            ]);
+        } else {
+            $this->flashBag->add('danger', 'you_can_not_send_message_to_the_user');
 
             return $this->redirectToRoute('svistyn_post_user', ['id' => $id]);
         }
-
-        return $this->render('Message/add.html.twig', [
-          'receiver' => $receiver,
-          'form' => $form->createView(),
-        ]);
     }
 
     /**

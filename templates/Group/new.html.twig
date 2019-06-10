@@ -1,0 +1,17 @@
+{% extends "Layout/layout-default.html.twig" %}
+
+{% block body_attr %}page-register{% endblock %}
+{% block title %}{{ 'create_account'|trans }}{% endblock %}
+{% block main %}
+    <div class="uk-container uk-container-xsmall">
+        <div class="uk-section uk-padding uk-background-default kuk-shadow">
+            <h2 class="uk-heading-divider">{{ 'new_group'|trans }}</h2>
+            {{ form_start(group_form) }}
+                {{ form_widget(group_form) }}
+                <button type="submit" class="uk-button uk-button-default">{{ 'created'|trans }}</button>
+            {{ form_end(group_form) }}
+            <hr>
+            <p class="uk-text-small">{{ 'go_back_to_the_list'|trans }} <a href="{{ path('user_groups_list') }}" class="uk-link">{{ 'groups'|trans }}</a></p>
+        </div>
+    </div>
+{% endblock %}

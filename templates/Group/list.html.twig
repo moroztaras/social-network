@@ -22,7 +22,8 @@
     {% endif %}
     <div class="uk-section uk-section-xsmall">
         <div class="uk-container uk-container-xsmall">
-
+            {{ include('Group/ModeView/full.html.twig',{'groups' :groups}) }}
+            {#{{ include('Pagination/kpn_pagination.html.twig', {'field' : groups}) }}#}
         </div>
     </div>
 {% endblock %}

@@ -1,0 +1,26 @@
+{% extends "Layout/layout-default.html.twig" %}
+
+{% block title %}{% endblock %}
+
+{% block main %}
+    {{ render(controller('App\\Controller\\BlockController::usersGroupCover',{ 'id': usersGroup.id })) }}
+    {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+        {% if app.user == usersGroup.admin  %}
+            <div class="uk-text-center uk-margin">
+                <a href="#" class="uk-button uk-button-default" style="margin-right: 5px;"><i class="fa fa-plus-square-o"></i>Вступити</a>
+            </div>
+        {% else  %}
+            <div class="uk-text-center uk-margin">
+                <a href="#" class="uk-button uk-button-default" style="margin-right: 5px;">
+                    <i class="fa fa-plus-square-o"></i>
+                    Вступити
+                </a>
+            </div>
+        {% endif %}
+    {% endif %}
+    <div class="uk-section uk-section-xsmall">
+        <div class="uk-container uk-container-xsmall">
+            <p>{{ usersGroup.description }}</p>
+        </div>
+    </div>
+{% endblock %}

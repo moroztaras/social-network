@@ -11,6 +11,8 @@ class UserTwigExtension extends \Twig_Extension
 {
     private $defaultImage = '/images/system/no-profile-pic.png';
 
+    private $defaultGroupImage = '/images/system/no-group-pic.png';
+
     private $fileAssistant;
 
     private $imageStyle;
@@ -25,12 +27,29 @@ class UserTwigExtension extends \Twig_Extension
     {
         return [
       new \Twig_SimpleFilter('avatarStyleDefault', [$this, 'avatarStyleDefault']),
+      new \Twig_SimpleFilter('avatarGroupStyleDefault', [$this, 'avatarGroupStyleDefault']),
     ];
     }
 
     public function avatarStyleDefault(File $avatar = null)
     {
         $render = $this->defaultImage;
+
+        if ($avatar instanceof File && $avatar->getId() > 0 && $this->fileAssistant->isFile($avatar)) {
+            $fileRoot = $this->fileAssistant->rootUrl($avatar->getUrl());
+
+            if ($this->fileAssistant->isImageMimeType($fileRoot)) {
+                $imageStyle = $this->imageStyle->styleImage($avatar, '250_250_crop');
+                $render = $this->fileAssistant->webDir($imageStyle);
+            }
+        }
+
+        return $render;
+    }
+
+    public function avatarGroupStyleDefault(File $avatar = null)
+    {
+        $render = $this->defaultGroupImage;
 
         if ($avatar instanceof File && $avatar->getId() > 0 && $this->fileAssistant->isFile($avatar)) {
             $fileRoot = $this->fileAssistant->rootUrl($avatar->getUrl());

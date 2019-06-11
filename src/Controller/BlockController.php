@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Svistyn;
 use App\Entity\User;
+use App\Entity\GroupUsers;
 use App\Entity\Friends;
 use App\Entity\Dialogue;
 use App\Services\UserService;
@@ -40,6 +41,13 @@ class BlockController extends Controller
         return $this->render('User/cover.html.twig', [
           'user' => $user,
           'count_svistyns' => $count_svistyns,
+        ]);
+    }
+
+    public function usersGroupCover($id)
+    {
+        return $this->render('Group/cover.html.twig', [
+          'group' => $this->getDoctrine()->getRepository(GroupUsers::class)->find($id),
         ]);
     }
 

@@ -8,6 +8,8 @@ use App\Services\GroupUsersService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * Class GroupController.
@@ -21,13 +23,26 @@ class GroupUsersController extends AbstractController
      */
     private $groupUsersService;
 
-    public function __construct(GroupUsersService $groupUsersService)
+    /**
+     * @var FlashBagInterface
+     */
+    private $flashBag;
+
+    /**
+     * GroupUsersController constructor.
+     *
+     * @param GroupUsersService $groupUsersService
+     * @param FlashBagInterface $flashBag
+     */
+    public function __construct(GroupUsersService $groupUsersService, FlashBagInterface $flashBag)
     {
         $this->groupUsersService = $groupUsersService;
+        $this->flashBag = $flashBag;
     }
 
     /**
-     * @Route("s", name="user_groups_list")
+     * @Route("s", methods={"GET"}, name="user_groups_list")
+     * @Security("is_granted('ROLE_USER')")
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
@@ -37,14 +52,17 @@ class GroupUsersController extends AbstractController
         if (null != $user && 0 == $user->getStatus()) {
             return $this->redirectToRoute('user_check_block');
         }
+        $groups = $this->getDoctrine()->getRepository(GroupUsers::class)->findAll();
 
         return $this->render('Group/list.html.twig', [
           'user' => $user,
+          'groups' => $groups,
         ]);
     }
 
     /**
      * @Route("/new", methods={"GET", "POST"}, name="user_group_new")
+     * @Security("is_granted('ROLE_USER')")
      */
     public function newGroup(Request $request)
     {
@@ -66,5 +84,53 @@ class GroupUsersController extends AbstractController
           'user' => $user,
           'group_form' => $groupForm->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/{slug}", methods={"GET"}, name="group_show")
+     * @Security("is_granted('ROLE_USER')")
+     */
+    public function showGroup($slug)
+    {
+        $user = $this->getUser();
+        if (null != $user && 0 == $user->getStatus()) {
+            return $this->redirectToRoute('user_check_block');
+        }
+        $usersGroup = $this->getGroup($slug);
+
+        return $this->render('Group/show.html.twig', [
+          'usersGroup' => $usersGroup,
+          'user' => $user,
+        ]);
+    }
+
+    /**
+     * @Route("/{slug}/dashboard", methods={"GET"}, name="group_dashboard")
+     * @Security("is_granted('ROLE_USER')")
+     */
+    public function dashboardGroup($slug)
+    {
+        $user = $this->getUser();
+        if (null != $user && 0 == $user->getStatus()) {
+            return $this->redirectToRoute('user_check_block');
+        }
+        $usersGroup = $this->getGroup($slug);
+        if ($usersGroup->getAdmin() != $user) {
+            $this->flashBag->add('danger', 'group_editing_is_not_allowed');
+
+            return $this->redirectToRoute('group_show', ['slug' => $slug]);
+        }
+        if (!$usersGroup) {
+            return $this->redirectToRoute('user_groups_list');
+        }
+
+        return $this->render('Group/dashboard.html.twig', [
+          'usersGroup' => $usersGroup,
+        ]);
+    }
+
+    private function getGroup($slug)
+    {
+        return $this->getDoctrine()->getRepository(GroupUsers::class)->findOneBy(['slug' => $slug]);
     }
 }

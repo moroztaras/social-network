@@ -20,9 +20,20 @@ class GroupUsersService
     private $flashBag;
 
     /**
-     * GroupService constructor.
+     * @var array
+     */
+    private $ukrRus = ['а', 'б', 'в', 'г', 'д', 'е', 'ё', 'є', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н', 'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'і', 'ь', 'э', 'ю', 'я', ' '];
+
+    /**
+     * @var array
+     */
+    private $lat = ['a', 'b', 'v', 'g', 'd', 'e', 'e', 'e', 'gh', 'z', 'i', 'y', 'k', 'l', 'm', 'n', 'o', 'p', 'r', 's', 't', 'u', 'f', 'h', 'c', 'ch', 'sh', 'sch', 'y', 'y', 'i', 'y', 'e', 'yu', 'ya', '_'];
+
+    /**
+     * GroupUsersService constructor.
      *
-     * @param ManagerRegistry $doctrine
+     * @param ManagerRegistry   $doctrine
+     * @param FlashBagInterface $flashBag
      */
     public function __construct(ManagerRegistry $doctrine, FlashBagInterface $flashBag)
     {
@@ -32,9 +43,12 @@ class GroupUsersService
 
     public function save(GroupUsers $groupUsers, User $user)
     {
-        $groupUsers->setAdmin($user);
+        $groupUsers
+          ->setSlug(str_replace($this->ukrRus, $this->lat, strtolower($groupUsers->getName())))
+          ->setAdmin($user);
+
         $this->saveData($groupUsers);
-        $this->flashBag->add('success', 'Група успішно зареєстрована');
+        $this->flashBag->add('success', 'group_created_successfully');
     }
 
     public function saveData(GroupUsers $groupUsers)

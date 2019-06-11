@@ -1,0 +1,34 @@
+{% set cover = '/images/user-default-bg.jpg' %}
+{% if group.cover is not null %}
+    {% set cover = group.cover|style_image('1280_300_crop') %}
+{% endif %}
+<div class="uk-container user-cover uk-background-cover" data-src="{{ cover }}" uk-img>
+    <div class="uk-section uk-section-xsmall">
+        <div uk-grid class="uk-flex-center user-cover-grid">
+            <div class="uk-width-medium ">
+                <ul class="uk-list uk-list-striped uk-background-default uk-text-center">
+                    <li>{{ 'FOLLOWERS'|trans }}<br>
+                        <span class="uk-text-large">0</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="uk-width-medium">
+                <div class="user-cover-avatar"><img src="{{ group.avatar|avatarGroupStyleDefault }}" width="200px" class="uk-background uk-background-default"></div>
+                <div class="uk-background-muted uk-margin-small-top uk-padding-small">
+                    <h4 class="uk-margin-remove-bottom">{{ group.name }}</h4>
+                </div>
+            </div>
+            <div class="uk-width-medium">
+                <ul class="uk-list uk-list-striped uk-background-default uk-text-center">
+                    <li>
+                        {{ 'POSTS'|trans }}<br>
+                        <span class="uk-text-large">0</span>
+                    </li>
+                </ul>
+            </div>
+            {% if app.user == group.admin %}
+                {{ include('Group/ModeView/menu.html.twig', {'group': group}) }}
+            {% endif %}
+        </div>
+    </div>
+</div>

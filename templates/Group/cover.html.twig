@@ -8,7 +8,9 @@
             <div class="uk-width-medium ">
                 <ul class="uk-list uk-list-striped uk-background-default uk-text-center">
                     <li>{{ 'FOLLOWERS'|trans }}<br>
-                        <span class="uk-text-large">0</span>
+                        <span class="uk-text-large">
+                            {{ render(controller('App\\Controller\\BlockController::getCountFollowersInGroup',{ 'slug': group.slug })) }}
+                        </span>
                     </li>
                 </ul>
             </div>

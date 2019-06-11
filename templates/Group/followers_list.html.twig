@@ -1,0 +1,11 @@
+{% extends "Layout/layout-default.html.twig" %}
+{% block main %}
+    <div class="uk-section uk-section-xsmall">
+        <div class="uk-container uk-container-xsmall">
+            {% for follower in usersGroup.users %}
+                {{ include('Group/ModeView/followers.html.twig', {'follower':follower}) }}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+

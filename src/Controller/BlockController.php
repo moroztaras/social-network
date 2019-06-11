@@ -134,4 +134,14 @@ class BlockController extends Controller
           'dialogues' => $dialogues,
         ]);
     }
+
+    public function getCountFollowersInGroup($slug)
+    {
+        $group = $this->getDoctrine()->getRepository(GroupUsers::class)->findOneBy(['slug' => $slug]);
+
+        return $this->render(
+          'Group/followers.html.twig', [
+          'group' => $group,
+        ]);
+    }
 }

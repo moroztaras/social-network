@@ -179,6 +179,23 @@ class GroupUsersController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/{slug}/followers", methods={"GET", "POST"}, name="group_list_followers")
+     * @Security("is_granted('ROLE_USER')")
+
+     *
+     * @param $slug
+     * @param Request $request
+     */
+    public function followersListGroup($slug, Request $request)
+    {
+        $this->userCheck();
+
+        return $this->render('Group/followers_list.html.twig', [
+          'usersGroup' => $this->getGroup($slug),
+        ]);
+    }
+
     private function getGroup($slug)
     {
         return $this->getDoctrine()->getRepository(GroupUsers::class)->findOneBy(['slug' => $slug]);

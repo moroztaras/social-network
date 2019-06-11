@@ -13,10 +13,8 @@
                         </a>
                     </div>
                     <p class="uk-text-meta uk-margin-remove-top">
-                        <a href="#">
-                            0
-                            {{ 'followers'|trans }}
-                        </a>
+                        {{ render(controller('App\\Controller\\BlockController::getCountFollowersInGroup',{ 'slug': group.slug })) }}
+                        {{ 'followers'|trans }}
                     </p>
                 </div>
             </div>

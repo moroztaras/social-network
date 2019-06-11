@@ -15,7 +15,11 @@
                 </ul>
             </div>
             <div class="uk-width-medium">
-                <div class="user-cover-avatar"><img src="{{ group.avatar|avatarGroupStyleDefault }}" width="200px" class="uk-background uk-background-default"></div>
+                <div class="user-cover-avatar"><img src="{{ group.avatar|avatarGroupStyleDefault }}" width="200px" class="uk-background uk-background-default">
+                    {% if app.user == group.admin %}
+                        {{ include('Group/ModeView/menu.html.twig', {'group': group}) }}
+                    {% endif %}
+                </div>
                 <div class="uk-background-muted uk-margin-small-top uk-padding-small">
                     <h4 class="uk-margin-remove-bottom">{{ group.name }}</h4>
                 </div>
@@ -28,9 +32,6 @@
                     </li>
                 </ul>
             </div>
-            {% if app.user == group.admin %}
-                {{ include('Group/ModeView/menu.html.twig', {'group': group}) }}
-            {% endif %}
         </div>
     </div>
 </div>

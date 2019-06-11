@@ -45,7 +45,9 @@ class GroupUsersService
     {
         $groupUsers
           ->setSlug(str_replace($this->ukrRus, $this->lat, strtolower($groupUsers->getName())))
-          ->setAdmin($user);
+          ->setAdmin($user)
+          ->addUser($user)
+        ;
 
         $this->saveData($groupUsers);
         $this->flashBag->add('success', 'group_created_successfully');

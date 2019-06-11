@@ -140,6 +140,12 @@ class User implements \Serializable, UserInterface, \JsonSerializable
     private $dialogues;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\GroupUsers", inversedBy="users")
+     * @ORM\JoinColumn(name="group_id", referencedColumnName="id")
+     */
+    private $group;
+
+    /**
      * User constructor.
      */
     public function __construct()
@@ -661,5 +667,17 @@ class User implements \Serializable, UserInterface, \JsonSerializable
           'status' => $this->getStatus(),
           'api_token' => $this->getApiToken(),
         ];
+    }
+
+    public function getGroup(): ?GroupUsers
+    {
+        return $this->group;
+    }
+
+    public function setGroup(?GroupUsers $group): self
+    {
+        $this->group = $group;
+
+        return $this;
     }
 }

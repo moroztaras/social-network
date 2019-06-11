@@ -29,7 +29,7 @@
             </li>
             {% if app.user == usersGroup.admin  %}
                 <li class="{% if app.request.attributes.get('_route') == 'user_edit_canonical' %}uk-active{% endif %}">
-                  <a href="#">{{ 'edit'|trans }}</a>
+                  <a href="{{ path('group_edit',{'slug':usersGroup.slug}) }}">{{ 'edit'|trans }}</a>
                 </li>
                 <li class="{% if app.request.attributes.get('_route') == 'user_security_canonical' %}uk-active{% endif %}">
                   <a href="#">{{ 'security'|trans }}</a>

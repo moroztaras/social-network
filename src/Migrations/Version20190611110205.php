@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20190610091731 extends AbstractMigration
+final class Version20190611110205 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -26,6 +26,9 @@ final class Version20190610091731 extends AbstractMigration
         $this->addSql('ALTER TABLE group_users ADD CONSTRAINT FK_44AF8E8E642B8210 FOREIGN KEY (admin_id) REFERENCES user (id)');
         $this->addSql('ALTER TABLE group_users ADD CONSTRAINT FK_44AF8E8E3B1E5BE3 FOREIGN KEY (avatar_fid) REFERENCES file_manager (id)');
         $this->addSql('ALTER TABLE group_users ADD CONSTRAINT FK_44AF8E8EFF6B0E46 FOREIGN KEY (cover_fid) REFERENCES file_manager (id)');
+        $this->addSql('ALTER TABLE user ADD group_id INT DEFAULT NULL');
+        $this->addSql('ALTER TABLE user ADD CONSTRAINT FK_8D93D649FE54D947 FOREIGN KEY (group_id) REFERENCES group_users (id)');
+        $this->addSql('CREATE INDEX IDX_8D93D649FE54D947 ON user (group_id)');
     }
 
     public function down(Schema $schema): void
@@ -33,6 +36,9 @@ final class Version20190610091731 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf('mysql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'mysql\'.');
 
+        $this->addSql('ALTER TABLE user DROP FOREIGN KEY FK_8D93D649FE54D947');
         $this->addSql('DROP TABLE group_users');
+        $this->addSql('DROP INDEX IDX_8D93D649FE54D947 ON user');
+        $this->addSql('ALTER TABLE user DROP group_id');
     }
 }

@@ -158,6 +158,7 @@ class User implements \Serializable, UserInterface, \JsonSerializable
         $this->friends = new ArrayCollection();
         $this->svistyns = new ArrayCollection();
         $this->dialogues = new ArrayCollection();
+        $this->groups = new ArrayCollection();
     }
 
     public function serialize()

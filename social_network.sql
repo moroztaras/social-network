@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Час створення: Чрв 05 2019 р., 11:15
+-- Час створення: Чрв 12 2019 р., 10:01
 -- Версія сервера: 5.7.24-0ubuntu0.16.04.1
 -- Версія PHP: 7.2.17-1+ubuntu16.04.1+deb.sury.org+3
 
@@ -94,7 +94,9 @@ INSERT INTO `file_manager` (`id`, `user_id`, `filename`, `origin_name`, `url`, `
 (5, 1, '1881fac691e8eb9cd9867f54b6111e96.jpg', '59990110_426910711189598_4020986234061979648_n.jpg', 'public://svistyn/3/1881fac691e8eb9cd9867f54b6111e96.jpg', 160445, 'image/jpeg', 1, '2019-05-12 21:49:36', NULL),
 (6, 1, '01f439452cbf1b3dcfc8de702442ee31.jpg', 'evpatoriya.jpg', 'public://svistyn/4/01f439452cbf1b3dcfc8de702442ee31.jpg', 58940, 'image/jpeg', 1, '2019-05-12 22:00:46', NULL),
 (7, 1, 'd87c9b6ce6d984e2506a44920669fdd3.jpg', '40617982_321833875030616_3516089030003392512_n.jpg', 'public://svistyn/5/d87c9b6ce6d984e2506a44920669fdd3.jpg', 27148, 'image/jpeg', 1, '2019-05-12 22:15:47', NULL),
-(8, 2, 'dbd56bef1d1670c1992e2c1bce8931ee.png', 'cropped-Favicon.png', 'public://svistyn/6/dbd56bef1d1670c1992e2c1bce8931ee.png', 12118, 'image/png', 1, '2019-05-12 22:20:46', NULL);
+(8, 2, 'dbd56bef1d1670c1992e2c1bce8931ee.png', 'cropped-Favicon.png', 'public://svistyn/6/dbd56bef1d1670c1992e2c1bce8931ee.png', 12118, 'image/png', 1, '2019-05-12 22:20:46', NULL),
+(9, 1, '60ca2f95643e4413e61336db42f6451d.jpg', 'ek_avatar.jpg', 'public://group/1/60ca2f95643e4413e61336db42f6451d.jpg', 7239, 'image/jpeg', 1, '2019-06-12 12:58:49', NULL),
+(10, 1, 'f3d6923d1956baf971765bb002dd8f55.png', 'cover_7.png', 'public://group/1/f3d6923d1956baf971765bb002dd8f55.png', 648557, 'image/png', 1, '2019-06-12 12:58:49', NULL);
 
 -- --------------------------------------------------------
 
@@ -130,6 +132,32 @@ CREATE TABLE `friends` (
 
 INSERT INTO `friends` (`id`, `created_at`, `user_id`, `friend_id`, `status`) VALUES
 (39, '2019-06-05 14:08:16', 1, 2, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблиці `group_users`
+--
+
+CREATE TABLE `group_users` (
+  `id` int(11) NOT NULL,
+  `admin_id` int(11) DEFAULT NULL,
+  `avatar_fid` int(11) DEFAULT NULL,
+  `cover_fid` int(11) DEFAULT NULL,
+  `name` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` longtext COLLATE utf8mb4_unicode_ci,
+  `slug` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `confidentiality` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Дамп даних таблиці `group_users`
+--
+
+INSERT INTO `group_users` (`id`, `admin_id`, `avatar_fid`, `cover_fid`, `name`, `description`, `slug`, `confidentiality`, `created_at`, `updated_at`) VALUES
+(1, 1, 9, 10, 'Ekreative', 'Група працівників IT компанії Ekreative', 'ekreative', 'open', '2019-06-12 12:53:44', '2019-06-12 12:53:44');
 
 -- --------------------------------------------------------
 
@@ -195,7 +223,8 @@ INSERT INTO `migration_versions` (`version`, `executed_at`) VALUES
 ('20190513075410', '2019-05-13 07:55:00'),
 ('20190522090525', '2019-05-22 09:07:44'),
 ('20190522123125', '2019-05-28 10:05:35'),
-('20190603122235', '2019-06-03 12:26:03');
+('20190603122235', '2019-06-03 12:26:03'),
+('20190612094830', '2019-06-12 09:51:02');
 
 -- --------------------------------------------------------
 
@@ -264,6 +293,25 @@ INSERT INTO `user` (`id`, `avatar_fid`, `cover_fid`, `username`, `email`, `passw
 (1, 1, 2, 'df0eb898662d2f97249fa60225dac7c6', 'moroztaras@i.ua', '$2y$13$utklY8PJH8N1icKQ66la.uLda9SFZGeT2BG7wXjtIucQGR7RkO/ue', '2019-05-12 21:30:33', '2019-05-12 21:30:33', 1, '["ROLE_SUPER_ADMIN"]', 'Moroz Taras', '1986-07-15 00:00:00', 'm', 'UA', NULL, 'ULJQGWATiF4uurM13Aijdf8X8TUH_RR8QC7jnNm7Df4'),
 (2, NULL, NULL, 'f8dc84f58cfcd8068fdc1b690bc556d6', 'user@mail.ua', '$2y$13$GfW9kvlAUOmvCDfQsVuwMOhTLfPqsvuQ4O1YxSWRvJwGxqfFF3MP6', '2019-05-12 21:30:34', '2019-05-12 21:30:34', 1, '["ROLE_USER"]', 'FullName', '2019-05-12 21:30:34', 'm', 'UA', NULL, 'HZIskuH6zN3bQqJADQ60oU6k5AYgrWWVxW2jp8a7-qk');
 
+-- --------------------------------------------------------
+
+--
+-- Структура таблиці `user_group_users`
+--
+
+CREATE TABLE `user_group_users` (
+  `user_id` int(11) NOT NULL,
+  `group_users_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Дамп даних таблиці `user_group_users`
+--
+
+INSERT INTO `user_group_users` (`user_id`, `group_users_id`) VALUES
+(1, 1),
+(2, 1);
+
 --
 -- Індекси збережених таблиць
 --
@@ -304,6 +352,15 @@ ALTER TABLE `friends`
   ADD PRIMARY KEY (`id`),
   ADD KEY `IDX_21EE70696A5458E8` (`friend_id`),
   ADD KEY `IDX_21EE7069A76ED395` (`user_id`);
+
+--
+-- Індекси таблиці `group_users`
+--
+ALTER TABLE `group_users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `UNIQ_44AF8E8E3B1E5BE3` (`avatar_fid`),
+  ADD UNIQUE KEY `UNIQ_44AF8E8EFF6B0E46` (`cover_fid`),
+  ADD KEY `IDX_44AF8E8E642B8210` (`admin_id`);
 
 --
 -- Індекси таблиці `media`
@@ -347,6 +404,14 @@ ALTER TABLE `user`
   ADD UNIQUE KEY `UNIQ_8D93D6497BA2F5EB` (`api_token`);
 
 --
+-- Індекси таблиці `user_group_users`
+--
+ALTER TABLE `user_group_users`
+  ADD PRIMARY KEY (`user_id`,`group_users_id`),
+  ADD KEY `IDX_EDB4471BA76ED395` (`user_id`),
+  ADD KEY `IDX_EDB4471B6E83F842` (`group_users_id`);
+
+--
 -- AUTO_INCREMENT для збережених таблиць
 --
 
@@ -364,7 +429,7 @@ ALTER TABLE `dialogue`
 -- AUTO_INCREMENT для таблиці `file_manager`
 --
 ALTER TABLE `file_manager`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT для таблиці `file_usage`
 --
@@ -375,6 +440,11 @@ ALTER TABLE `file_usage`
 --
 ALTER TABLE `friends`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+--
+-- AUTO_INCREMENT для таблиці `group_users`
+--
+ALTER TABLE `group_users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT для таблиці `media`
 --
@@ -427,6 +497,14 @@ ALTER TABLE `friends`
   ADD CONSTRAINT `FK_21EE7069A76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
 
 --
+-- Обмеження зовнішнього ключа таблиці `group_users`
+--
+ALTER TABLE `group_users`
+  ADD CONSTRAINT `FK_44AF8E8E3B1E5BE3` FOREIGN KEY (`avatar_fid`) REFERENCES `file_manager` (`id`),
+  ADD CONSTRAINT `FK_44AF8E8E642B8210` FOREIGN KEY (`admin_id`) REFERENCES `user` (`id`),
+  ADD CONSTRAINT `FK_44AF8E8EFF6B0E46` FOREIGN KEY (`cover_fid`) REFERENCES `file_manager` (`id`);
+
+--
 -- Обмеження зовнішнього ключа таблиці `message`
 --
 ALTER TABLE `message`
@@ -448,6 +526,13 @@ ALTER TABLE `svistyn`
 ALTER TABLE `user`
   ADD CONSTRAINT `FK_8D93D6493B1E5BE3` FOREIGN KEY (`avatar_fid`) REFERENCES `file_manager` (`id`),
   ADD CONSTRAINT `FK_8D93D649FF6B0E46` FOREIGN KEY (`cover_fid`) REFERENCES `file_manager` (`id`);
+
+--
+-- Обмеження зовнішнього ключа таблиці `user_group_users`
+--
+ALTER TABLE `user_group_users`
+  ADD CONSTRAINT `FK_EDB4471B6E83F842` FOREIGN KEY (`group_users_id`) REFERENCES `group_users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_EDB4471BA76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

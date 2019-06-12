@@ -140,10 +140,9 @@ class User implements \Serializable, UserInterface, \JsonSerializable
     private $dialogues;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\GroupUsers", inversedBy="users")
-     * @ORM\JoinColumn(name="group_id", referencedColumnName="id")
+     * @ORM\ManyToMany(targetEntity="App\Entity\GroupUsers", inversedBy="users")
      */
-    private $group;
+    private $groups;
 
     /**
      * User constructor.
@@ -669,14 +668,28 @@ class User implements \Serializable, UserInterface, \JsonSerializable
         ];
     }
 
-    public function getGroup(): ?GroupUsers
+    /**
+     * @return Collection|GroupUsers[]
+     */
+    public function getGroups(): Collection
     {
-        return $this->group;
+        return $this->groups;
     }
 
-    public function setGroup(?GroupUsers $group): self
+    public function addGroup(GroupUsers $group): self
     {
-        $this->group = $group;
+        if (!$this->groups->contains($group)) {
+            $this->groups[] = $group;
+        }
+
+        return $this;
+    }
+
+    public function removeGroup(GroupUsers $group): self
+    {
+        if ($this->groups->contains($group)) {
+            $this->groups->removeElement($group);
+        }
 
         return $this;
     }

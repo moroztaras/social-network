@@ -181,3 +181,4 @@ blocking_user_is_prohibited: 'Блокування користувача заб
 group_created_successfully: 'Група успішно створена'
 group_editing_is_not_allowed: 'Редагування групи заборонено'
 group_edit_save: 'Дані групи збережено'
+you_joined_the_group: 'Ви вступили в групу'

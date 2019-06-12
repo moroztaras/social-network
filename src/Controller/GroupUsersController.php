@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\GroupUsers;
+use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 use App\Form\GroupUsers\GroupUsersForm;
 use App\Form\GroupUsers\GroupEditForm;
 use App\Form\GroupUsers\Model\GroupEditModel;
@@ -182,18 +184,37 @@ class GroupUsersController extends AbstractController
     /**
      * @Route("/{slug}/followers", methods={"GET", "POST"}, name="group_list_followers")
      * @Security("is_granted('ROLE_USER')")
-
      *
      * @param $slug
-     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function followersListGroup($slug, Request $request)
+    public function followersListGroup($slug)
     {
         $this->userCheck();
 
         return $this->render('Group/followers_list.html.twig', [
           'usersGroup' => $this->getGroup($slug),
         ]);
+    }
+
+    /**
+     * @Route("/{slug}/follower/{id}/add", methods={"GET", "POST"}, name="group_add_follower", requirements={"id"="\d+"}, defaults={"id" = null})
+     * @Security("is_granted('ROLE_USER')")
+     */
+    public function addRemoveFollower($slug, $id, EntityManagerInterface $entityManager)
+    {
+        $this->userCheck();
+        $usersGroup = $this->getGroup($slug);
+        $user = $this->getDoctrine()->getRepository(User::class)->find($id);
+        if ('open' == $usersGroup->getConfidentiality()) {
+            $usersGroup->addUser($user);
+            $entityManager->persist($usersGroup);
+            $entityManager->flush();
+            $this->flashBag->add('success', 'you_joined_the_group');
+        }
+
+        return $this->redirectToRoute('group_show', ['slug' => $slug]);
     }
 
     private function getGroup($slug)

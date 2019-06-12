@@ -51,12 +51,12 @@ class GroupUsers
      */
     private $admin;
 
-    /**
-     * @var ArrayCollection
-     * @ORM\OneToMany(targetEntity="User", mappedBy="group", cascade={"persist", "remove"})
-     * @ORM\OrderBy({"id" = "DESC"})
-     */
-    private $users;
+//    /**
+//     * Many Groups have Many Users.
+//     * @var ArrayCollection
+//     * @ORM\ManyToMany(targetEntity="User", mappedBy="groups")
+//     */
+//    private $users;
 
     /**
      * @ORM\OneToOne(targetEntity="File", cascade={"persist", "remove"})
@@ -79,6 +79,11 @@ class GroupUsers
      * @ORM\Column(type="datetime")
      */
     private $updatedAt;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\User", mappedBy="groups")
+     */
+    private $users;
 
     /**
      * Group constructor.
@@ -306,7 +311,7 @@ class GroupUsers
     {
         if (!$this->users->contains($user)) {
             $this->users[] = $user;
-            $user->setGroup($this);
+            $user->addGroup($this);
         }
 
         return $this;
@@ -316,10 +321,7 @@ class GroupUsers
     {
         if ($this->users->contains($user)) {
             $this->users->removeElement($user);
-            // set the owning side to null (unless already changed)
-            if ($user->getGroup() === $this) {
-                $user->setGroup(null);
-            }
+            $user->removeGroup($this);
         }
 
         return $this;

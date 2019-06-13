@@ -3,12 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\GroupUsers;
-use App\Entity\User;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Form\Svistyn\SvistynForm;
+use App\Form\Svistyn\Model\SvistynModel;
 use App\Form\GroupUsers\GroupUsersForm;
 use App\Form\GroupUsers\GroupEditForm;
 use App\Form\GroupUsers\Model\GroupEditModel;
 use App\Services\GroupUsersService;
+use App\Services\SvistService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -38,17 +39,23 @@ class GroupUsersController extends AbstractController
     private $groupEditModel;
 
     /**
+     * @var SvistService
+     */
+    private $svistService;
+
+    /**
      * GroupUsersController constructor.
      *
      * @param GroupUsersService $groupUsersService
      * @param FlashBagInterface $flashBag
      * @param GroupEditModel    $groupEditModel
      */
-    public function __construct(GroupUsersService $groupUsersService, FlashBagInterface $flashBag, GroupEditModel $groupEditModel)
+    public function __construct(GroupUsersService $groupUsersService, FlashBagInterface $flashBag, GroupEditModel $groupEditModel, SvistService $svistService)
     {
         $this->groupUsersService = $groupUsersService;
         $this->flashBag = $flashBag;
         $this->groupEditModel = $groupEditModel;
+        $this->svistService = $svistService;
     }
 
     /**
@@ -202,19 +209,51 @@ class GroupUsersController extends AbstractController
      * @Route("/{slug}/follower/{id}/add", methods={"GET", "POST"}, name="group_add_follower", requirements={"id"="\d+"}, defaults={"id" = null})
      * @Security("is_granted('ROLE_USER')")
      */
-    public function addRemoveFollower($slug, $id, EntityManagerInterface $entityManager)
+    public function addRemoveFollower($slug, $id)
     {
         $this->userCheck();
         $usersGroup = $this->getGroup($slug);
-        $user = $this->getDoctrine()->getRepository(User::class)->find($id);
         if ('open' == $usersGroup->getConfidentiality()) {
-            $usersGroup->addUser($user);
-            $entityManager->persist($usersGroup);
-            $entityManager->flush();
-            $this->flashBag->add('success', 'you_joined_the_group');
+            $this->groupUsersService->saveFollower($usersGroup, $id);
+        } else {
+            $this->flashBag->add('danger', 'Група закрита або приватна');
         }
 
         return $this->redirectToRoute('group_show', ['slug' => $slug]);
+    }
+
+    /**
+     * @Route("/{slug}/svist/new", methods={"GET", "POST"}, name="group_svist_new")
+     * @Security("is_granted('ROLE_USER')")
+     *
+     * @param $slug
+     * @param Request      $request
+     * @param SvistynModel $svistynModel
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function addSvist($slug, Request $request, SvistynModel $svistynModel)
+    {
+        $this->userCheck();
+        $usersGroup = $this->getGroup($slug);
+
+        $svistRepo = $this->svistService->svistynRepo();
+        $svistyn = $svistRepo->findNew($this->getUser());
+
+        $svistynModel->setSvistynEntity($svistyn);
+        $form = $this->createForm(SvistynForm::class, $svistynModel);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $svistynModel->saveInGroup($usersGroup);
+            $this->flashBag->add('success', 'added_new_svist_in_group_successfully');
+
+            return $this->redirectToRoute('group_show', ['slug' => $slug]);
+        }
+
+        return $this->render('Svistyn/add.html.twig', [
+          'form' => $form->createView(),
+          'svistyn' => $svistyn,
+        ]);
     }
 
     private function getGroup($slug)

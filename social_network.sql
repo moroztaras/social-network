@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Час створення: Чрв 12 2019 р., 10:01
+-- Час створення: Чрв 13 2019 р., 07:36
 -- Версія сервера: 5.7.24-0ubuntu0.16.04.1
 -- Версія PHP: 7.2.17-1+ubuntu16.04.1+deb.sury.org+3
 
@@ -35,13 +35,6 @@ CREATE TABLE `comment` (
   `approved` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Дамп даних таблиці `comment`
---
-
-INSERT INTO `comment` (`id`, `svistyn_id`, `user_id`, `comment`, `created_at`, `approved`) VALUES
-(1, 6, 1, 'The best IT company in Cherkassy', '2019-05-12 22:25:04', 1);
-
 -- --------------------------------------------------------
 
 --
@@ -51,17 +44,17 @@ INSERT INTO `comment` (`id`, `svistyn_id`, `user_id`, `comment`, `created_at`, `
 CREATE TABLE `dialogue` (
   `id` int(11) NOT NULL,
   `creator_id` int(11) DEFAULT NULL,
+  `receiver_id` int(11) DEFAULT NULL,
   `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
-  `receiver_id` int(11) DEFAULT NULL
+  `updated_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Дамп даних таблиці `dialogue`
 --
 
-INSERT INTO `dialogue` (`id`, `creator_id`, `created_at`, `updated_at`, `receiver_id`) VALUES
-(1, 1, '2019-05-28 13:06:17', '2019-06-05 12:47:56', 2);
+INSERT INTO `dialogue` (`id`, `creator_id`, `receiver_id`, `created_at`, `updated_at`) VALUES
+(1, 1, 2, '2019-06-13 10:25:10', '2019-06-13 10:27:30');
 
 -- --------------------------------------------------------
 
@@ -87,16 +80,10 @@ CREATE TABLE `file_manager` (
 --
 
 INSERT INTO `file_manager` (`id`, `user_id`, `filename`, `origin_name`, `url`, `file_size`, `file_mime`, `status`, `created`, `handler`) VALUES
-(1, 1, '8d6deff29f2fd1065419470b5176e5c6.png', 'my_photo.png', 'public://user/1/8d6deff29f2fd1065419470b5176e5c6.png', 643340, 'image/png', 1, '2019-05-12 21:33:05', NULL),
-(2, 1, 'bd03d9f7f25b6af62fb714f93cd1de9d.jpg', 'cover_11.jpg', 'public://user/1/bd03d9f7f25b6af62fb714f93cd1de9d.jpg', 123597, 'image/jpeg', 1, '2019-05-12 21:33:05', NULL),
-(3, 1, 'f1d4112827cd36926b1aca0e65a92ed0.png', 'Amazon-Web-Services_logo835x396.png', 'public://svistyn/1/f1d4112827cd36926b1aca0e65a92ed0.png', 60665, 'image/png', 1, '2019-05-12 21:38:17', NULL),
-(4, 1, 'e101535bd1dc2564bb93ec9f89d4e290.png', 'i00011528.png', 'public://svistyn/2/e101535bd1dc2564bb93ec9f89d4e290.png', 44933, 'image/png', 1, '2019-05-12 21:42:56', NULL),
-(5, 1, '1881fac691e8eb9cd9867f54b6111e96.jpg', '59990110_426910711189598_4020986234061979648_n.jpg', 'public://svistyn/3/1881fac691e8eb9cd9867f54b6111e96.jpg', 160445, 'image/jpeg', 1, '2019-05-12 21:49:36', NULL),
-(6, 1, '01f439452cbf1b3dcfc8de702442ee31.jpg', 'evpatoriya.jpg', 'public://svistyn/4/01f439452cbf1b3dcfc8de702442ee31.jpg', 58940, 'image/jpeg', 1, '2019-05-12 22:00:46', NULL),
-(7, 1, 'd87c9b6ce6d984e2506a44920669fdd3.jpg', '40617982_321833875030616_3516089030003392512_n.jpg', 'public://svistyn/5/d87c9b6ce6d984e2506a44920669fdd3.jpg', 27148, 'image/jpeg', 1, '2019-05-12 22:15:47', NULL),
-(8, 2, 'dbd56bef1d1670c1992e2c1bce8931ee.png', 'cropped-Favicon.png', 'public://svistyn/6/dbd56bef1d1670c1992e2c1bce8931ee.png', 12118, 'image/png', 1, '2019-05-12 22:20:46', NULL),
-(9, 1, '60ca2f95643e4413e61336db42f6451d.jpg', 'ek_avatar.jpg', 'public://group/1/60ca2f95643e4413e61336db42f6451d.jpg', 7239, 'image/jpeg', 1, '2019-06-12 12:58:49', NULL),
-(10, 1, 'f3d6923d1956baf971765bb002dd8f55.png', 'cover_7.png', 'public://group/1/f3d6923d1956baf971765bb002dd8f55.png', 648557, 'image/png', 1, '2019-06-12 12:58:49', NULL);
+(1, 1, 'cdc84957cacf7359f0e96f7c67d908cf.png', 'my_photo.png', 'public://user/1/cdc84957cacf7359f0e96f7c67d908cf.png', 643340, 'image/png', 1, '2019-06-13 10:21:39', NULL),
+(2, 1, '863bec6423e0cb361fd8c1f9ce816fd7.jpg', 'cover_1.jpg', 'public://user/1/863bec6423e0cb361fd8c1f9ce816fd7.jpg', 102119, 'image/jpeg', 1, '2019-06-13 10:21:39', NULL),
+(3, 1, '2265d302808e6a93454c181ba305f359.jpg', 'ek_avatar.jpg', 'public://group/1/2265d302808e6a93454c181ba305f359.jpg', 7239, 'image/jpeg', 1, '2019-06-13 10:34:51', NULL),
+(4, 1, '98ce9a35f7526c80fb5e4fe36c22e2ec.png', 'cover_7.png', 'public://group/1/98ce9a35f7526c80fb5e4fe36c22e2ec.png', 648557, 'image/png', 1, '2019-06-13 10:34:51', NULL);
 
 -- --------------------------------------------------------
 
@@ -120,18 +107,19 @@ CREATE TABLE `file_usage` (
 
 CREATE TABLE `friends` (
   `id` int(11) NOT NULL,
-  `created_at` datetime NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
   `friend_id` int(11) DEFAULT NULL,
-  `status` int(11) NOT NULL
+  `user_id` int(11) DEFAULT NULL,
+  `status` int(11) NOT NULL,
+  `created_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Дамп даних таблиці `friends`
 --
 
-INSERT INTO `friends` (`id`, `created_at`, `user_id`, `friend_id`, `status`) VALUES
-(39, '2019-06-05 14:08:16', 1, 2, 1);
+INSERT INTO `friends` (`id`, `friend_id`, `user_id`, `status`, `created_at`) VALUES
+(1, 2, 1, 1, '2019-06-13 10:22:26'),
+(3, 1, 2, 1, '2019-06-13 10:23:40');
 
 -- --------------------------------------------------------
 
@@ -157,7 +145,7 @@ CREATE TABLE `group_users` (
 --
 
 INSERT INTO `group_users` (`id`, `admin_id`, `avatar_fid`, `cover_fid`, `name`, `description`, `slug`, `confidentiality`, `created_at`, `updated_at`) VALUES
-(1, 1, 9, 10, 'Ekreative', 'Група працівників IT компанії Ekreative', 'ekreative', 'open', '2019-06-12 12:53:44', '2019-06-12 12:53:44');
+(1, 1, 3, 4, 'Ekreative', 'Група співробітників IT компанії Ekriative', 'ekreative', 'open', '2019-06-13 10:30:29', '2019-06-13 10:30:29');
 
 -- --------------------------------------------------------
 
@@ -195,8 +183,8 @@ CREATE TABLE `message` (
 --
 
 INSERT INTO `message` (`id`, `sender_id`, `receiver_id`, `dialogue_id`, `message`, `created_at`, `status`) VALUES
-(1, 1, 2, 1, 'Привіт! Як справи?', '2019-05-28 13:06:17', 1),
-(2, 2, 1, 1, 'Привіт все добре!', '2019-06-03 15:53:42', 1);
+(1, 1, 2, 1, 'Привіт як твої справи?', '2019-06-13 10:25:10', 1),
+(2, 2, 1, 1, 'Привіт, все добре, а в тебе як справи?', '2019-06-13 10:27:30', 0);
 
 -- --------------------------------------------------------
 
@@ -214,17 +202,7 @@ CREATE TABLE `migration_versions` (
 --
 
 INSERT INTO `migration_versions` (`version`, `executed_at`) VALUES
-('20190307162700', '2019-05-12 18:30:21'),
-('20190308084711', '2019-05-12 18:30:23'),
-('20190312085102', '2019-05-12 18:30:23'),
-('20190315094922', '2019-05-12 18:30:26'),
-('20190316095607', '2019-05-12 18:30:26'),
-('20190327112900', '2019-05-12 18:30:27'),
-('20190513075410', '2019-05-13 07:55:00'),
-('20190522090525', '2019-05-22 09:07:44'),
-('20190522123125', '2019-05-28 10:05:35'),
-('20190603122235', '2019-06-03 12:26:03'),
-('20190612094830', '2019-06-12 09:51:02');
+('20190613071723', '2019-06-13 07:17:58');
 
 -- --------------------------------------------------------
 
@@ -237,28 +215,16 @@ CREATE TABLE `svistyn` (
   `user_id` int(11) DEFAULT NULL,
   `photo_id` int(11) DEFAULT NULL,
   `parent_id` int(11) DEFAULT NULL,
+  `group_users_id` int(11) DEFAULT NULL,
   `text` text COLLATE utf8mb4_unicode_ci,
   `embed_video` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `state` int(11) NOT NULL,
   `status` int(11) NOT NULL,
+  `views` int(11) NOT NULL,
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL,
-  `marking` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `views` int(11) NOT NULL
+  `marking` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Дамп даних таблиці `svistyn`
---
-
-INSERT INTO `svistyn` (`id`, `user_id`, `photo_id`, `parent_id`, `text`, `embed_video`, `state`, `status`, `created`, `updated`, `marking`, `views`) VALUES
-(1, 1, 3, NULL, 'AWS - Amazon Web Services - Що це і чому тобі це потрібно', 'https://www.youtube.com/watch?v=8jbx8O3wuLg', 0, 1, '2019-05-12 21:36:13', '2019-05-12 21:38:17', 'active', 0),
-(2, 1, 4, NULL, 'Docker - Все що потрібно знати щоб почати працювати з Docker, всі основи в одному уроці', 'https://www.youtube.com/watch?v=I18TNwZ2Nqg&t=445s', 0, 1, '2019-05-12 21:41:53', '2019-05-12 21:42:56', 'active', 0),
-(3, 1, 5, NULL, 'Команду eKreative переповнюють емоції\r\nАдже відбувся випуск Першого сезону Lektorium!\r\nВітаємо наших випускників!', NULL, 0, 1, '2019-05-12 21:47:35', '2019-05-12 21:51:46', 'active', 0),
-(4, 1, 6, NULL, 'Євпаторія, Крим. Коротко про курорт. Пляж, Житло, Відпочинок', 'https://www.youtube.com/watch?v=Djm1FphB0WQ', 0, 1, '2019-05-12 21:53:44', '2019-05-12 22:00:46', 'active', 0),
-(5, 1, 7, NULL, 'Lektorium', NULL, 0, 1, '2019-05-12 22:11:49', '2019-05-12 22:15:47', 'active', 0),
-(6, 2, 8, NULL, 'EKreative - web and mobile app development', NULL, 0, 1, '2019-05-12 22:16:50', '2019-05-12 22:20:46', 'active', 0),
-(7, 1, NULL, 6, 'IT company Cherkasy', NULL, 1, 1, '2019-05-12 22:22:52', '2019-05-12 22:22:52', 'active', 0);
 
 -- --------------------------------------------------------
 
@@ -290,8 +256,8 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `avatar_fid`, `cover_fid`, `username`, `email`, `password`, `created`, `updated`, `status`, `roles`, `fullname`, `birthday`, `gender`, `region`, `token_recover`, `api_token`) VALUES
-(1, 1, 2, 'df0eb898662d2f97249fa60225dac7c6', 'moroztaras@i.ua', '$2y$13$utklY8PJH8N1icKQ66la.uLda9SFZGeT2BG7wXjtIucQGR7RkO/ue', '2019-05-12 21:30:33', '2019-05-12 21:30:33', 1, '["ROLE_SUPER_ADMIN"]', 'Moroz Taras', '1986-07-15 00:00:00', 'm', 'UA', NULL, 'ULJQGWATiF4uurM13Aijdf8X8TUH_RR8QC7jnNm7Df4'),
-(2, NULL, NULL, 'f8dc84f58cfcd8068fdc1b690bc556d6', 'user@mail.ua', '$2y$13$GfW9kvlAUOmvCDfQsVuwMOhTLfPqsvuQ4O1YxSWRvJwGxqfFF3MP6', '2019-05-12 21:30:34', '2019-05-12 21:30:34', 1, '["ROLE_USER"]', 'FullName', '2019-05-12 21:30:34', 'm', 'UA', NULL, 'HZIskuH6zN3bQqJADQ60oU6k5AYgrWWVxW2jp8a7-qk');
+(1, 1, 2, '588e29970938dc478ac22b0be97144ee', 'moroztaras@i.ua', '$2y$13$w7vZ24Ybzqn1f1iyufGujeLar.tTLCJMJrST99zDEzwEcfP.BBWLS', '2019-06-13 10:19:12', '2019-06-13 10:19:12', 1, '["ROLE_SUPER_ADMIN"]', 'Moroz Taras', '1986-06-15 00:00:00', 'm', 'UA', NULL, 'qo8252uMPfPzbD7mUgAft0DVkwwMiRF8sJ6pWnei4SY'),
+(2, NULL, NULL, 'f3afb403f3251e79ae710228c17768b5', 'user@mail.ua', '$2y$13$ZGnCH8X6sZ9ZhAECb3a6YeCMc07K9JnovazWaHytGu9rO7QfKKmXu', '2019-06-13 10:19:13', '2019-06-13 10:19:13', 1, '["ROLE_USER"]', 'FullName', '2019-06-13 10:19:14', 'm', 'UA', NULL, 'pPX9PumqJWx1CZaglHoAIHWIOBulHWEAyPfIwyfrobI');
 
 -- --------------------------------------------------------
 
@@ -309,8 +275,7 @@ CREATE TABLE `user_group_users` (
 --
 
 INSERT INTO `user_group_users` (`user_id`, `group_users_id`) VALUES
-(1, 1),
-(2, 1);
+(1, 1);
 
 --
 -- Індекси збережених таблиць
@@ -390,7 +355,8 @@ ALTER TABLE `svistyn`
   ADD PRIMARY KEY (`id`),
   ADD KEY `IDX_7730AF36A76ED395` (`user_id`),
   ADD KEY `IDX_7730AF367E9E4C8C` (`photo_id`),
-  ADD KEY `IDX_7730AF36727ACA70` (`parent_id`);
+  ADD KEY `IDX_7730AF36727ACA70` (`parent_id`),
+  ADD KEY `IDX_7730AF366E83F842` (`group_users_id`);
 
 --
 -- Індекси таблиці `user`
@@ -399,9 +365,9 @@ ALTER TABLE `user`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `UNIQ_8D93D649F85E0677` (`username`),
   ADD UNIQUE KEY `UNIQ_8D93D649E7927C74` (`email`),
+  ADD UNIQUE KEY `UNIQ_8D93D6497BA2F5EB` (`api_token`),
   ADD UNIQUE KEY `UNIQ_8D93D6493B1E5BE3` (`avatar_fid`),
-  ADD UNIQUE KEY `UNIQ_8D93D649FF6B0E46` (`cover_fid`),
-  ADD UNIQUE KEY `UNIQ_8D93D6497BA2F5EB` (`api_token`);
+  ADD UNIQUE KEY `UNIQ_8D93D649FF6B0E46` (`cover_fid`);
 
 --
 -- Індекси таблиці `user_group_users`
@@ -419,7 +385,7 @@ ALTER TABLE `user_group_users`
 -- AUTO_INCREMENT для таблиці `comment`
 --
 ALTER TABLE `comment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT для таблиці `dialogue`
 --
@@ -429,7 +395,7 @@ ALTER TABLE `dialogue`
 -- AUTO_INCREMENT для таблиці `file_manager`
 --
 ALTER TABLE `file_manager`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT для таблиці `file_usage`
 --
@@ -439,7 +405,7 @@ ALTER TABLE `file_usage`
 -- AUTO_INCREMENT для таблиці `friends`
 --
 ALTER TABLE `friends`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT для таблиці `group_users`
 --
@@ -454,12 +420,12 @@ ALTER TABLE `media`
 -- AUTO_INCREMENT для таблиці `message`
 --
 ALTER TABLE `message`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT для таблиці `svistyn`
 --
 ALTER TABLE `svistyn`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT для таблиці `user`
 --
@@ -516,6 +482,7 @@ ALTER TABLE `message`
 -- Обмеження зовнішнього ключа таблиці `svistyn`
 --
 ALTER TABLE `svistyn`
+  ADD CONSTRAINT `FK_7730AF366E83F842` FOREIGN KEY (`group_users_id`) REFERENCES `group_users` (`id`),
   ADD CONSTRAINT `FK_7730AF36727ACA70` FOREIGN KEY (`parent_id`) REFERENCES `svistyn` (`id`),
   ADD CONSTRAINT `FK_7730AF367E9E4C8C` FOREIGN KEY (`photo_id`) REFERENCES `file_manager` (`id`),
   ADD CONSTRAINT `FK_7730AF36A76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);

@@ -136,6 +136,7 @@ group: 'спільнота'
 
 #flash_messages
 added_new_svist_successfully: 'Новий свист добавлений успішно'
+added_new_svist_in_group_successfully: 'Новий свист добавлений в группу успішно'
 svist_edited_successfully: 'Свист відредаговано успішно'
 edit_svist_is_forbidden: 'Редагувати свист заборонено'
 svist_not_found: 'Свист не знайдено'

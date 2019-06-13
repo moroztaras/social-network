@@ -53,6 +53,14 @@ class GroupUsersService
         $this->flashBag->add('success', 'group_created_successfully');
     }
 
+    public function saveFollower(GroupUsers $groupUsers, $id)
+    {
+        $user = $this->doctrine->getRepository(User::class)->find($id);
+        $groupUsers->addUser($user);
+        $this->saveData($groupUsers);
+        $this->flashBag->add('success', 'you_joined_the_group');
+    }
+
     public function saveData(GroupUsers $groupUsers)
     {
         $this->doctrine->getManager()->persist($groupUsers);

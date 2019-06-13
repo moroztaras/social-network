@@ -9,7 +9,9 @@
         <div class="user-avatar uk-text-center uk-margin-small-bottom"><img src="{{ usersGroup.avatar|avatarGroupStyleDefault }}" width="100px" class="uk-background uk-background-default"></div>
         <hr>
         <ul class="uk-list uk-padding uk-padding-small">
-          <li>{{ 'followers'|trans }}: <span class="uk-link">0</span></li>
+          <li>{{ 'followers'|trans }}: <span class="uk-link">
+              {{ render(controller('App\\Controller\\BlockController::getCountFollowersInGroup',{ 'slug': usersGroup.slug })) }}
+            </span></li>
           <li>{{ 'posts'|trans }}:
             <a href="{{ path('group_show', {'slug': usersGroup.slug}) }}">
               <span class="uk-link">

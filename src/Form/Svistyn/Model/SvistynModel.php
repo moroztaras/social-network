@@ -5,6 +5,7 @@ namespace App\Form\Svistyn\Model;
 use App\Components\User\CurrentUser;
 use App\Components\File\FileAssistant;
 use App\Entity\File;
+use App\Entity\GroupUsers;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Components\VideoEmbed\VideoEmbedManager;
@@ -152,6 +153,16 @@ class SvistynModel
     public function save()
     {
         $this->beforeSave();
+        $this->svistyn->setMarking('active');
+        $this->svistyn->setUpdatedAtValue(new \DateTime());
+        $this->em->persist($this->svistyn);
+        $this->em->flush();
+    }
+
+    public function saveInGroup(GroupUsers $groupUsers)
+    {
+        $this->beforeSave();
+        $this->svistyn->setGroupUsers($groupUsers);
         $this->svistyn->setMarking('active');
         $this->svistyn->setUpdatedAtValue(new \DateTime());
         $this->em->persist($this->svistyn);

@@ -7,7 +7,9 @@
     {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
         {% if app.user == usersGroup.admin  %}
             <div class="uk-text-center uk-margin">
-                <a href="{{ path('group_dashboard',{'slug':usersGroup.slug}) }}" class="uk-button uk-button-default" style="margin-right: 5px;"><i class="fa fa-plus-square-o"></i>{{ 'profile'|trans }}
+                {#<a href="{{ path('group_dashboard',{'slug':usersGroup.slug}) }}" class="uk-button uk-button-default" style="margin-right: 5px;"><i class="fa fa-plus-square-o"></i>{{ 'profile'|trans }}#}
+                {#</a>#}
+                <a href="{{ path('group_svist_new',{'slug':usersGroup.slug}) }}" class="uk-button uk-button-default" style="margin-right: 5px;"><i class="fa fa-plus-square-o"></i>{{ 'add'|trans }}
                 </a>
             </div>
         {% else  %}

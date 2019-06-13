@@ -51,13 +51,6 @@ class GroupUsers
      */
     private $admin;
 
-//    /**
-//     * Many Groups have Many Users.
-//     * @var ArrayCollection
-//     * @ORM\ManyToMany(targetEntity="User", mappedBy="groups")
-//     */
-//    private $users;
-
     /**
      * @ORM\OneToOne(targetEntity="File", cascade={"persist", "remove"})
      * @ORM\JoinColumn(name="avatar_fid", referencedColumnName="id")
@@ -86,6 +79,13 @@ class GroupUsers
     private $users;
 
     /**
+     * @var ArrayCollection
+     * @ORM\OneToMany(targetEntity="Svistyn", mappedBy="groupUsers", cascade={"persist", "remove"})
+     * @ORM\OrderBy({"id" = "DESC"})
+     */
+    private $svistyns;
+
+    /**
      * Group constructor.
      */
     public function __construct()
@@ -93,6 +93,7 @@ class GroupUsers
         $this->createdAt = new \DateTime();
         $this->updatedAt = new \DateTime();
         $this->users = new ArrayCollection();
+        $this->svistyns = new ArrayCollection();
     }
 
     /**
@@ -326,4 +327,66 @@ class GroupUsers
 
         return $this;
     }
+
+    /**
+     * @return Collection|Svistyn[]
+     */
+    public function getSvistyns(): Collection
+    {
+        return $this->svistyns;
+    }
+
+    public function addSvistyn(Svistyn $svistyn): self
+    {
+        if (!$this->svistyns->contains($svistyn)) {
+            $this->svistyns[] = $svistyn;
+            $svistyn->setGroupUsers($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSvistyn(Svistyn $svistyn): self
+    {
+        if ($this->svistyns->contains($svistyn)) {
+            $this->svistyns->removeElement($svistyn);
+            // set the owning side to null (unless already changed)
+            if ($svistyn->getGroupUsers() === $this) {
+                $svistyn->setGroupUsers(null);
+            }
+        }
+
+        return $this;
+    }
+
+//    /**
+//     * @return Collection|Svistyn[]
+//     */
+//    public function getSvistyns(): Collection
+//    {
+//        return $this->svistyns;
+//    }
+//
+//    public function addSvistyn(Svistyn $svistyn): self
+//    {
+//        if (!$this->svistyns->contains($svistyn)) {
+//            $this->svistyns[] = $svistyn;
+//            $svistyn->setGroupUsers($this);
+//        }
+//
+//        return $this;
+//    }
+//
+//    public function removeSvistyn(Svistyn $svistyn): self
+//    {
+//        if ($this->svistyns->contains($svistyn)) {
+//            $this->svistyns->removeElement($svistyn);
+//            // set the owning side to null (unless already changed)
+//            if ($svistyn->getGroupUsers() === $this) {
+//                $svistyn->setGroupUsers(null);
+//            }
+//        }
+//
+//        return $this;
+//    }
 }

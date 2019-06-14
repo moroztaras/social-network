@@ -233,7 +233,7 @@ class GroupUsersController extends AbstractController
         if ('open' == $usersGroup->getConfidentiality()) {
             $this->groupUsersService->saveFollower($usersGroup, $id);
         } else {
-            $this->flashBag->add('danger', 'Група закрита або приватна');
+            $this->flashBag->add('danger', 'group_close_or_private');
         }
 
         return $this->redirectToRoute('group_show', ['slug' => $slug]);

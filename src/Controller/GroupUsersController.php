@@ -44,18 +44,26 @@ class GroupUsersController extends AbstractController
     private $svistService;
 
     /**
+     * @var SvistynModel
+     */
+    private $svistynModel;
+
+    /**
      * GroupUsersController constructor.
      *
      * @param GroupUsersService $groupUsersService
      * @param FlashBagInterface $flashBag
      * @param GroupEditModel    $groupEditModel
+     * @param SvistService      $svistService
+     * @param SvistynModel      $svistynModel
      */
-    public function __construct(GroupUsersService $groupUsersService, FlashBagInterface $flashBag, GroupEditModel $groupEditModel, SvistService $svistService)
+    public function __construct(GroupUsersService $groupUsersService, FlashBagInterface $flashBag, GroupEditModel $groupEditModel, SvistService $svistService, SvistynModel $svistynModel)
     {
         $this->groupUsersService = $groupUsersService;
         $this->flashBag = $flashBag;
         $this->groupEditModel = $groupEditModel;
         $this->svistService = $svistService;
+        $this->svistynModel = $svistynModel;
     }
 
     /**
@@ -107,10 +115,11 @@ class GroupUsersController extends AbstractController
      * @Security("is_granted('ROLE_USER')")
      *
      * @param $slug
+     * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function showGroup($slug)
+    public function showGroup($slug, Request $request)
     {
         $this->userCheck();
         $usersGroup = $this->getGroup($slug);
@@ -119,9 +128,12 @@ class GroupUsersController extends AbstractController
             return $this->redirectToRoute('user_groups_list');
         }
 
+        $svistyns = $this->svistService->getSvistynsForGroup($usersGroup, $request);
+
         return $this->render('Group/show.html.twig', [
           'usersGroup' => $usersGroup,
           'user' => $this->getUser(),
+          'svistyns' => $svistyns,
         ]);
     }
 
@@ -208,6 +220,11 @@ class GroupUsersController extends AbstractController
     /**
      * @Route("/{slug}/follower/{id}/add", methods={"GET", "POST"}, name="group_add_follower", requirements={"id"="\d+"}, defaults={"id" = null})
      * @Security("is_granted('ROLE_USER')")
+     *
+     * @param $slug
+     * @param $id
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function addRemoveFollower($slug, $id)
     {
@@ -227,12 +244,11 @@ class GroupUsersController extends AbstractController
      * @Security("is_granted('ROLE_USER')")
      *
      * @param $slug
-     * @param Request      $request
-     * @param SvistynModel $svistynModel
+     * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function addSvist($slug, Request $request, SvistynModel $svistynModel)
+    public function addSvist($slug, Request $request)
     {
         $this->userCheck();
         $usersGroup = $this->getGroup($slug);
@@ -240,11 +256,11 @@ class GroupUsersController extends AbstractController
         $svistRepo = $this->svistService->svistynRepo();
         $svistyn = $svistRepo->findNew($this->getUser());
 
-        $svistynModel->setSvistynEntity($svistyn);
-        $form = $this->createForm(SvistynForm::class, $svistynModel);
+        $this->svistynModel->setSvistynEntity($svistyn);
+        $form = $this->createForm(SvistynForm::class, $this->svistynModel);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $svistynModel->saveInGroup($usersGroup);
+            $this->svistynModel->saveInGroup($usersGroup);
             $this->flashBag->add('success', 'added_new_svist_in_group_successfully');
 
             return $this->redirectToRoute('group_show', ['slug' => $slug]);

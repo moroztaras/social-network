@@ -3,8 +3,11 @@
 namespace App\Services;
 
 use App\Entity\Svistyn;
+use App\Entity\GroupUsers;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 class SvistService
 {
@@ -19,15 +22,31 @@ class SvistService
     private $flashBag;
 
     /**
+     * @var PaginatorInterface
+     */
+    private $paginator;
+
+    /**
      * SvistService constructor.
      *
-     * @param ManagerRegistry   $doctrine
-     * @param FlashBagInterface $flashBag
+     * @param ManagerRegistry    $doctrine
+     * @param FlashBagInterface  $flashBag
+     * @param PaginatorInterface $paginator
      */
-    public function __construct(ManagerRegistry $doctrine, FlashBagInterface $flashBag)
+    public function __construct(ManagerRegistry $doctrine, FlashBagInterface $flashBag, PaginatorInterface $paginator)
     {
         $this->doctrine = $doctrine;
         $this->flashBag = $flashBag;
+        $this->paginator = $paginator;
+    }
+
+    public function getSvistynsForGroup(GroupUsers $groupUsers, Request $request)
+    {
+        return $this->paginator->paginate(
+          $groupUsers->getSvistyns(),
+          $request->query->getInt('page', 1),
+          $request->query->getInt('limit', 10)
+        );
     }
 
     public function block($id)

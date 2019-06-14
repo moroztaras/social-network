@@ -15,7 +15,7 @@
           <li>{{ 'posts'|trans }}:
             <a href="{{ path('group_show', {'slug': usersGroup.slug}) }}">
               <span class="uk-link">
-                  0
+                  {{ render(controller('App\\Controller\\BlockController::getCountSvistynsInGroup',{ 'slug': usersGroup.slug })) }}
               </span>
             </a>
           </li>

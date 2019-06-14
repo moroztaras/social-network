@@ -45,9 +45,10 @@ class SvistController extends Controller
     /**
      * SvistController constructor.
      *
-     * @param SvistService      $svistService
-     * @param CommentService    $commentService
-     * @param FlashBagInterface $flashBag
+     * @param SvistService       $svistService
+     * @param CommentService     $commentService
+     * @param FlashBagInterface  $flashBag
+     * @param PaginatorInterface $paginator
      */
     public function __construct(SvistService $svistService, CommentService $commentService, FlashBagInterface $flashBag, PaginatorInterface $paginator)
     {

@@ -55,10 +55,36 @@ class GroupUsersService
 
     public function saveFollower(GroupUsers $groupUsers, $id)
     {
-        $user = $this->doctrine->getRepository(User::class)->find($id);
-        $groupUsers->addUser($user);
+        $status = 0;
+        foreach ($groupUsers->getUsers() as $user) {
+            if ($user->getId() == $id) {
+                $status = 1;
+            }
+        }
+        switch ($status) {
+            case 0:
+                $groupUsers->addUser($this->doctrine->getRepository(User::class)->find($id));
+                $this->flashBag->add('success', 'you_joined_the_group');
+                break;
+            case 1:
+                $groupUsers->removeUser($this->doctrine->getRepository(User::class)->find($id));
+                $this->flashBag->add('danger', 'you_left_the_group');
+                break;
+        }
+
         $this->saveData($groupUsers);
-        $this->flashBag->add('success', 'you_joined_the_group');
+    }
+
+    public function getStatusButton(GroupUsers $groupUsers, $id)
+    {
+        $status = 0;
+        foreach ($groupUsers->getUsers() as $user) {
+            if ($user->getId() == $id) {
+                $status = 1;
+            }
+        }
+
+        return $status;
     }
 
     public function saveData(GroupUsers $groupUsers)

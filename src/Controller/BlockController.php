@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Entity\GroupUsers;
 use App\Entity\Friends;
 use App\Entity\Dialogue;
+use App\Services\GroupUsersService;
 use App\Services\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,13 +22,20 @@ class BlockController extends Controller
     private $userService;
 
     /**
+     * @var GroupUsersService
+     */
+    private $groupUsersService;
+
+    /**
      * BlockController constructor.
      *
-     * @param UserService $userService
+     * @param UserService       $userService
+     * @param GroupUsersService $groupUsersService
      */
-    public function __construct(UserService $userService)
+    public function __construct(UserService $userService, GroupUsersService $groupUsersService)
     {
         $this->userService = $userService;
+        $this->groupUsersService = $groupUsersService;
     }
 
     public function userCover($id)
@@ -137,11 +145,37 @@ class BlockController extends Controller
 
     public function getCountFollowersInGroup($slug)
     {
-        $group = $this->getDoctrine()->getRepository(GroupUsers::class)->findOneBy(['slug' => $slug]);
+        $group = $this->getGroup($slug);
 
         return $this->render(
           'Group/followers.html.twig', [
           'group' => $group,
         ]);
+    }
+
+    public function getCountSvistynsInGroup($slug)
+    {
+        $group = $this->getGroup($slug);
+
+        return $this->render(
+          'Group/svistyns.html.twig', [
+          'group' => $group,
+        ]);
+    }
+
+    public function getStatusButtonGroup($slug, $id)
+    {
+        $group = $this->getGroup($slug);
+        $status = $this->groupUsersService->getStatusButton($group, $id);
+
+        return $this->render(
+          'Group/button_group.html.twig', [
+          'status' => $status,
+        ]);
+    }
+
+    private function getGroup($slug)
+    {
+        return $this->getDoctrine()->getRepository(GroupUsers::class)->findOneBy(['slug' => $slug]);
     }
 }

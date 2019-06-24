@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\GroupUsersRequest;
 use App\Entity\Svistyn;
 use App\Entity\User;
 use App\Entity\GroupUsers;
@@ -160,6 +161,17 @@ class BlockController extends Controller
         return $this->render(
           'Group/svistyns.html.twig', [
           'group' => $group,
+        ]);
+    }
+
+    public function getCountRequestsFollowersInGroup($slug)
+    {
+        $requests = $this->getDoctrine()->getRepository(GroupUsersRequest::class)->getRequestUsersForGroup($this->getGroup($slug));
+
+        return $this->render(
+          'Group/requests.html.twig', [
+          'requests' => $requests,
+          'groupUsers' => $this->getGroup($slug),
         ]);
     }
 

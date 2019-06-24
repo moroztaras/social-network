@@ -133,6 +133,7 @@ private: 'Приватна'
 confidentiality: 'Конфіденційність'
 was_created: 'Створено'
 group: 'спільнота'
+REQUESTS: 'ЗАПИТИ'
 
 #flash_messages
 added_new_svist_successfully: 'Новий свист добавлений успішно'
@@ -185,3 +186,4 @@ group_edit_save: 'Дані групи збережено'
 you_joined_the_group: 'Ви вступили в групу'
 you_left_the_group: 'Ви залишили групу'
 group_close_or_private: 'Група закрита або приватна'
+your_subscription_request_has_been_submitted_to_the_group: 'Надіслана заявка на підписку в групу'

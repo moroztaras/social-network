@@ -12,6 +12,13 @@
                             {{ render(controller('App\\Controller\\BlockController::getCountFollowersInGroup',{ 'slug': group.slug })) }}
                         </span>
                     </li>
+                    {% if app.user == group.admin %}
+                        <li>{{ 'REQUESTS'|trans }}<br>
+                            <span class="uk-text-large">
+                                {{ render(controller('App\\Controller\\BlockController::getCountRequestsFollowersInGroup',{ 'slug': group.slug })) }}
+                            </span>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
             <div class="uk-width-medium">

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Entity\User;
 use App\Entity\GroupUsers;
+use App\Entity\GroupUsersRequest;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
@@ -73,6 +74,24 @@ class GroupUsersService
         }
 
         $this->saveData($groupUsers);
+    }
+
+    public function sendRequest(User $user, GroupUsers $groupUsers)
+    {
+        $groupUsersRequest = new GroupUsersRequest();
+        $groupUsersRequest->setUser($user);
+        $groupUsersRequest->setGroupUsers($groupUsers);
+        $this->saveGroupUsersRequest($groupUsersRequest);
+
+        $this->flashBag->add('success', 'your_subscription_request_has_been_submitted_to_the_group');
+    }
+
+    private function saveGroupUsersRequest(GroupUsersRequest $groupUsersRequest)
+    {
+        $this->doctrine->getManager()->persist($groupUsersRequest);
+        $this->doctrine->getManager()->flush();
+
+        return $this;
     }
 
     public function getStatusButton(GroupUsers $groupUsers, $id)

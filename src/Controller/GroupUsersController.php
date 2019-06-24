@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\GroupUsers;
+use App\Entity\GroupUsersRequest;
 use App\Form\Svistyn\SvistynForm;
 use App\Form\Svistyn\Model\SvistynModel;
 use App\Form\GroupUsers\GroupUsersForm;
@@ -229,11 +230,11 @@ class GroupUsersController extends AbstractController
     public function addRemoveFollower($slug, $id)
     {
         $this->userCheck();
-        $usersGroup = $this->getGroup($slug);
-        if ('open' == $usersGroup->getConfidentiality()) {
-            $this->groupUsersService->saveFollower($usersGroup, $id);
+        $groupUsers = $this->getGroup($slug);
+        if ('open' == $groupUsers->getConfidentiality()) {
+            $this->groupUsersService->saveFollower($groupUsers, $id);
         } else {
-            $this->flashBag->add('danger', 'group_close_or_private');
+            $this->groupUsersService->sendRequest($this->getUser(), $groupUsers);
         }
 
         return $this->redirectToRoute('group_show', ['slug' => $slug]);
@@ -269,6 +270,25 @@ class GroupUsersController extends AbstractController
         return $this->render('Svistyn/add.html.twig', [
           'form' => $form->createView(),
           'svistyn' => $svistyn,
+        ]);
+    }
+
+    /**
+     * @Route("/{slug}/users/request", methods={"GET", "POST"}, name="group_users_request")
+     * @Security("is_granted('ROLE_USER')")
+     *
+     * @param $slug
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getListUsersRequestsInGroup($slug)
+    {
+        $GroupUsersRequests = $this->getDoctrine()->getRepository(GroupUsersRequest::class)->getRequestUsersForGroup($this->getGroup($slug));
+
+        return $this->render(
+          'Group/users_list_requests.html.twig', [
+          'GroupUsersRequests' => $GroupUsersRequests,
+          'groupUsers' => $this->getGroup($slug),
         ]);
     }
 

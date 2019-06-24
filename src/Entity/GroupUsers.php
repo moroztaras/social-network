@@ -86,7 +86,14 @@ class GroupUsers
     private $svistyns;
 
     /**
-     * Group constructor.
+     * @var ArrayCollection
+     * @ORM\OneToMany(targetEntity="GroupUsersRequest", mappedBy="groupUsers", cascade={"persist", "remove"})
+     * @ORM\OrderBy({"id" = "DESC"})
+     */
+    private $groupUsersRequests;
+
+    /**
+     * GroupUsers constructor.
      */
     public function __construct()
     {
@@ -94,6 +101,7 @@ class GroupUsers
         $this->updatedAt = new \DateTime();
         $this->users = new ArrayCollection();
         $this->svistyns = new ArrayCollection();
+        $this->groupUsersRequests = new ArrayCollection();
     }
 
     /**
@@ -359,34 +367,50 @@ class GroupUsers
         return $this;
     }
 
-//    /**
-//     * @return Collection|Svistyn[]
-//     */
-//    public function getSvistyns(): Collection
-//    {
-//        return $this->svistyns;
-//    }
-//
-//    public function addSvistyn(Svistyn $svistyn): self
-//    {
-//        if (!$this->svistyns->contains($svistyn)) {
-//            $this->svistyns[] = $svistyn;
-//            $svistyn->setGroupUsers($this);
-//        }
-//
-//        return $this;
-//    }
-//
-//    public function removeSvistyn(Svistyn $svistyn): self
-//    {
-//        if ($this->svistyns->contains($svistyn)) {
-//            $this->svistyns->removeElement($svistyn);
-//            // set the owning side to null (unless already changed)
-//            if ($svistyn->getGroupUsers() === $this) {
-//                $svistyn->setGroupUsers(null);
-//            }
-//        }
-//
-//        return $this;
-//    }
+    /**
+     * Get groupUsersRequests.
+     *
+     * @return Collection|GroupUsersRequest[]
+     */
+    public function getGroupUsersRequests(): Collection
+    {
+        return $this->groupUsersRequests;
+    }
+
+    /**
+     * Add groupUsersRequests.
+     *
+     * @param GroupUsersRequest $groupUsersRequest
+     *
+     * @return GroupUsers
+     */
+    public function addGroupUsersRequest(GroupUsersRequest $groupUsersRequest): self
+    {
+        if (!$this->groupUsersRequests->contains($groupUsersRequest)) {
+            $this->groupUsersRequests[] = $groupUsersRequest;
+            $groupUsersRequest->setGroupUsers($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove groupUsersRequest.
+     *
+     * @param GroupUsersRequest $groupUsersRequest
+     *
+     * @return GroupUsers
+     */
+    public function removeGroupUsersRequest(GroupUsersRequest $groupUsersRequest): self
+    {
+        if ($this->groupUsersRequests->contains($groupUsersRequest)) {
+            $this->groupUsersRequests->removeElement($groupUsersRequest);
+            // set the owning side to null (unless already changed)
+            if ($groupUsersRequest->getGroupUsers() === $this) {
+                $groupUsersRequest->setGroupUsers(null);
+            }
+        }
+
+        return $this;
+    }
 }

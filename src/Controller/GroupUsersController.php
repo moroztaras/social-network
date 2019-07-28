@@ -219,7 +219,7 @@ class GroupUsersController extends AbstractController
     }
 
     /**
-     * @Route("/{slug}/follower/{id}/add", methods={"GET", "POST"}, name="group_add_follower", requirements={"id"="\d+"}, defaults={"id" = null})
+     * @Route("/{slug}/follower/{id}/add", methods={"GET", "POST"}, name="group_follower_or_send_request", requirements={"id"="\d+"}, defaults={"id" = null})
      * @Security("is_granted('ROLE_USER')")
      *
      * @param $slug
@@ -227,17 +227,34 @@ class GroupUsersController extends AbstractController
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function addRemoveFollower($slug, $id)
+    public function addFollowerOrSendRequest($slug, $id)
     {
         $this->userCheck();
         $groupUsers = $this->getGroup($slug);
         if ('open' == $groupUsers->getConfidentiality()) {
-            $this->groupUsersService->saveFollower($groupUsers, $id);
+            $this->groupUsersService->saveFollower($groupUsers, $id, $status = "accept");
         } else {
             $this->groupUsersService->sendRequest($this->getUser(), $groupUsers);
         }
 
         return $this->redirectToRoute('group_show', ['slug' => $slug]);
+    }
+
+    /**
+     * @Route("/{slug}/follower/{id}/{status}", methods={"GET", "POST"}, name="group_add_follower", requirements={"id"="\d+"}, defaults={"id" = null})
+     * @Security("is_granted('ROLE_USER')")
+     * @param $slug
+     * @param $id
+     * @param $status
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function addRemoveFollower($slug, $id, $status)
+    {
+        $this->userCheck();
+
+        $this->groupUsersService->addOrRemoveFollower($this->getGroup($slug), $id, $status);
+
+        return $this->redirectToRoute('group_users_request', ['slug' => $slug]);
     }
 
     /**

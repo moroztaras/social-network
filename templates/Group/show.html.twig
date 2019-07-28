@@ -12,7 +12,7 @@
             </div>
         {% else  %}
             <div class="uk-text-center uk-margin">
-                <a href="{{ path('group_add_follower',{'slug': usersGroup.slug, 'id':user.id}) }}" class="uk-button uk-button-default" style="margin-right: 5px;">
+                <a href="{{ path('group_follower_or_send_request',{'slug': usersGroup.slug, 'id':user.id}) }}" class="uk-button uk-button-default" style="margin-right: 5px;">
                     <i class="fa fa-plus-square-o"></i>
                     {{ render(controller('App\\Controller\\BlockController::getStatusButtonGroup',{ 'slug': usersGroup.slug, 'id':user.id })) }}
                 </a>

@@ -76,6 +76,17 @@ class GroupUsersService
         $this->saveData($groupUsers);
     }
 
+    public function addOrRemoveFollower(GroupUsers $groupUsers, $id, $status)
+    {
+        if ($status == "accept"){
+            $groupUsers->addUser($this->doctrine->getRepository(User::class)->find($id));
+            $this->flashBag->add('success', 'user_joined_the_group');
+        }else{
+            $this->flashBag->add('danger', 'request_to_group_is_canceled');
+        }
+        $this->saveData($groupUsers);
+    }
+
     public function sendRequest(User $user, GroupUsers $groupUsers)
     {
         $groupUsersRequest = new GroupUsersRequest();

@@ -5,10 +5,10 @@
             {% for request in GroupUsersRequests %}
                 {{ include('Group/ModeView/full_users_list_request.html.twig') }}
                 <p uk-margin class="center">
-                    <a href="#" style="text-decoration: none">
+                    <a href="{{ path('group_add_follower',{'id':request.user.id, 'slug':groupUsers.slug, 'status': 'accept'}) }}" style="text-decoration: none">
                         <button class="uk-button uk-button-default">{{ 'accept'|trans }}</button>
                     </a>
-                    <a href="#" style="text-decoration: none">
+                    <a href="{{ path('group_add_follower',{'id':request.user.id, 'slug':groupUsers.slug, 'status': 'canceled'}) }}" style="text-decoration: none">
                         <button class="uk-button uk-button-danger">{{ 'cancel'|trans }}</button>
                     </a>
                 </p>

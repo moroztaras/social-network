@@ -20,13 +20,16 @@ class SvistNormalizer implements NormalizerInterface
             'id' => $svist->getId(),
             'text' => $svist->getText(),
             'embedVideo' => $svist->getEmbedVideo(),
-            'photo' => $svist->getPhoto(),
+            'photo' => [
+                'url' => $svist->getPhoto()->getUrl(),
+            ],
             'comments' => count($svist->getComments()),
             'author' => [
               'fullName' => $svist->getUser()->getFullname(),
             ],
             'countSvists' => $svist->getCountSvists(),
             'countZvizds' => $svist->getCountZvizds(),
+            'views' => $svist->getViews(),
             'createdAt' => $svist->getCreated()->format('d-m-Y H:i:s'),
         ];
     }

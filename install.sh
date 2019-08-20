@@ -12,6 +12,7 @@ case "$Keypress" in
 1) echo "installing";
     script_dir=$(dirname $0)
     cd $script_dir
+    cp env-example .env
     composer install
     php bin/console doctrine:database:drop --force
     php bin/console doctrine:database:create

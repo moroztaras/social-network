@@ -71,10 +71,10 @@ class UserController extends Controller
           ->getRepository(User::class)
           ->findOneBy(['apiToken' => $apiToken]);
         if (!$user) {
-            throw new JsonHttpException(400, 'Authentication error');
+            throw new JsonHttpException(Response::HTTP_BAD_REQUEST, 'Authentication error');
         }
 
-        return $this->json(['user' => $user]);
+        return $this->json(['user' => $user], Response::HTTP_OK);
     }
 
     /**
@@ -86,7 +86,7 @@ class UserController extends Controller
             throw new NotFoundException(Response::HTTP_NOT_FOUND, 'Not Found.');
         }
 
-        return $this->json(['user' => $user], Response::HTTP_OK);
+        return $this->json(['profile' => $user], Response::HTTP_OK, [], ['profile' => true]);
     }
 
     /**
@@ -131,12 +131,10 @@ class UserController extends Controller
             throw new JsonHttpException(Response::HTTP_NOT_FOUND, 'Svists not found');
         }
 
-        return $this->json(
-          [
-            'svists' => $this->paginator->paginate(
-              $svists,
-              $request->query->getInt('page', $page), $limit),
+        return $this->json([
+            'svists' => $this->paginator->paginate($svists, $request->query->getInt('page', $page), $limit),
           ],
-          Response::HTTP_OK);
+          Response::HTTP_OK
+        );
     }
 }

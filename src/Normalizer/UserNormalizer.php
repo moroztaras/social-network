@@ -22,6 +22,15 @@ class UserNormalizer implements NormalizerInterface
             ];
         }
 
+        if (isset($context['profile'])) {
+            return [
+                'id' => $user->getId(),
+                'fullName' => $user->getFullname(),
+                'email' => $user->getEmail(),
+                'gender' => $user->getGender(),
+                'birthday' => $user->getBirthday()->format('d-m-Y'),
+            ];
+        }
         return [
           'id' => $user->getId(),
           'fullName' => $user->getFullname(),

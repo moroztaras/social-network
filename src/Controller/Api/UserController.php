@@ -74,7 +74,7 @@ class UserController extends Controller
             throw new JsonHttpException(Response::HTTP_BAD_REQUEST, 'Authentication error');
         }
 
-        return $this->json(['user' => $user], Response::HTTP_OK);
+        return $this->json(['profile' => $user], Response::HTTP_OK);
     }
 
     /**
@@ -110,7 +110,7 @@ class UserController extends Controller
         $this->getDoctrine()->getManager()->persist($user);
         $this->getDoctrine()->getManager()->flush();
 
-        return $this->json(['user' => $user]);
+        return $this->json(['profile' => $user]);
     }
 
     /**

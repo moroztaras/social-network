@@ -364,11 +364,11 @@ class Svistyn implements \JsonSerializable
     /**
      * Set parent.
      *
-     * @param \App\Entity\Svistyn $parent
+     * @param Svistyn $parent
      *
      * @return Svistyn
      */
-    public function setParent(\App\Entity\Svistyn $parent)
+    public function setParent(Svistyn $parent)
     {
         $this->parent = $parent;
 

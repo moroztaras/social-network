@@ -74,7 +74,7 @@ class GroupUsers
     private $updatedAt;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\User", mappedBy="groups")
+     * @ORM\ManyToMany(targetEntity="User", mappedBy="groups")
      */
     private $users;
 

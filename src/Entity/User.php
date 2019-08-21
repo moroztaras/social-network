@@ -140,7 +140,7 @@ class User implements \Serializable, UserInterface, \JsonSerializable
     private $dialogues;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\GroupUsers", inversedBy="users")
+     * @ORM\ManyToMany(targetEntity="GroupUsers", inversedBy="users")
      */
     private $groups;
 

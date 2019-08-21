@@ -4,7 +4,7 @@ namespace App\Controller\Api;
 
 use App\Entity\User;
 use App\Entity\Friends;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -20,7 +20,7 @@ use App\Exception\AccessDeniedException;
  *
  * @Route("api/")
  */
-class FriendsController extends Controller
+class FriendsController extends AbstractController
 {
     /**
      * @var SerializerInterface

@@ -4,8 +4,8 @@ namespace App\Controller\Api;
 
 use App\Entity\User;
 use App\Exception\JsonHttpException;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -18,7 +18,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  *
  * @Route("api/user")
  */
-class SecurityController extends Controller
+class SecurityController extends AbstractController
 {
     /**
      * @var SerializerInterface

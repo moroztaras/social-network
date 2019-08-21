@@ -6,13 +6,13 @@ use App\Entity\Friends;
 use App\Entity\User;
 use App\Services\FriendsService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Class FriendsController.
  */
-class FriendsController extends Controller
+class FriendsController extends AbstractController
 {
     /**
      * @var FriendsService

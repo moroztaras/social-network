@@ -7,7 +7,7 @@ use App\Form\Comment\Model\CommentImportFileModel;
 use App\Services\ImportService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 /**
@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
  *
  * @Route("/admin")
  */
-class ImportController extends Controller
+class ImportController extends AbstractController
 {
     /**
      * @var FlashBagInterface

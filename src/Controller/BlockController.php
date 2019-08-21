@@ -10,12 +10,12 @@ use App\Entity\Friends;
 use App\Entity\Dialogue;
 use App\Services\GroupUsersService;
 use App\Services\UserService;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class BlockController extends Controller
+class BlockController extends AbstractController
 {
     /**
      * @var UserService

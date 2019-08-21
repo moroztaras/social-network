@@ -9,13 +9,13 @@ use App\Components\User\Models\ProfileSecurityModel;
 use App\Components\User\UserSecurityManager;
 use App\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class UserController extends Controller
+class UserController extends AbstractController
 {
     /**
      * @var

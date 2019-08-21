@@ -9,7 +9,7 @@ use App\Components\Utils\Form\EntityDeleteForm;
 use App\Services\SvistService;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
@@ -21,7 +21,7 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @Route("/admin/svists")
  */
-class SvistAdminController extends Controller
+class SvistAdminController extends AbstractController
 {
     /**
      * @var SvistService

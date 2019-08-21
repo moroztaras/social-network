@@ -5,10 +5,10 @@ namespace App\Controller\Api;
 use App\Entity\User;
 use App\Entity\Svistyn;
 use App\Exception\JsonHttpException;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Exception\NotFoundException;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -20,7 +20,7 @@ use Knp\Component\Pager\PaginatorInterface;
  *
  * @Route("api/user")
  */
-class UserController extends Controller
+class UserController extends AbstractController
 {
     /**
      * @var SerializerInterface

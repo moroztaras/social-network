@@ -6,7 +6,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Csv;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use App\Services\ExportService;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
  * @Route("/admin")
 
  */
-class ExportController extends Controller
+class ExportController extends AbstractController
 {
     /**
      * @var FlashBagInterface

@@ -6,7 +6,7 @@ use App\Components\User\Models\RecoverUserModel;
 use App\Components\User\Models\RegistrationUserModel;
 use App\Components\User\Security\RecoverPassword;
 use App\Services\UserService;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -20,7 +20,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Components\User\Models\ChangePasswordModel;
 use App\Components\User\Forms\ChangePasswordForm;
 
-class SecurityController extends Controller
+class SecurityController extends AbstractController
 {
     /**
      * @var UserService

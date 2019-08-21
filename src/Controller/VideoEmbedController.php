@@ -4,13 +4,13 @@ namespace App\Controller;
 
 use App\Components\VideoEmbed\VideoEmbedManager;
 use App\Components\VideoEmbed\VideoEmbedRenderer;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Encoder\JsonEncode;
 
-class VideoEmbedController extends Controller
+class VideoEmbedController extends AbstractController
 {
     /**
      * @Route("/api/embed_video", name="embed_video_api", defaults={"_format"="json"})

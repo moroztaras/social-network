@@ -8,7 +8,7 @@ use App\Entity\Svistyn;
 use App\Entity\Comment;
 use App\Services\CommentService;
 use App\Security\CommentVoter;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
  *
  * @Route("/comment")
  */
-class CommentController extends Controller
+class CommentController extends AbstractController
 {
     /**
      * @var CommentService

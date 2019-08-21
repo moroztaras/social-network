@@ -5,14 +5,14 @@ namespace App\Controller;
 use App\Components\File\FileUploadHandler;
 use App\Components\Utils\View\ViewJson;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Class FileController.
  */
-class FileController extends Controller
+class FileController extends AbstractController
 {
     /**
      * @Route("/file_upload", name="file_upload")

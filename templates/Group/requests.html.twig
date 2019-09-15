@@ -1,0 +1,6 @@
+{% if requests|length == 0%}
+    0
+{% else %}
+    <a href="{{ path('group_users_request',{'slug':groupUsers.slug}) }}">{{ requests|length }}</a>
+{% endif %}
+

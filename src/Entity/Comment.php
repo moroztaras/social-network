@@ -33,7 +33,7 @@ class Comment implements \JsonSerializable
     private $createdAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Svistyn", inversedBy="comments")
+     * @ORM\ManyToOne(targetEntity="Svistyn", inversedBy="comments")
      * @ORM\JoinColumn(name="svistyn_id", referencedColumnName="id")
      */
     private $svistyn;

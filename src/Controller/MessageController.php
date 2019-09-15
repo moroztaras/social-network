@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Dialogue;
 use App\Entity\Message;
 use App\Entity\User;
 use App\Form\Message\MessageForm;
@@ -9,15 +10,14 @@ use App\Form\Message\MessageEditForm;
 use App\Form\Message\Model\MessageModel;
 use App\Services\FriendsService;
 use App\Services\MessageService;
-use Proxies\__CG__\App\Entity\Dialogue;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Knp\Component\Pager\PaginatorInterface;
 
-class MessageController extends Controller
+class MessageController extends AbstractController
 {
     /**
      * @var MessageService

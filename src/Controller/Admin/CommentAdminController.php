@@ -5,7 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Comment;
 use App\Services\CommentService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @Route("/admin/comments")
  */
-class CommentAdminController extends Controller
+class CommentAdminController extends AbstractController
 {
     /**
      * @var CommentService

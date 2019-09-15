@@ -1,0 +1,5 @@
+{% if group.users|length == 0%}
+    0
+{% else %}
+    <a href="{{ path('group_list_followers', {'slug': group.slug}) }}">{{ group.users|length }}</a>
+{% endif %}

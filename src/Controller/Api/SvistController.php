@@ -5,12 +5,12 @@ namespace App\Controller\Api;
 use App\Entity\Svistyn;
 use App\Entity\Comment;
 use App\Entity\User;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Exception\NotFoundException;
 use App\Exception\JsonHttpException;
 use App\Exception\AccessDeniedException;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -21,7 +21,7 @@ use Knp\Component\Pager\PaginatorInterface;
  *
  * @Route("api/svist")
  */
-class SvistController extends Controller
+class SvistController extends AbstractController
 {
     /**
      * @var SerializerInterface

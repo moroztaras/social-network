@@ -5,22 +5,24 @@ namespace App\Controller\Api;
 use App\Entity\User;
 use App\Entity\Svistyn;
 use App\Exception\JsonHttpException;
+use App\Services\UserService;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Exception\NotFoundException;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Class UserController.
  *
  * @Route("api/user")
  */
-class UserController extends Controller
+class UserController extends AbstractController
 {
     /**
      * @var SerializerInterface
@@ -43,19 +45,26 @@ class UserController extends Controller
     private $paginator;
 
     /**
+     * @var UserService
+     */
+    private $userService;
+
+    /**
      * UserController constructor.
      *
      * @param SerializerInterface          $serializer
      * @param UserPasswordEncoderInterface $passwordEncoder
      * @param ValidatorInterface           $validator
      * @param PaginatorInterface           $paginator
+     * @param UserService                  $userService
      */
-    public function __construct(SerializerInterface $serializer, UserPasswordEncoderInterface $passwordEncoder, ValidatorInterface $validator, PaginatorInterface $paginator)
+    public function __construct(SerializerInterface $serializer, UserPasswordEncoderInterface $passwordEncoder, ValidatorInterface $validator, PaginatorInterface $paginator, UserService $userService)
     {
         $this->serializer = $serializer;
         $this->passwordEncoder = $passwordEncoder;
         $this->validator = $validator;
         $this->paginator = $paginator;
+        $this->userService = $userService;
     }
 
     /**
@@ -71,10 +80,10 @@ class UserController extends Controller
           ->getRepository(User::class)
           ->findOneBy(['apiToken' => $apiToken]);
         if (!$user) {
-            throw new JsonHttpException(400, 'Authentication error');
+            throw new JsonHttpException(Response::HTTP_BAD_REQUEST, 'Authentication error');
         }
 
-        return $this->json(['user' => $user]);
+        return $this->json(['profile' => $user], Response::HTTP_OK);
     }
 
     /**
@@ -86,31 +95,19 @@ class UserController extends Controller
             throw new NotFoundException(Response::HTTP_NOT_FOUND, 'Not Found.');
         }
 
-        return $this->json(['user' => $user], Response::HTTP_OK);
+        return $this->json(['profile' => $user], Response::HTTP_OK, [], ['profile' => true]);
     }
 
     /**
      * @Route("/profile", name="api_edit_user_profile", methods={"PUT"})
+     * @param Request $request
+     * @return JsonResponse
      */
     public function editProfileUser(Request $request)
     {
-        if (!$content = $request->getContent()) {
-            throw new JsonHttpException(Response::HTTP_BAD_REQUEST, 'Bad Request');
-        }
-        $em = $this->getDoctrine()->getManager();
-        $apiToken = $request->headers->get('x-api-key');
-
-        $user = $em->getRepository(User::class)->findOneBy(['apiToken' => $apiToken]);
-        if (!$user) {
-            throw new JsonHttpException(Response::HTTP_UNAUTHORIZED, 'Authentication error');
-        }
-
-        $this->serializer->deserialize($request->getContent(), User::class, 'json', ['object_to_populate' => $user]);
-
-        $this->getDoctrine()->getManager()->persist($user);
-        $this->getDoctrine()->getManager()->flush();
-
-        return $this->json(['user' => $user]);
+        return $this->json([
+            'profile' => $this->userService->editProfile($request)
+        ]);
     }
 
     /**
@@ -131,12 +128,10 @@ class UserController extends Controller
             throw new JsonHttpException(Response::HTTP_NOT_FOUND, 'Svists not found');
         }
 
-        return $this->json(
-          [
-            'svists' => $this->paginator->paginate(
-              $svists,
-              $request->query->getInt('page', $page), $limit),
+        return $this->json([
+            'svists' => $this->paginator->paginate($svists, $request->query->getInt('page', $page), $limit),
           ],
-          Response::HTTP_OK);
+          Response::HTTP_OK
+        );
     }
 }

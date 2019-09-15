@@ -2,17 +2,20 @@
 
 namespace App\Controller;
 
+use App\Entity\GroupUsersRequest;
 use App\Entity\Svistyn;
 use App\Entity\User;
+use App\Entity\GroupUsers;
 use App\Entity\Friends;
 use App\Entity\Dialogue;
+use App\Services\GroupUsersService;
 use App\Services\UserService;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class BlockController extends Controller
+class BlockController extends AbstractController
 {
     /**
      * @var UserService
@@ -20,13 +23,20 @@ class BlockController extends Controller
     private $userService;
 
     /**
+     * @var GroupUsersService
+     */
+    private $groupUsersService;
+
+    /**
      * BlockController constructor.
      *
-     * @param UserService $userService
+     * @param UserService       $userService
+     * @param GroupUsersService $groupUsersService
      */
-    public function __construct(UserService $userService)
+    public function __construct(UserService $userService, GroupUsersService $groupUsersService)
     {
         $this->userService = $userService;
+        $this->groupUsersService = $groupUsersService;
     }
 
     public function userCover($id)
@@ -40,6 +50,13 @@ class BlockController extends Controller
         return $this->render('User/cover.html.twig', [
           'user' => $user,
           'count_svistyns' => $count_svistyns,
+        ]);
+    }
+
+    public function usersGroupCover($id)
+    {
+        return $this->render('Group/cover.html.twig', [
+          'group' => $this->getDoctrine()->getRepository(GroupUsers::class)->find($id),
         ]);
     }
 
@@ -125,5 +142,52 @@ class BlockController extends Controller
           'user' => $user,
           'dialogues' => $dialogues,
         ]);
+    }
+
+    public function getCountFollowersInGroup($slug)
+    {
+        $group = $this->getGroup($slug);
+
+        return $this->render(
+          'Group/followers.html.twig', [
+          'group' => $group,
+        ]);
+    }
+
+    public function getCountSvistynsInGroup($slug)
+    {
+        $group = $this->getGroup($slug);
+
+        return $this->render(
+          'Group/svistyns.html.twig', [
+          'group' => $group,
+        ]);
+    }
+
+    public function getCountRequestsFollowersInGroup($slug)
+    {
+        $requests = $this->getDoctrine()->getRepository(GroupUsersRequest::class)->getRequestUsersForGroup($this->getGroup($slug));
+
+        return $this->render(
+          'Group/requests.html.twig', [
+          'requests' => $requests,
+          'groupUsers' => $this->getGroup($slug),
+        ]);
+    }
+
+    public function getStatusButtonGroup($slug, $id)
+    {
+        $group = $this->getGroup($slug);
+        $status = $this->groupUsersService->getStatusButton($group, $id);
+
+        return $this->render(
+          'Group/button_group.html.twig', [
+          'status' => $status,
+        ]);
+    }
+
+    private function getGroup($slug)
+    {
+        return $this->getDoctrine()->getRepository(GroupUsers::class)->findOneBy(['slug' => $slug]);
     }
 }

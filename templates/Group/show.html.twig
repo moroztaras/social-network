@@ -1,0 +1,45 @@
+{% extends "Layout/layout-default.html.twig" %}
+
+{% block title %}{% endblock %}
+
+{% block main %}
+    {{ render(controller('App\\Controller\\BlockController::usersGroupCover',{ 'id': usersGroup.id })) }}
+    {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+        {% if app.user == usersGroup.admin  %}
+            <div class="uk-text-center uk-margin">
+                <a href="{{ path('group_svist_new',{'slug':usersGroup.slug}) }}" class="uk-button uk-button-default" style="margin-right: 5px;"><i class="fa fa-plus-square-o"></i>{{ 'add'|trans }}
+                </a>
+            </div>
+        {% else  %}
+            <div class="uk-text-center uk-margin">
+                <a href="{{ path('group_follower_or_send_request',{'slug': usersGroup.slug, 'id':user.id}) }}" class="uk-button uk-button-default" style="margin-right: 5px;">
+                    <i class="fa fa-plus-square-o"></i>
+                    {{ render(controller('App\\Controller\\BlockController::getStatusButtonGroup',{ 'slug': usersGroup.slug, 'id':user.id })) }}
+                </a>
+            </div>
+        {% endif %}
+    {% endif %}
+    <div class="uk-section uk-section-xsmall">
+        <div class="uk-container uk-container-xsmall">
+            <div class="uk-card uk-card-default uk-card-small uk-margin-small">
+                <div class="uk-card-header">
+                    <div class="uk-grid-small uk-flex-middle" uk-grid>
+                        <div class="uk-width-auto">
+                            <img data-src="{{ usersGroup.avatar|avatarGroupStyleDefault }}" width="40" height="40" alt uk-img>
+                        </div>
+                        <div class="uk-width-expand">
+                            <div><a class="uk-text-small uk-text-muted" href="#">{{ usersGroup.name}}</a></div>
+                            <p class="uk-text-meta uk-margin-remove-top">
+                                {{ usersGroup.description}}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% for svistyn in svistyns %}
+                {{ include('Svistyn/ModeView/full.html.twig', { 'svistyn' : svistyn }) }}
+            {% endfor %}
+            {{ include('Pagination/kpn_pagination.html.twig', {'field' : svistyns}) }}
+        </div>
+    </div>
+{% endblock %}

@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  * Class File.
  *
  * @ORM\Table(name="file_manager")
- * @ORM\Entity(repositoryClass="\App\Repository\FileRepository")
+ * @ORM\Entity
  */
 class File
 {

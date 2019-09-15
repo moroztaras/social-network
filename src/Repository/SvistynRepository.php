@@ -36,6 +36,8 @@ class SvistynRepository extends EntityRepository
         }
         $query->andWhere('sv.status = :status');
         $query->setParameter('status', 1);
+        $query->leftJoin('sv.groupUsers', 'groupUsers');
+        $query->andWhere('groupUsers IS NULL');
         $this->queryByOptions($query, $options);
         $query->orderBy('sv.id', 'desc');
         $results = $query->getQuery()->execute();

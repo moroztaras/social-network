@@ -4,8 +4,9 @@ namespace App\Controller\Api;
 
 use App\Entity\User;
 use App\Exception\JsonHttpException;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -17,7 +18,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  *
  * @Route("api/user")
  */
-class SecurityController extends Controller
+class SecurityController extends AbstractController
 {
     /**
      * @var SerializerInterface
@@ -73,7 +74,7 @@ class SecurityController extends Controller
             $user->setApiToken(Uuid::uuid4());
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->json(['user' => $user]);
+            return $this->json(['login' => $user], Response::HTTP_OK, [], ['login' => true]);
         }
 
         throw new JsonHttpException(400, 'Incorrect password');
@@ -102,6 +103,6 @@ class SecurityController extends Controller
         $this->getDoctrine()->getManager()->persist($user);
         $this->getDoctrine()->getManager()->flush();
 
-        return $this->json(['user' => $user]);
+        return $this->json(['registration' => $user], Response::HTTP_OK, [], ['registration' => true]);
     }
 }

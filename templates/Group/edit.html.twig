@@ -1,0 +1,8 @@
+{% extends "Group/Layout/profile-layout.html.twig" %}
+{% block profile_title %}{{ 'edit'|trans }}{% endblock %}
+{% block profile_content %}
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button type="submit" class="uk-button uk-button-default">{{ 'save'|trans }}</button>
+    {{ form_end(form) }}
+{% endblock %}

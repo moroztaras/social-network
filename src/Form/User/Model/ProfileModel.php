@@ -3,7 +3,6 @@
 namespace App\Form\User\Model;
 
 use App\Components\File\FileAssistant;
-use App\Entity\File;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Entity\User;

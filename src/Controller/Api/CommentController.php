@@ -7,9 +7,9 @@ use App\Entity\User;
 use App\Exception\JsonHttpException;
 use App\Exception\NotFoundException;
 use App\Exception\AccessDeniedException;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -20,7 +20,7 @@ use Knp\Component\Pager\PaginatorInterface;
  *
  * @Route("api/comments")
  */
-class CommentController extends Controller
+class CommentController extends AbstractController
 {
     /**
      * @var SerializerInterface

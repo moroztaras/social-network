@@ -99,6 +99,12 @@ class Svistyn implements \JsonSerializable
     private $isParent = false;
 
     /**
+     * @ORM\ManyToOne(targetEntity="GroupUsers", inversedBy="svistyns")
+     * @ORM\JoinColumn(name="group_users_id", referencedColumnName="id")
+     */
+    private $groupUsers;
+
+    /**
      * Svistyn constructor.
      */
     public function __construct()
@@ -358,11 +364,11 @@ class Svistyn implements \JsonSerializable
     /**
      * Set parent.
      *
-     * @param \App\Entity\Svistyn $parent
+     * @param Svistyn $parent
      *
      * @return Svistyn
      */
-    public function setParent(\App\Entity\Svistyn $parent)
+    public function setParent(Svistyn $parent)
     {
         $this->parent = $parent;
 
@@ -512,5 +518,17 @@ class Svistyn implements \JsonSerializable
           'countSvists' => $this->getCountSvists(),
           'countZvizds' => $this->getCountZvizds(),
         ];
+    }
+
+    public function getGroupUsers(): ?GroupUsers
+    {
+        return $this->groupUsers;
+    }
+
+    public function setGroupUsers(?GroupUsers $groupUsers): self
+    {
+        $this->groupUsers = $groupUsers;
+
+        return $this;
     }
 }

@@ -140,6 +140,11 @@ class User implements \Serializable, UserInterface, \JsonSerializable
     private $dialogues;
 
     /**
+     * @ORM\ManyToMany(targetEntity="GroupUsers", inversedBy="users")
+     */
+    private $groups;
+
+    /**
      * User constructor.
      */
     public function __construct()
@@ -153,6 +158,7 @@ class User implements \Serializable, UserInterface, \JsonSerializable
         $this->friends = new ArrayCollection();
         $this->svistyns = new ArrayCollection();
         $this->dialogues = new ArrayCollection();
+        $this->groups = new ArrayCollection();
     }
 
     public function serialize()
@@ -661,5 +667,31 @@ class User implements \Serializable, UserInterface, \JsonSerializable
           'status' => $this->getStatus(),
           'api_token' => $this->getApiToken(),
         ];
+    }
+
+    /**
+     * @return Collection|GroupUsers[]
+     */
+    public function getGroups(): Collection
+    {
+        return $this->groups;
+    }
+
+    public function addGroup(GroupUsers $group): self
+    {
+        if (!$this->groups->contains($group)) {
+            $this->groups[] = $group;
+        }
+
+        return $this;
+    }
+
+    public function removeGroup(GroupUsers $group): self
+    {
+        if ($this->groups->contains($group)) {
+            $this->groups->removeElement($group);
+        }
+
+        return $this;
     }
 }

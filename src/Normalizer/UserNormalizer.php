@@ -37,8 +37,36 @@ class UserNormalizer implements NormalizerInterface
           'email' => $user->getEmail(),
           'gender' => $user->getGender(),
           'birthday' => $user->getBirthday()->format('d-m-Y'),
-          'api_token' => $user->getApiToken(),
         ];
+    }
+
+    public function denormalize($data, $class, $format = null, array $context = [])
+    {
+        if (isset($context['edit']) && isset($context['object_to_populate'])) {
+            $user = $context['object_to_populate'];
+
+            if (isset($data['fullName'])) {
+                $user->setFullName($data['fullName']);
+            }
+
+            if (isset($data['email'])) {
+                $user->setEmail($data['email']);
+            }
+
+            if (isset($data['gender'])) {
+                $user->setGender($data['gender']);
+            }
+
+            if (isset($data['region'])) {
+                $user->setRegion($data['region']);
+            }
+
+            if (isset($data['birthday'])) {
+                $user->setBirtDay($data['birthday']);
+            }
+
+            return $user;
+        }
     }
 
     public function supportsNormalization($user, $format = null)

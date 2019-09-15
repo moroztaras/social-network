@@ -7,12 +7,21 @@ use App\Entity\User;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use App\Exception\JsonHttpException;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 class UserService
 {
+    /**
+     * @var SerializerInterface
+     */
+    private $serializer;
+
     /**
      * @var ManagerRegistry
      */
@@ -39,16 +48,18 @@ class UserService
     private $flashBag;
 
     /**
-     * UserService constructor.
+     * UserService constructor.'
      *
+     * @param SerializerInterface          $serializer
      * @param ManagerRegistry              $doctrine
      * @param UserPasswordEncoderInterface $passwordEncoder
      * @param PaginatorInterface           $paginator
      * @param TokenGeneratorInterface      $tokenGenerator
      * @param FlashBagInterface            $flashBag
      */
-    public function __construct(ManagerRegistry $doctrine, UserPasswordEncoderInterface $passwordEncoder, PaginatorInterface $paginator, TokenGeneratorInterface $tokenGenerator, FlashBagInterface $flashBag)
+    public function __construct(SerializerInterface $serializer, ManagerRegistry $doctrine, UserPasswordEncoderInterface $passwordEncoder, PaginatorInterface $paginator, TokenGeneratorInterface $tokenGenerator, FlashBagInterface $flashBag)
     {
+        $this->serializer = $serializer;
         $this->doctrine = $doctrine;
         $this->passwordEncoder = $passwordEncoder;
         $this->paginator = $paginator;
@@ -61,6 +72,25 @@ class UserService
         $password = $this->passwordEncoder->encodePassword($user, $user->getPlainPassword());
         $user->setPassword($password);
         $user->setApiToken($this->tokenGenerator->generateToken());
+        $this->saveData($user);
+
+        return $user;
+    }
+
+    public function editProfile(Request $request)
+    {
+        if (!$content = $request->getContent()) {
+            throw new JsonHttpException(Response::HTTP_BAD_REQUEST, 'Bad Request');
+        }
+        $apiToken = $request->headers->get('x-api-key');
+
+        $user = $this->doctrine->getRepository(User::class)->findOneBy(['apiToken' => $apiToken]);
+        if (!$user) {
+            throw new JsonHttpException(Response::HTTP_UNAUTHORIZED, 'Authentication error');
+        }
+
+        $this->serializer->deserialize($request->getContent(), User::class, JsonEncoder::FORMAT, ['edit' => true, 'object_to_populate' => $user]);
+
         $this->saveData($user);
 
         return $user;
